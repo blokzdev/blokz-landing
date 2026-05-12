@@ -32,7 +32,7 @@ The repo currently still holds the legacy v1 Glitch template. **v2 will replace 
 | URL state        | `nuqs`                                                | `/apps` filter state in URL                      | latest   |
 | Forms            | Native form + server action + `resend`                | Contact form → `team@blokz.dev`                  | 4.x      |
 | Icons            | `lucide-react` + custom SVGs                          | Tree-shaken icons + custom chain marks           | latest   |
-| Fonts            | `next/font/google`: Geist Sans, Geist Mono, Instrument Serif | Built-in optimization, no FOUT             | n/a      |
+| Fonts            | `geist` npm pkg + `@fontsource/instrument-serif`      | Self-hosted Geist Sans/Mono via next/font, no Google Fonts fetch | latest   |
 | Analytics        | `@vercel/analytics` + `@vercel/speed-insights`        | Zero-config, privacy-friendly                    | latest   |
 | Lint             | ESLint flat (`eslint-config-next`)                    |                                                  | 9.x      |
 | Format           | Prettier + `prettier-plugin-tailwindcss`              |                                                  | 3.x      |
@@ -273,8 +273,8 @@ interface Project {
 ## 7. Styling rules
 
 - **Tailwind v4** is the default. Use utility classes for layout, spacing, color, typography, state variants.
-- **Design tokens** live in `app/globals.css` inside `@theme { … }`. Source-of-truth for colors, fonts, radii, easings, shadows. Reference via Tailwind utilities (`bg-bg`, `text-ink`, `text-accent`) or CSS vars (`var(--accent)`).
-- **Don't use arbitrary value escape hatches** (`bg-[#08D9D6]`) — add a token first, use the named class. Exception: one-off layout numbers (e.g., `mt-[18vh]`) are fine when there's no semantic name.
+- **Design tokens** live in `app/globals.css` inside `@theme { … }`. Token names follow the `--color-*` Tailwind-v4 convention: `--color-canvas` (page bg), `--color-surface` (elevated bg), `--color-ink`, `--color-ink-dim`, `--color-accent`, `--color-accent-hot`, `--color-accent-deep`, `--color-violet`, `--color-success`, `--color-warn`, `--color-danger`. Reference via Tailwind utilities (`bg-canvas`, `text-ink`, `text-accent`, `ring-accent-hot`) or CSS vars in arbitrary values (`bg-[var(--color-canvas)]`). Custom utilities `.glass`, `.text-display`, `.text-eyebrow`, `.ease-out-expo` are also defined here.
+- **Don't use arbitrary value escape hatches** (`bg-[#08D9D6]`) — add a token first, use the named class. Exception: one-off layout numbers (e.g., `mt-[18vh]`) and `bg-[var(--color-*)]` refs are fine.
 - **Component-scoped CSS**: if a component needs styling that utility classes can't express (e.g., GLSL shader textures, complex `mask-image`), put it inline via `style={{}}` or, for repeated cases, add a small CSS file colocated next to the component (`r3f-hero.module.css`).
 - **No CSS-in-JS libs** (no styled-components, no emotion).
 - **Dark by default**. No light theme in v1.
@@ -338,8 +338,9 @@ Verify with `pnpm analyze`. `three` and `gsap` MUST NOT appear in chunks for rou
 - Project screenshots: ship at 1x + 2x in `public/projects/<slug>/`, let `next/image` srcset.
 
 **Font rules**:
-- Only `next/font/google` (Geist Sans, Geist Mono, Instrument Serif) with `display: "swap"`, `subsets: ["latin"]`.
-- No `@import` of fonts in CSS. No external font CDN.
+- Geist Sans + Geist Mono come from the `geist` npm package (`geist/font/sans`, `geist/font/mono`) — self-hosted, next/font-optimized. Their CSS variables (`--font-geist-sans`, `--font-geist-mono`) are wired to Tailwind's `--font-sans` / `--font-mono` via `@theme inline` in `globals.css`.
+- Instrument Serif comes from `@fontsource/instrument-serif/400-italic.css` imported once in `app/globals.css` — italic display accent only, no other weights.
+- No external font CDN. No raw `<link rel="stylesheet">` to fonts.googleapis.com.
 
 ---
 
@@ -410,33 +411,7 @@ You MUST confirm with the user before:
 - **Glass card** — the standard surface treatment (recipe in §7).
 - **Chain mark** — small monogram badge for a blockchain (BTC, ETH, BSC, TRON, MULTI).
 
-**Brand asset registry** (extracted from legacy v1 `settings.json` before cleanup; ported to `data/brand.ts`):
-
-```ts
-// data/brand.ts (target shape — to be created in Phase 1)
-export const brand = {
-  name: "Blokz",
-  legalName: "Blokz Development Company",
-  tagline: "Apps for a decentralized, transparent, sustainable future.",
-  positioning:
-    "We develop streamlined applications that empower users with advanced blockchain exploration tools and insights — driving discovery and adoption of blockchain, cryptocurrency, and web3 technologies.",
-  logo: {
-    // TODO replace with /public/brand/logo.svg once vector is supplied
-    src: "https://cdn.glitch.global/d470e077-214b-4bf9-ac27-4933bce2a4c9/blokz-logo-circle-blue-640px.png?v=1676232520196",
-    alt: "Blokz logo",
-  },
-  social: {
-    telegram: "https://t.me/blokzdev",
-    github: "https://github.com/blokzdev",
-    linkedin: "https://www.linkedin.com/company/blokz/",
-    twitter: "https://twitter.com/blokzdev/",
-    gdev: "https://g.dev/blokz",
-    email: "team@blokz.dev",
-    playStore: "https://play.google.com/store/apps/dev?id=8878695474933625157",
-    flowPage: "https://flow.page/blokz",
-  },
-} as const;
-```
+**Brand asset registry**: see `data/brand.ts` for the live source-of-truth (extracted from legacy v1 `settings.json` before cleanup). Shape includes `name`, `legalName`, `domain`, `tagline`, `positioning`, `headline` (eyebrow/title/titleAccent/sub for the hero), `logo` (PNG src/alt/width/height — swap to `/public/brand/logo.svg` once a vector is supplied), `social` (telegram/github/linkedin/twitter/gdev/email/playStore/flowPage), and `nav` (top-level routes). Add new brand-level constants here rather than hardcoding.
 
 ---
 
