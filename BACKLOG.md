@@ -45,7 +45,14 @@ Mark done with `- [x]` and move to the **Resolved** section at the bottom. Inlin
 
 ## Phase 4 (workflow page)
 
-_(empty)_
+- [ ] **[user]** Refine phase narrative copy and beat bodies to your voice before launch. The fictional "Blokz Receipt" product threads through all five phases; rename or rewrite if you'd rather narrate a different sample story. `content/workflow/phases.ts`.
+- [ ] **[polish]** Chapter 1 visual treatment: chunk 1 ships a clean glass-card layout. Plan called for a stylized chat-window mockup with Claude conversation streaming in. Add in chunk 2 alongside the code reveal component.
+- [ ] **[polish]** Chapter 2 visual treatment: plan called for three "document silhouettes" stacking on a desk that expand on hover into the artifact frame. Currently just the glass cards. Chunk 2.
+- [ ] **[polish]** Chapter 3 visual treatment: plan called for a faux terminal typing the bootstrap commands beat by beat with a blinking cursor. Currently lives only as the platform-note body. Chunk 2.
+- [ ] **[polish]** Chapter 4 visual treatment: plan's R3F build-pipeline tunnel (≤ 5k tris, nodes light up sequentially). Chunk 2 — dependency `gsap` + `@gsap/react` may be needed if we want pinned scroll.
+- [ ] **[polish]** Chapter 5 visual treatment: plan's "release train" horizontal track with stations + canvas-confetti on the ship beat. Chunk 2 — add `canvas-confetti` + `@types/canvas-confetti` deps.
+- [ ] **[polish]** MDX pipeline + `/workflow/artifacts/[slug]` route. Chunk 2 — add `@next/mdx`, `@types/mdx`, `remark-gfm`, `rehype-pretty-code`, `shiki`. Author 4 sample artifacts (CLAUDE.md, PRD, spec, prompt library) narrating "Blokz Receipt".
+- [ ] **[polish]** Keyboard navigation between beats + `?` shortcut help dialog. Chunk 2.
 
 ## Phase 5 (contact + polish)
 
