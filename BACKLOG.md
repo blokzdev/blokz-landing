@@ -23,7 +23,6 @@ Mark done with `- [x]` and move to the **Resolved** section at the bottom. Inlin
 - [ ] **[user]** Rewrite manifesto principles to your voice. Placeholder copy is in the hero headline block in `data/brand.ts`; the principle array (`content/manifesto/principles.ts`) lands in Phase 2 with similar placeholders.
 - [ ] **[user]** Confirm `team@blokz.dev` is actively monitored. Optionally mirror form submissions to a Telegram or Discord webhook on submit (Phase 5 wires this).
 - [ ] **[verify]** Confirm `public/app-ads.txt` is still required by Play Store ad SDKs. It was preserved verbatim from the legacy template.
-- [ ] **[debt]** `lucide-react@1.14.0` resolved during install; the canonical stable range is `0.x`. Build/typecheck pass and our usage (`Menu`, `X`) compiles, but verify we're on the canonical package and not a fork before launch. Pin to a known-good version if so.
 - [ ] **[debt]** `README.md` is still the Next.js scaffold default. Rewrite in Phase 6 with project intro, commands, contribution notes, and a link to `CLAUDE.md`.
 - [ ] **[polish]** `app/icon.tsx` not yet authored — currently shipping the scaffold's `app/favicon.ico`. Generate a dynamic icon from the brand monogram in Phase 5.
 - [ ] **[polish]** Service worker / full PWA installability skipped for v1 per plan. Revisit if mobile install rate becomes a stated goal.
@@ -38,7 +37,11 @@ Mark done with `- [x]` and move to the **Resolved** section at the bottom. Inlin
 
 ## Phase 3 (apps showcase)
 
-_(empty)_
+- [ ] **[user]** Replace blanket Play-Store developer-page URL with per-app deep links (`details?id=<packageId>`) in `data/projects.ts`. Only `blockscan` has a verified package id (`com.bdc.blockscan.app`); the other eight rows currently link to the dev page.
+- [ ] **[user]** Provide per-app download counts + review counts beyond Blockchair's confirmed 10K+. `data/projects.ts` only carries rating for the other eight today.
+- [ ] **[polish]** Seed real 512×512 app icons under `public/projects/<slug>/icon.png`. Cards currently fall back to a generated 2-letter monogram tinted by chain accent — works at launch, but real icons are more credible.
+- [ ] **[polish]** `/apps` First Load JS is 149 KB vs the 120 KB plan ceiling. Likely culprit: `@radix-ui/react-dialog` ships in shared chunks because the global `<MobileSheet>` uses it. Phase 5 polish: confirm via `pnpm analyze` and either lazy-load `MobileSheet` (button server-rendered, Dialog imported on first click) or swap to a lighter primitive.
+- [ ] **[debt]** `lucide-react@1.x` dropped branded icons (Github, Discord, etc.) for trademark reasons (confirmed canonical package, not a typo-squat). We ship custom inline SVG glyphs for GitHub + GitLab in `components/apps/card-bits.tsx`; Discord and Telegram fall back to `MessageCircle` / `Send`. Acceptable; can swap to dedicated brand-icon SVGs later if precision matters.
 
 ## Phase 4 (workflow page)
 
