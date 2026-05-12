@@ -32,7 +32,9 @@ Mark done with `- [x]` and move to the **Resolved** section at the bottom. Inlin
 
 ## Phase 2 (R3F hero + manifesto)
 
-_(empty — will fill as items surface)_
+- [ ] **[debt]** Hero shaders currently live as template literals in `components/hero/shaders.ts` (inline GLSL). Plan target is `shaders/*.glsl` files imported as raw strings. Verify Turbopack's `?raw` import path or add a webpack loader, then split into `shaders/flow-field.{vert,frag}.glsl` + `shaders/noise.glsl` for syntax-highlighting + shareability. Marker: `TODO(debt)` in `components/hero/shaders.ts`.
+- [ ] **[polish]** Add the "packet particle" overlay described in the plan — ~200 instanced luminous dots drifting along the flow-field gradient. Held back from chunk 1 to keep first-pass shader simple.
+- [ ] **[polish]** Add a faint hex-lattice overlay to the hero shader (procedural SDF) to evoke block structure. Plan called for it; deferred so chunk 1 ships clean.
 
 ## Phase 3 (apps showcase)
 

@@ -1,13 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LenisProvider } from "@/components/effects/lenis-provider";
-import { ReducedMotionProvider } from "@/components/effects/reduced-motion-provider";
 import { NoiseOverlay } from "@/components/effects/noise-overlay";
-import { SiteNav } from "@/components/nav/site-nav";
-import { SiteFooter } from "@/components/footer/site-footer";
+import { ReducedMotionProvider } from "@/components/effects/reduced-motion-provider";
 import { buildMetadata } from "@/lib/seo";
 import "./globals.css";
 
@@ -37,9 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <ReducedMotionProvider>
           <LenisProvider>
-            <SiteNav />
-            <main id="main">{children}</main>
-            <SiteFooter />
+            {children}
             <NoiseOverlay />
           </LenisProvider>
         </ReducedMotionProvider>
