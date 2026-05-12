@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { AppsBrowser } from "@/components/apps/apps-browser";
 import { ProjectGrid } from "@/components/apps/project-grid";
 import { GlowOrb } from "@/components/effects/glow-orb";
@@ -44,7 +45,9 @@ export default function AppsPage() {
         </header>
 
         <Suspense fallback={<ProjectGrid projects={all} />}>
-          <AppsBrowser projects={all} />
+          <NuqsAdapter>
+            <AppsBrowser projects={all} />
+          </NuqsAdapter>
         </Suspense>
       </div>
 

@@ -1,36 +1,39 @@
 "use client";
-import Link from "next/link";
+
+import dynamic from "next/dynamic";
 import { Menu } from "lucide-react";
-import { brand } from "@/data/brand";
-import { Sheet, SheetTrigger, SheetContent, SheetClose } from "@/components/ui/sheet";
+import { useState } from "react";
+
+// Defer the Radix-Dialog-backed sheet body until the menu button is first
+// pressed. Saves ~30 KB First Load JS on every route while keeping the
+// trigger interactive from initial paint.
+const MobileSheetPortal = dynamic(
+  () => import("./mobile-sheet-portal").then((m) => m.MobileSheetPortal),
+  { ssr: false },
+);
 
 export function MobileSheet() {
+  const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const handleOpen = () => {
+    setMounted(true);
+    setOpen(true);
+  };
+
   return (
-    <Sheet>
-      <SheetTrigger
-        className="rounded-full p-2 text-[var(--color-ink-dim)] transition-colors hover:text-[var(--color-ink)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none md:hidden"
+    <>
+      <button
+        type="button"
+        onClick={handleOpen}
         aria-label="Open menu"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        className="rounded-full p-2 text-[var(--color-ink-dim)] transition-colors hover:text-[var(--color-ink)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none md:hidden"
       >
         <Menu className="h-5 w-5" />
-      </SheetTrigger>
-      <SheetContent side="right">
-        <nav aria-label="Mobile">
-          <ul className="mt-12 flex flex-col gap-2">
-            {brand.nav.map((item) => (
-              <li key={item.href}>
-                <SheetClose asChild>
-                  <Link
-                    href={item.href}
-                    className="block rounded-md px-4 py-3 font-mono text-sm tracking-[0.08em] text-[var(--color-ink-dim)] uppercase transition-colors hover:bg-white/[0.04] hover:text-[var(--color-ink)]"
-                  >
-                    {item.label}
-                  </Link>
-                </SheetClose>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </SheetContent>
-    </Sheet>
+      </button>
+      {mounted && <MobileSheetPortal open={open} onOpenChange={setOpen} />}
+    </>
   );
 }
