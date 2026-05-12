@@ -3,6 +3,7 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { LenisProvider } from "@/components/effects/lenis-provider";
 import { NoiseOverlay } from "@/components/effects/noise-overlay";
 import { ReducedMotionProvider } from "@/components/effects/reduced-motion-provider";
@@ -33,12 +34,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Skip to content
         </a>
-        <ReducedMotionProvider>
-          <LenisProvider>
-            {children}
-            <NoiseOverlay />
-          </LenisProvider>
-        </ReducedMotionProvider>
+        <NuqsAdapter>
+          <ReducedMotionProvider>
+            <LenisProvider>
+              {children}
+              <NoiseOverlay />
+            </LenisProvider>
+          </ReducedMotionProvider>
+        </NuqsAdapter>
         <Analytics />
         <SpeedInsights />
       </body>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AppsPreview } from "@/components/apps/apps-preview";
 import { Hero } from "@/components/hero/hero";
 import { Manifesto } from "@/components/manifesto/manifesto";
 import { buildMetadata } from "@/lib/seo";
@@ -10,6 +11,7 @@ export default function HomePage() {
     <>
       <Hero />
       <Manifesto />
+      <AppsPreview />
     </>
   );
 }

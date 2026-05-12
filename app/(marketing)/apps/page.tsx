@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { AppsBrowser } from "@/components/apps/apps-browser";
 import { ProjectGrid } from "@/components/apps/project-grid";
 import { GlowOrb } from "@/components/effects/glow-orb";
+import { JsonLd } from "@/components/seo/json-ld";
 import { listProjects } from "@/lib/projects";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, siteUrl } from "@/lib/seo";
+import { brand } from "@/data/brand";
 
 export const metadata: Metadata = buildMetadata({
   title: "Apps",
@@ -12,8 +16,9 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function AppsPage() {
-  const total = listProjects().length;
-  const live = listProjects({ status: "live" }).length;
+  const all = listProjects();
+  const total = all.length;
+  const live = all.filter((p) => p.status === "live").length;
 
   return (
     <div className="relative overflow-hidden px-6 pt-32 pb-32 sm:pt-40">
@@ -25,7 +30,7 @@ export default function AppsPage() {
       />
 
       <div className="relative mx-auto max-w-7xl">
-        <header className="mb-16 max-w-3xl">
+        <header className="mb-12 max-w-3xl">
           <p className="text-eyebrow text-[var(--color-accent)]">Apps · Repos · Tools</p>
           <h1 className="mt-4 text-5xl sm:text-6xl md:text-7xl">
             <span className="text-display text-[var(--color-ink)]">
@@ -38,8 +43,25 @@ export default function AppsPage() {
           </p>
         </header>
 
-        <ProjectGrid />
+        <Suspense fallback={<ProjectGrid projects={all} />}>
+          <AppsBrowser projects={all} />
+        </Suspense>
       </div>
+
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: `${brand.name} — Apps`,
+          url: `${siteUrl}/apps`,
+          description: metadata.description ?? undefined,
+          hasPart: all.map((p) => ({
+            "@type": "SoftwareApplication",
+            name: p.name,
+            url: `${siteUrl}/apps/${p.slug}`,
+          })),
+        }}
+      />
     </div>
   );
 }
