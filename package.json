@@ -1,44 +1,27 @@
 {
   "name": "blokz-landing",
-  "version": "1.1.1",
-  "description": "Building Applications for a Decentralized & Transparent Future",
-  "main": "index.html",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "vite",
-    "build": "vite build",
-    "serve": "vite preview",
-    "release": "auto shipit"
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "next": "15.5.18"
   },
   "devDependencies": {
-    "@auto-it/all-contributors": "^10.32.2",
-    "@auto-it/first-time-contributor": "^10.32.2",
-    "@auto-it/git-tag": "^10.32.3",
-    "@auto-it/released": "^10.32.2",
-    "@glitchdotcom/vite-plugin-handlebars": "^1.6.2",
-    "auto": "^10.32.2",
-    "vite": "^2.5.0"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead"
-  ],
-  "engines": {
-    "node": "14.x"
-  },
-  "repository": {
-    "url": "https://github.com/blokzdev/blokz-landing.git"
-  },
-  "glitch": {
-    "projectType": "generated_static"
-  },
-  "author": "Blokz Development Co.",
-  "auto": {
-    "plugins": [
-      "all-contributors",
-      "first-time-contributor",
-      "released",
-      "git-tag"
-    ],
-    "onlyPublishWithReleaseLabel": true
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.18",
+    "@eslint/eslintrc": "^3"
   }
 }
