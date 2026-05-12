@@ -511,8 +511,9 @@ Triage `BACKLOG.md` at the end of every Phase and again before launch.
 `.env.local` (gitignored — never commit):
 
 ```
-RESEND_API_KEY=             # required for /api/contact in dev/prod
+RESEND_API_KEY=             # required for the /contact server action
 CONTACT_TO_EMAIL=team@blokz.dev
+CONTACT_FROM_EMAIL=Blokz <hello@blokz.dev>   # optional; falls back to onboarding@resend.dev
 NEXT_PUBLIC_SITE_URL=http://localhost:3000   # prod: https://blokz.dev
 ```
 
@@ -520,6 +521,7 @@ Vercel project env (production + preview):
 
 - `RESEND_API_KEY`
 - `CONTACT_TO_EMAIL`
+- `CONTACT_FROM_EMAIL` (optional)
 - `NEXT_PUBLIC_SITE_URL` = `https://blokz.dev`
 
 Never log secret values. Never check secrets into the repo. If you find a leaked secret in history, alert the user and recommend rotation.

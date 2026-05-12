@@ -53,7 +53,9 @@ Mark done with `- [x]` and move to the **Resolved** section at the bottom. Inlin
 
 ## Phase 5 (contact + polish)
 
-_(empty)_
+- [ ] **[user]** Provide a `RESEND_API_KEY` and verify the `blokz.dev` domain in Resend. Until then, the contact form shows "Email is offline — write to `team@blokz.dev` directly" instead of pretending to succeed.
+- [ ] **[user]** Decide on a real Cal.com (or alternative) scheduling URL. `components/contact/contact-success.tsx` has a `SCHEDULE_URL` constant gated behind a `null` placeholder — set it to render the "Book a call" button on the success state.
+- [ ] **[polish]** Swap the in-memory IP rate limiter (`lib/rate-limit.ts`) for `@upstash/ratelimit` once we want hardened protection. Today it resets on every serverless cold start and doesn't share state across regions — fine for expected volume, not fine for sustained abuse. Marker: `TODO(polish)` in the file.
 
 ## Phase 6 (deploy)
 
