@@ -1,9 +1,27 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
+import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
   openAnalyzer: false,
+});
+
+const withMDX = createMDX({
+  extension: /\.mdx?$/,
+  options: {
+    remarkPlugins: [["remark-gfm", {}]],
+    rehypePlugins: [
+      [
+        "rehype-pretty-code",
+        {
+          theme: "github-dark-default",
+          keepBackground: false,
+          defaultLang: { block: "txt", inline: "txt" },
+        },
+      ],
+    ],
+  },
 });
 
 const nextConfig: NextConfig = {
@@ -19,4 +37,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+export default withBundleAnalyzer(withMDX(nextConfig));

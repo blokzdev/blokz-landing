@@ -1,0 +1,108 @@
+# CLAUDE.md — Blokz Receipt
+
+This file is the contract between the agent and the Blokz Receipt codebase. Read end-to-end before touching anything non-trivial. The product is a mobile-first explorer that turns any on-chain transaction hash into a printable, shareable receipt.
+
+## 1. Overview
+
+One input field, one beautiful output. Paste a transaction hash or an explorer URL; get back a printable receipt with from / to / value / fee / status — accountant-legible, founder-shareable, screenshot-ready.
+
+Brand line: _Receipts for the chain._
+
+## 2. Tech stack
+
+| Layer      | Choice                             | Why                          | Version |
+| ---------- | ---------------------------------- | ---------------------------- | ------- |
+| Framework  | Next.js (App Router, RSC)          | SSG + Edge, native MDX       | 15.x    |
+| UI runtime | React 19                           | RSC + Compiler               | 19.x    |
+| Styling    | Tailwind v4 (`@theme`)             | CSS-first tokens             | 4.x     |
+| Data       | Blockchair API + Supabase tx cache | Multi-chain, rate-limit safe | latest  |
+| Forms      | Native + server actions            | No client form lib needed    | n/a     |
+| Hosting    | Vercel (Edge for /api/receipt)     | SSG + Edge caching           | n/a     |
+
+## 3. Commands
+
+```bash
+pnpm install         # install deps (pnpm only)
+pnpm dev             # next dev --turbopack
+pnpm build           # next build
+pnpm typecheck       # tsc --noEmit
+pnpm test            # vitest
+pnpm test:e2e        # playwright test
+```
+
+## 4. Folder map
+
+```
+app/
+  (marketing)/             # nav + footer chrome
+    page.tsx               # /  — home + paste input
+    r/[hash]/page.tsx      # /r/<hash> — receipt detail
+  api/
+    receipt/route.ts       # Edge runtime, Blockchair + Supabase cache
+    og/[hash]/route.tsx    # dynamic OG image
+components/
+  receipt/                 # ReceiptCard, FieldRow, ChainBadge, ShareSheet
+  paste-input.tsx          # the one input
+  ui/                      # shadcn primitives
+lib/
+  chains/                  # one adapter per chain (bitcoin, eth, polygon, bsc)
+  supabase.ts              # tx cache client
+  format.ts                # value/fee/timestamp formatters
+data/
+  chains.ts                # registry
+content/
+  faq.mdx                  # explainer copy
+```
+
+## 5. Conventions
+
+- **File names** kebab-case (`receipt-card.tsx`). **Exports** PascalCase.
+- **RSC by default**. Add `"use client"` only when motion, hooks, or browser APIs are involved. Keep client islands narrow.
+- **No barrel files** — they hurt tree-shaking.
+- **`cn()` helper** for conditional class composition. Never string-concat Tailwind classes.
+- **Chain adapters** all implement the same `ChainAdapter` interface in `lib/chains/types.ts`. Adding a chain = adding one file.
+
+## 6. Agent guardrails
+
+✅ Free to touch: components, content, lib utilities, Tailwind class usage anywhere, shadcn primitives.
+
+🛑 Confirm before touching:
+
+- Adding or removing an npm dependency.
+- `next.config.ts`, `tsconfig.json`, ESLint or Prettier configs.
+- `.env*`, secrets, deploy config, GitHub Actions.
+- Schema changes in Supabase (run migration locally first).
+- Destructive git operations.
+
+## 7. Definition of done
+
+- `pnpm lint` clean.
+- `pnpm typecheck` clean.
+- `pnpm build` succeeds.
+- Lighthouse mobile ≥ 90 on a touched route.
+- Manual a11y pass: focus ring visible, keyboard nav works, reduced-motion fallback renders.
+- For UI work: tested at 360 / 768 / 1440 / 1920.
+- PR description includes a screenshot and links the spec section it implements.
+
+## 8. Domain glossary
+
+- **Hash** — a transaction identifier on a given chain.
+- **Receipt** — the rendered output of a hash; the product itself.
+- **Counterparty** — the address on the other end of a transaction; user-labelable.
+
+## 9. Environment & secrets
+
+`.env.local` (gitignored — never commit):
+
+```
+BLOCKCHAIR_API_KEY=
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SITE_URL=
+```
+
+Never log secret values. Never check secrets in. If you find a leaked secret in history, alert the human and recommend rotation.
+
+---
+
+_This artifact is a representative example. Real Blokz CLAUDE.md files for shipped projects live in their repos, not this site._

@@ -46,8 +46,8 @@ Mark done with `- [x]` and move to the **Resolved** section at the bottom. Inlin
 ## Phase 4 (workflow page)
 
 - [ ] **[user]** Refine phase narrative copy and beat bodies to your voice before launch. The fictional "Blokz Receipt" product threads through all five phases; rename or rewrite if you'd rather narrate a different sample story. `content/workflow/phases.ts`.
-- [ ] **[polish]** MDX pipeline + `/workflow/artifacts/[slug]` route. Chunk 3 — add `@next/mdx`, `@types/mdx`, `remark-gfm`, `rehype-pretty-code`, `shiki`. Author 4 sample artifacts (CLAUDE.md, PRD, spec, prompt library) narrating "Blokz Receipt". The chapter-2 doc tiles already link to `/workflow/artifacts/<slug>` — those will 404 until the route lands.
-- [ ] **[polish]** Code-reveal component (Shiki + typing motion) for inline code blocks in chapter beats. Phase 5 polish — current chapters use static styled text. The MDX pipeline (chunk 3) already gets Shiki via rehype-pretty-code; this would extend it to typing-animation reveals on scroll.
+- [ ] **[user]** Review the 4 sample MDX artifacts under `content/workflow/artifacts/` and refine to your voice. Each is a "representative example" footer-tagged so readers know it isn't a live project doc.
+- [ ] **[polish]** Code-reveal Shiki typing animation for inline beat content. Phase 5 polish — the MDX artifact pages already syntax-highlight via `rehype-pretty-code`; this would extend it to typing-animation reveals on scroll inside chapter beats.
 - [ ] **[polish]** Keyboard navigation between beats + `?` shortcut help dialog. Phase 5 polish.
 - [ ] **[polish]** Optional GSAP pinning for the chapters. Current sticky-column layout reads well; revisit if the cinematic pinning genuinely adds something. Phase 5 evaluation.
 
