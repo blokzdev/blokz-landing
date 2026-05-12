@@ -15,7 +15,9 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 z-0">{reduced ? <HeroFallback /> : <R3FHero />}</div>
+      <div aria-hidden className="absolute inset-0 z-0">
+        {reduced ? <HeroFallback /> : <R3FHero />}
+      </div>
       <HeroCopy />
       <ScrollCue />
     </section>

@@ -22,7 +22,10 @@ export function ChapterDevelop() {
 
   return (
     <div ref={ref} className="flex flex-col gap-4">
-      <div className="relative aspect-[5/3] overflow-hidden rounded-2xl bg-[var(--color-surface)]/40 ring-1 ring-white/[0.08] ring-inset">
+      <div
+        aria-hidden
+        className="relative aspect-[5/3] overflow-hidden rounded-2xl bg-[var(--color-surface)]/40 ring-1 ring-white/[0.08] ring-inset"
+      >
         {reduced ? <BuildTunnelFallback /> : <BuildTunnel progress={scrollYProgress} />}
       </div>
       <ul

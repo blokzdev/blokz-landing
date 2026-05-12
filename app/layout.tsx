@@ -6,7 +6,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LenisProvider } from "@/components/effects/lenis-provider";
 import { NoiseOverlay } from "@/components/effects/noise-overlay";
 import { ReducedMotionProvider } from "@/components/effects/reduced-motion-provider";
-import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { brand } from "@/data/brand";
+import { buildMetadata, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = buildMetadata();
@@ -41,6 +43,30 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </ReducedMotionProvider>
         <Analytics />
         <SpeedInsights />
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: brand.legalName,
+            alternateName: brand.name,
+            url: siteUrl,
+            description: brand.positioning,
+            logo: `${siteUrl}/apple-icon`,
+            sameAs: [
+              brand.social.github,
+              brand.social.linkedin,
+              brand.social.twitter,
+              brand.social.telegram,
+              brand.social.gdev,
+              brand.social.playStore,
+            ],
+            contactPoint: {
+              "@type": "ContactPoint",
+              email: brand.social.email,
+              contactType: "customer support",
+            },
+          }}
+        />
       </body>
     </html>
   );
