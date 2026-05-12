@@ -426,6 +426,35 @@ You MUST confirm with the user before:
 - Group related changes in one commit; don't make 10 micro-commits for one feature.
 - Never `--no-verify` or `--no-gpg-sign` unless the user explicitly asks.
 
+### Open-items tracking workflow
+
+`BACKLOG.md` at the repo root is the single source of truth for "tracked but deferred" work — anything you'd otherwise mention only in chat. Use it relentlessly so nothing gets lost between Phases.
+
+**When to add an entry**:
+
+- A decision is blocked on the user (missing asset, copy, env var, scheduling URL, etc.) → add with `**[user]**` tag.
+- A piece of code is functional but un-refined and the time to refine it isn't now → `**[polish]**`.
+- A workaround was applied that should be unwound when adjacent code is next touched → `**[debt]**`.
+- An assumption (Play Store ad SDK requirement, a third-party version pin, a fair-use claim, etc.) should be sanity-checked before launch → `**[verify]**`.
+- A nice-to-have is explicitly post-v2 → `**[future]**`.
+
+**Format**: file the item under the matching Phase section if it surfaced during that Phase's work, otherwise under "Carried from Phase 1" or "Future enhancements". Always include enough context (file path, what's blocking, what unblocks it) so the item is actionable months later without reading chat history.
+
+**Inline `// TODO` comments** are encouraged for code-local items:
+
+```ts
+// TODO(user): swap to /public/brand/logo.svg once vector is supplied.
+// TODO(polish): replace this static gradient with a moving shader uniform.
+// TODO(debt): consolidate this duplicated reduced-motion check.
+// TODO(verify): does Play Store still require this exact path?
+```
+
+The `(category)` parenthetical mirrors a `BACKLOG.md` tag. **Rule**: if the item isn't purely code-local (e.g., it depends on the user or spans multiple files), the inline `// TODO` must be paired with a `BACKLOG.md` entry. Pure code-local items can stay as inline `TODO` only.
+
+**When closing an item**: change the BACKLOG checkbox to `[x]` and move it to the **Resolved** section at the bottom (rolling archive). If the item came from an inline `// TODO`, remove the comment in the same commit.
+
+Triage `BACKLOG.md` at the end of every Phase and again before launch.
+
 ---
 
 ## 12. Common tasks playbook
