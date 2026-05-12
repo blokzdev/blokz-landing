@@ -1,5 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
+import type { ReactNode } from "react";
 import type { Phase, WorkflowPlatform } from "@/types/workflow";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
@@ -10,9 +11,10 @@ interface Props {
   phase: Phase;
   platform: WorkflowPlatform;
   index: number;
+  scene?: ReactNode;
 }
 
-export function PhaseChapter({ phase, platform, index }: Readonly<Props>) {
+export function PhaseChapter({ phase, platform, index, scene }: Readonly<Props>) {
   const reduced = useReducedMotion();
   const note = phase.platformNotes[platform];
   const isEven = index % 2 === 0;
@@ -51,12 +53,23 @@ export function PhaseChapter({ phase, platform, index }: Readonly<Props>) {
           </p>
         </motion.header>
 
-        <div className={cn("flex flex-col gap-5", !isEven && "lg:order-1")}>
-          <ol className="grid gap-4">
+        <div className={cn("flex flex-col gap-6", !isEven && "lg:order-1")}>
+          {scene && (
+            <motion.div
+              initial={reduced ? false : { opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.7, ease: EASE_OUT_EXPO }}
+            >
+              {scene}
+            </motion.div>
+          )}
+
+          <ol className="grid gap-3">
             {phase.beats.map((beat, i) => (
               <motion.li
                 key={beat.id}
-                className="glass rounded-2xl p-6"
+                className="rounded-2xl bg-white/[0.03] p-5 ring-1 ring-white/[0.06] ring-inset"
                 initial={reduced ? false : { opacity: 0, y: 16, filter: "blur(6px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, amount: 0.35 }}
@@ -70,7 +83,7 @@ export function PhaseChapter({ phase, platform, index }: Readonly<Props>) {
                   <span className="font-mono text-[10px] tracking-[0.16em] text-[var(--color-accent)] uppercase">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="text-lg font-medium text-[var(--color-ink)]">{beat.title}</h3>
+                  <h3 className="text-base font-medium text-[var(--color-ink)]">{beat.title}</h3>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-[var(--color-ink-dim)]">
                   {beat.body}
@@ -80,7 +93,7 @@ export function PhaseChapter({ phase, platform, index }: Readonly<Props>) {
           </ol>
 
           <motion.div
-            className="mt-2 rounded-2xl bg-[var(--color-surface)]/60 p-6 ring-1 ring-white/[0.08] backdrop-blur-xl ring-inset"
+            className="rounded-2xl bg-[var(--color-surface)]/60 p-6 ring-1 ring-white/[0.08] backdrop-blur-xl ring-inset"
             initial={reduced ? false : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}

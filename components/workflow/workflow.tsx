@@ -3,6 +3,11 @@ import { motion } from "motion/react";
 import { phases } from "@/content/workflow/phases";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useWorkflowPlatform } from "@/hooks/use-workflow-platform";
+import { ChapterConceptualize } from "./chapter-conceptualize";
+import { ChapterDevelop } from "./chapter-develop";
+import { ChapterEnvironment } from "./chapter-environment";
+import { ChapterShip } from "./chapter-ship";
+import { ChapterSpec } from "./chapter-spec";
 import { PhaseChapter } from "./phase-chapter";
 import { PlatformTabs } from "./platform-tabs";
 
@@ -61,8 +66,31 @@ export function Workflow() {
       </motion.section>
 
       {phases.map((phase, i) => (
-        <PhaseChapter key={phase.id} phase={phase} platform={platform} index={i} />
+        <PhaseChapter
+          key={phase.id}
+          phase={phase}
+          platform={platform}
+          index={i}
+          scene={renderScene(phase.id, platform, phase.platformNotes[platform])}
+        />
       ))}
     </div>
   );
+}
+
+function renderScene(phaseId: string, platform: string, note: { title: string; body: string }) {
+  switch (phaseId) {
+    case "conceptualize":
+      return <ChapterConceptualize />;
+    case "spec":
+      return <ChapterSpec />;
+    case "environment":
+      return <ChapterEnvironment note={note} platformKey={platform} />;
+    case "develop":
+      return <ChapterDevelop />;
+    case "ship":
+      return <ChapterShip />;
+    default:
+      return null;
+  }
 }
