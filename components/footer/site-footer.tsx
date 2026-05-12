@@ -22,12 +22,12 @@ export function SiteFooter() {
               aria-label={`${brand.name} home`}
             >
               <span className="block h-2.5 w-2.5 rounded-full bg-[var(--color-accent)] shadow-[0_0_12px_var(--color-accent)]" />
-              <span className="font-mono text-sm uppercase tracking-[0.16em]">{brand.name}</span>
+              <span className="font-mono text-sm tracking-[0.16em] uppercase">{brand.name}</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm text-[var(--color-ink-dim)]">{brand.tagline}</p>
             <Link
               href="/workflow"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-ink-dim)] ring-1 ring-inset ring-white/[0.08] transition-colors hover:bg-white/[0.08] hover:text-[var(--color-ink)]"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1.5 font-mono text-[10px] tracking-[0.08em] text-[var(--color-ink-dim)] uppercase ring-1 ring-white/[0.08] transition-colors ring-inset hover:bg-white/[0.08] hover:text-[var(--color-ink)]"
             >
               <span className="block h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
               Built with Claude Code
@@ -35,7 +35,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-dim)]">
+            <h3 className="font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase">
               Sitemap
             </h3>
             <ul className="mt-4 space-y-2">
@@ -53,7 +53,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-dim)]">
+            <h3 className="font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase">
               Connect
             </h3>
             <ul className="mt-4 grid grid-cols-2 gap-2">
@@ -74,10 +74,10 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-white/[0.06] pt-8 md:flex-row md:items-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-ink-dim)]">
+          <p className="font-mono text-[10px] tracking-[0.08em] text-[var(--color-ink-dim)] uppercase">
             © {new Date().getFullYear()} {brand.legalName} — {brand.tagline}
           </p>
-          <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-ink-dim)]">
+          <p className="font-mono text-[10px] tracking-[0.08em] text-[var(--color-ink-dim)] uppercase">
             Vibecoded with Claude Code
           </p>
         </div>

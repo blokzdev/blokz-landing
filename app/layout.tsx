@@ -20,9 +20,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
@@ -33,7 +31,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[999] focus:rounded-md focus:bg-[var(--color-accent)] focus:px-3 focus:py-2 focus:font-mono focus:text-xs focus:uppercase focus:tracking-[0.08em] focus:text-[var(--color-canvas)]"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[999] focus:rounded-md focus:bg-[var(--color-accent)] focus:px-3 focus:py-2 focus:font-mono focus:text-xs focus:tracking-[0.08em] focus:text-[var(--color-canvas)] focus:uppercase"
         >
           Skip to content
         </a>

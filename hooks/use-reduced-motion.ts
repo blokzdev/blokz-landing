@@ -1,16 +1,20 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
+
+const QUERY = "(prefers-reduced-motion: reduce)";
+
+function getServerSnapshot(): boolean {
+  return false;
+}
 
 export function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(media.matches);
-    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
+  const subscribe = useCallback((onChange: () => void) => {
+    const media = window.matchMedia(QUERY);
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
   }, []);
 
-  return reduced;
+  const getSnapshot = useCallback(() => window.matchMedia(QUERY).matches, []);
+
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

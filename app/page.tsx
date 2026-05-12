@@ -9,12 +9,12 @@ export default function HomePage() {
   return (
     <div className="relative min-h-screen overflow-hidden px-6 pt-32 pb-24">
       <GlowOrb
-        className="left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2"
+        className="top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2"
         size={720}
         opacity={0.18}
       />
       <GlowOrb
-        className="bottom-0 right-0 translate-x-1/3 translate-y-1/3"
+        className="right-0 bottom-0 translate-x-1/3 translate-y-1/3"
         size={520}
         color="var(--color-violet)"
         opacity={0.12}
@@ -34,7 +34,7 @@ export default function HomePage() {
           {brand.headline.sub}
         </p>
 
-        <p className="mt-16 inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-ink-dim)] ring-1 ring-inset ring-white/[0.08]">
+        <p className="mt-16 inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1.5 font-mono text-[10px] tracking-[0.08em] text-[var(--color-ink-dim)] uppercase ring-1 ring-white/[0.08] ring-inset">
           <span className="block h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-accent)]" />
           v2 scaffold landed — hero, manifesto, apps showcase, workflow scrolly inbound
         </p>

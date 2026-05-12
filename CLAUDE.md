@@ -8,7 +8,7 @@ This file is the contract between you (Claude) and this codebase. Read it end-to
 
 **Blokz.dev** is the marketing site for **Blokz Development Company**, a vibecoding studio shipping production blockchain / web3 apps (nine published Android explorers and growing). The site is itself a demonstration of agentic engineering: it is built end-to-end with Claude Code, with the workflow it preaches visualized on `/workflow`.
 
-Brand line: *Apps for a decentralized, transparent, sustainable future.*
+Brand line: _Apps for a decentralized, transparent, sustainable future._
 
 The repo currently still holds the legacy v1 Glitch template. **v2 will replace it wholesale** — only `.git/`, `LICENSE`, and the brand-asset URLs (captured in §13) are preserved.
 
@@ -16,31 +16,31 @@ The repo currently still holds the legacy v1 Glitch template. **v2 will replace 
 
 ## 2. Tech stack (pinned)
 
-| Layer            | Choice                                                | Why                                              | Version  |
-| ---------------- | ----------------------------------------------------- | ------------------------------------------------ | -------- |
-| Framework        | Next.js (App Router, RSC, Turbopack dev)              | SSG-first, RSC for content, native MDX, Vercel   | 15.3.x   |
-| UI runtime       | React                                                 | RSC + React Compiler (stable in 19)              | 19.1.x   |
-| Language         | TypeScript, `strict: true`                            | Type safety end-to-end                           | 5.6.x    |
-| Styling          | Tailwind CSS v4 (CSS-first `@theme`)                  | No JS config file; tokens in `globals.css`       | 4.1.x    |
-| Component prims  | shadcn/ui (Radix + Tailwind, copied into `ui/`)       | Owned components, no runtime dep                 | latest   |
-| Motion (DOM)     | `motion` (formerly framer-motion)                     | Shared layout, scroll, gestures                  | 12.x     |
-| Motion (scroll)  | `gsap` + `@gsap/react` + ScrollTrigger                | Pinned timelines, scrub-driven scenes            | 3.13.x   |
-| Smooth scroll    | `lenis`                                               | Inertial scroll; integrates with ScrollTrigger   | 1.1.x    |
-| 3D / shaders     | `three` + `@react-three/fiber` + `drei`               | Hero + workflow chapter 4 build-vis              | 0.170+   |
-| Postprocessing   | `@react-three/postprocessing`                         | Bloom on accents                                 | 3.x      |
-| Content          | `@next/mdx`, `rehype-pretty-code` (Shiki), `remark-gfm` | Manifesto/projects/workflow as MDX             | latest   |
-| URL state        | `nuqs`                                                | `/apps` filter state in URL                      | latest   |
-| Forms            | Native form + server action + `resend`                | Contact form → `team@blokz.dev`                  | 4.x      |
-| Icons            | `lucide-react` + custom SVGs                          | Tree-shaken icons + custom chain marks           | latest   |
-| Fonts            | `geist` npm pkg + `@fontsource/instrument-serif`      | Self-hosted Geist Sans/Mono via next/font, no Google Fonts fetch | latest   |
-| Analytics        | `@vercel/analytics` + `@vercel/speed-insights`        | Zero-config, privacy-friendly                    | latest   |
-| Lint             | ESLint flat (`eslint-config-next`)                    |                                                  | 9.x      |
-| Format           | Prettier + `prettier-plugin-tailwindcss`              |                                                  | 3.x      |
-| Hooks            | `simple-git-hooks` + `lint-staged`                    | Lighter than husky                               | latest   |
-| Package manager  | `pnpm`                                                | Mandatory (`engine-strict=true`)                 | 9.x      |
-| Runtime          | Node                                                  | LTS                                              | ≥20.11   |
-| Deploy           | Vercel                                                | SSG + Edge for `/api/contact`                    | n/a      |
-| Tests (optional) | Playwright                                            | Smoke tests on hero/workflow                     | 1.48+    |
+| Layer            | Choice                                                  | Why                                                              | Version |
+| ---------------- | ------------------------------------------------------- | ---------------------------------------------------------------- | ------- |
+| Framework        | Next.js (App Router, RSC, Turbopack dev)                | SSG-first, RSC for content, native MDX, Vercel                   | 15.3.x  |
+| UI runtime       | React                                                   | RSC + React Compiler (stable in 19)                              | 19.1.x  |
+| Language         | TypeScript, `strict: true`                              | Type safety end-to-end                                           | 5.6.x   |
+| Styling          | Tailwind CSS v4 (CSS-first `@theme`)                    | No JS config file; tokens in `globals.css`                       | 4.1.x   |
+| Component prims  | shadcn/ui (Radix + Tailwind, copied into `ui/`)         | Owned components, no runtime dep                                 | latest  |
+| Motion (DOM)     | `motion` (formerly framer-motion)                       | Shared layout, scroll, gestures                                  | 12.x    |
+| Motion (scroll)  | `gsap` + `@gsap/react` + ScrollTrigger                  | Pinned timelines, scrub-driven scenes                            | 3.13.x  |
+| Smooth scroll    | `lenis`                                                 | Inertial scroll; integrates with ScrollTrigger                   | 1.1.x   |
+| 3D / shaders     | `three` + `@react-three/fiber` + `drei`                 | Hero + workflow chapter 4 build-vis                              | 0.170+  |
+| Postprocessing   | `@react-three/postprocessing`                           | Bloom on accents                                                 | 3.x     |
+| Content          | `@next/mdx`, `rehype-pretty-code` (Shiki), `remark-gfm` | Manifesto/projects/workflow as MDX                               | latest  |
+| URL state        | `nuqs`                                                  | `/apps` filter state in URL                                      | latest  |
+| Forms            | Native form + server action + `resend`                  | Contact form → `team@blokz.dev`                                  | 4.x     |
+| Icons            | `lucide-react` + custom SVGs                            | Tree-shaken icons + custom chain marks                           | latest  |
+| Fonts            | `geist` npm pkg + `@fontsource/instrument-serif`        | Self-hosted Geist Sans/Mono via next/font, no Google Fonts fetch | latest  |
+| Analytics        | `@vercel/analytics` + `@vercel/speed-insights`          | Zero-config, privacy-friendly                                    | latest  |
+| Lint             | ESLint flat (`eslint-config-next`)                      |                                                                  | 9.x     |
+| Format           | Prettier + `prettier-plugin-tailwindcss`                |                                                                  | 3.x     |
+| Hooks            | `simple-git-hooks` + `lint-staged`                      | Lighter than husky                                               | latest  |
+| Package manager  | `pnpm`                                                  | Mandatory (`engine-strict=true`, pinned via `packageManager`)    | 10.x    |
+| Runtime          | Node                                                    | LTS                                                              | ≥20.11  |
+| Deploy           | Vercel                                                  | SSG + Edge for `/api/contact`                                    | n/a     |
+| Tests (optional) | Playwright                                              | Smoke tests on hero/workflow                                     | 1.48+   |
 
 Don't add a dependency without confirming with the user (see §11). Don't change a pinned major version without confirmation.
 
@@ -243,26 +243,77 @@ Edit the `@theme` block at the top of `app/globals.css`. Tailwind v4 picks up th
 
 ```ts
 // types/project.ts
-type ProjectType   = "android-app" | "ios-app" | "web-app" | "desktop-app" | "oss-repo" | "library" | "service";
+type ProjectType =
+  | "android-app"
+  | "ios-app"
+  | "web-app"
+  | "desktop-app"
+  | "oss-repo"
+  | "library"
+  | "service";
 type ProjectStatus = "live" | "beta" | "coming-soon" | "archived";
-type Chain         = "bitcoin" | "ethereum" | "bsc" | "tron" | "polygon" | "solana" | "multi-chain" | "n-a";
-type Platform      = "android" | "ios" | "web" | "windows" | "macos" | "linux" | "cross-platform";
-type LinkKind      = "play-store" | "app-store" | "github" | "gitlab" | "website" | "docs"
-                   | "demo" | "download" | "npm" | "discord" | "telegram" | "video";
+type Chain = "bitcoin" | "ethereum" | "bsc" | "tron" | "polygon" | "solana" | "multi-chain" | "n-a";
+type Platform = "android" | "ios" | "web" | "windows" | "macos" | "linux" | "cross-platform";
+type LinkKind =
+  | "play-store"
+  | "app-store"
+  | "github"
+  | "gitlab"
+  | "website"
+  | "docs"
+  | "demo"
+  | "download"
+  | "npm"
+  | "discord"
+  | "telegram"
+  | "video";
 
-interface ProjectLink { kind: LinkKind; url: string; label?: string; primary?: boolean }
-interface ProjectStat { kind: "downloads"|"rating"|"reviews"|"stars"|"forks"|"users"|"tvl"|"version"|"custom";
-                        value: string; raw?: number; label?: string }
-interface ProjectMedia { icon: string; cover?: string;
-                         screenshots?: { src: string; alt: string; device?: "phone"|"tablet"|"desktop" }[];
-                         video?: string; accentColor?: string }
+interface ProjectLink {
+  kind: LinkKind;
+  url: string;
+  label?: string;
+  primary?: boolean;
+}
+interface ProjectStat {
+  kind:
+    | "downloads"
+    | "rating"
+    | "reviews"
+    | "stars"
+    | "forks"
+    | "users"
+    | "tvl"
+    | "version"
+    | "custom";
+  value: string;
+  raw?: number;
+  label?: string;
+}
+interface ProjectMedia {
+  icon: string;
+  cover?: string;
+  screenshots?: { src: string; alt: string; device?: "phone" | "tablet" | "desktop" }[];
+  video?: string;
+  accentColor?: string;
+}
 interface Project {
-  slug: string; name: string; tagline: string; description: string;
-  type: ProjectType; status: ProjectStatus;
-  platforms: Platform[]; chains: Chain[];
-  category?: "explorer"|"wallet"|"messaging"|"tool"|"infra"|"experiment";
-  tags?: string[]; media: ProjectMedia; stats: ProjectStat[]; links: ProjectLink[];
-  launchedAt?: string; updatedAt?: string; featured?: boolean; hasLongForm?: boolean;
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  type: ProjectType;
+  status: ProjectStatus;
+  platforms: Platform[];
+  chains: Chain[];
+  category?: "explorer" | "wallet" | "messaging" | "tool" | "infra" | "experiment";
+  tags?: string[];
+  media: ProjectMedia;
+  stats: ProjectStat[];
+  links: ProjectLink[];
+  launchedAt?: string;
+  updatedAt?: string;
+  featured?: boolean;
+  hasLongForm?: boolean;
 }
 ```
 
@@ -315,29 +366,31 @@ interface Project {
 
 ## 10. Performance budget
 
-| Metric                       | Target                       |
-| ---------------------------- | ---------------------------- |
-| Lighthouse Performance (mobile) | ≥ 90                      |
-| Lighthouse Accessibility     | ≥ 98                         |
-| Lighthouse Best Practices    | 100                          |
-| Lighthouse SEO               | 100                          |
-| LCP                          | < 2.5s                       |
-| CLS                          | < 0.05                       |
-| INP                          | < 200ms                      |
-| Bundle ceiling (route `/`)   | ≤ 250KB gz (incl. R3F)       |
-| Bundle ceiling (`/apps`)     | ≤ 120KB gz                   |
-| Bundle ceiling (`/workflow`) | ≤ 280KB gz (incl. R3F + GSAP)|
-| Bundle ceiling (other routes)| ≤ 90KB gz                    |
+| Metric                          | Target                        |
+| ------------------------------- | ----------------------------- |
+| Lighthouse Performance (mobile) | ≥ 90                          |
+| Lighthouse Accessibility        | ≥ 98                          |
+| Lighthouse Best Practices       | 100                           |
+| Lighthouse SEO                  | 100                           |
+| LCP                             | < 2.5s                        |
+| CLS                             | < 0.05                        |
+| INP                             | < 200ms                       |
+| Bundle ceiling (route `/`)      | ≤ 250KB gz (incl. R3F)        |
+| Bundle ceiling (`/apps`)        | ≤ 120KB gz                    |
+| Bundle ceiling (`/workflow`)    | ≤ 280KB gz (incl. R3F + GSAP) |
+| Bundle ceiling (other routes)   | ≤ 90KB gz                     |
 
 Verify with `pnpm analyze`. `three` and `gsap` MUST NOT appear in chunks for routes other than `/` and `/workflow`.
 
 **Image rules**:
+
 - All `<img>` go through `next/image` with explicit `width` + `height` (or `fill` + parent aspect-ratio container).
 - AVIF first, WebP fallback, raster last.
 - `priority` flag is reserved for the hero brand mark and one above-the-fold project icon — never more.
 - Project screenshots: ship at 1x + 2x in `public/projects/<slug>/`, let `next/image` srcset.
 
 **Font rules**:
+
 - Geist Sans + Geist Mono come from the `geist` npm package (`geist/font/sans`, `geist/font/mono`) — self-hosted, next/font-optimized. Their CSS variables (`--font-geist-sans`, `--font-geist-mono`) are wired to Tailwind's `--font-sans` / `--font-mono` via `@theme inline` in `globals.css`.
 - Instrument Serif comes from `@fontsource/instrument-serif/400-italic.css` imported once in `app/globals.css` — italic display accent only, no other weights.
 - No external font CDN. No raw `<link rel="stylesheet">` to fonts.googleapis.com.
@@ -347,6 +400,7 @@ Verify with `pnpm analyze`. `three` and `gsap` MUST NOT appear in chunks for rou
 ## 11. Agent guardrails
 
 You (Claude) have freedom in these areas — proceed without asking:
+
 - ✅ Create, edit, or delete files under `app/`, `components/`, `content/`, `data/`, `lib/`, `shaders/`, `hooks/`, `types/`, `public/`.
 - ✅ Refactor utility code in `lib/`.
 - ✅ Add or refine MDX content under `content/`.
@@ -355,6 +409,7 @@ You (Claude) have freedom in these areas — proceed without asking:
 - ✅ Add reasonable unit/Playwright tests.
 
 You MUST confirm with the user before:
+
 - 🛑 Adding a new npm dependency (or removing one). State why, what it costs in bundle size, and what alternatives you considered.
 - 🛑 Upgrading any pinned major version in §2.
 - 🛑 Changing `next.config.ts`, `tsconfig.json`, ESLint or Prettier configs.
@@ -365,6 +420,7 @@ You MUST confirm with the user before:
 - 🛑 Committing files with secrets (`.env*`, keys, tokens).
 
 **Git workflow**:
+
 - Development branch is **`claude/revamp-blokz-landing-zkhIT`**. All commits land there.
 - Commit messages: imperative mood, ≤ 72 char subject, optional body. Conventional Commit prefixes welcome but not required (`feat:`, `fix:`, `chore:`).
 - Group related changes in one commit; don't make 10 micro-commits for one feature.
@@ -375,6 +431,7 @@ You MUST confirm with the user before:
 ## 12. Common tasks playbook
 
 ### Add a new app card type (e.g., `chrome-extension`)
+
 1. Extend `ProjectType` union in `types/project.ts`.
 2. Create `components/apps/project-card-extension.tsx` rendering the variant.
 3. Add a `case "chrome-extension":` branch to the dispatcher in `components/apps/project-card.tsx`.
@@ -382,21 +439,25 @@ You MUST confirm with the user before:
 5. Add an example entry to `data/projects.ts` (status `"coming-soon"` if not real yet) so the variant ships exercised.
 
 ### Add a new workflow chapter
+
 1. Append to `content/workflow/phases.ts`.
 2. Create the MDX file under `content/workflow/`.
 3. If the chapter needs a bespoke visual, create a component under `components/workflow/`; otherwise the default `phase-chapter.tsx` is sufficient.
 4. Update the workflow page's reduced-motion fallback section (`workflow-scrolly.tsx` exposes a `<WorkflowStatic/>` companion — keep it in sync).
 
 ### Change brand colors
+
 1. Edit the `@theme` block in `app/globals.css`. That's it — every utility class derives from there.
 2. If the change is dramatic, regenerate OG images by rebuilding (`app/opengraph-image.tsx` reads tokens).
 
 ### Re-host a logo
+
 1. Drop the SVG (preferred) or 2x PNG in `public/brand/`.
 2. Update `data/brand.ts` `logo.src` to the local path.
 3. Run `pnpm dev`, verify nav + footer + manifest icon.
 
 ### Add an OSS repo to the showcase
+
 1. New entry in `data/projects.ts` with `type: "oss-repo"`, `status: "live"`, `platforms: ["cross-platform"]`, stats `{ kind: "stars" }` + `{ kind: "forks" }` + `{ kind: "version" }`, links `{ kind: "github", primary: true }` + `{ kind: "npm" }` if published.
 2. Drop a 512×512 icon in `public/projects/<slug>/icon.png`.
 
@@ -405,6 +466,7 @@ You MUST confirm with the user before:
 ## 13. Domain glossary & brand asset registry
 
 **Vocabulary**:
+
 - **Vibecoding** — agentic engineering: conceptualizing, prompting, and shipping software end-to-end with an AI agent as primary author and human as architect/reviewer.
 - **Blokz Receipt** — fictional sample product narrated across the workflow page artifacts. Not a real product; the name is reserved as a placeholder.
 - **Bento masonry** — the apps grid layout: CSS Grid + manual `span` annotations on `featured` entries; not a JS masonry lib.
@@ -426,6 +488,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000   # prod: https://blokz.dev
 ```
 
 Vercel project env (production + preview):
+
 - `RESEND_API_KEY`
 - `CONTACT_TO_EMAIL`
 - `NEXT_PUBLIC_SITE_URL` = `https://blokz.dev`
@@ -446,7 +509,7 @@ A change is "done" only when ALL of these hold:
 - [ ] Lighthouse mobile run on touched routes meets §10 thresholds (or regression is explained).
 - [ ] Visual confirmation in a real browser (Chrome + Firefox) — UI work isn't done until you've seen it move. Take a screenshot if you can't run a browser.
 - [ ] For UI work: tested at viewport widths 360 (mobile), 768 (tablet), 1440 (desktop), 1920 (wide).
-- [ ] Commit message describes the *why*, not just the *what*.
+- [ ] Commit message describes the _why_, not just the _what_.
 
 ---
 

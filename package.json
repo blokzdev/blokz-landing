@@ -1,12 +1,24 @@
 {
   "name": "blokz-landing",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
+  "description": "Blokz.dev — marketing site for Blokz Development Co., a vibecoding studio shipping production web3 apps.",
+  "engines": {
+    "node": ">=20.11",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@10.33.0",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "analyze": "ANALYZE=true next build --turbopack",
+    "prepare": "simple-git-hooks"
   },
   "dependencies": {
     "@fontsource/instrument-serif": "^5.2.8",
@@ -30,13 +42,39 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^16.2.6",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.18",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "lint-staged": "^17.0.4",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec lint-staged",
+    "pre-push": "pnpm typecheck"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,md,mdx,json,yaml,yml,html}": [
+      "prettier --write"
+    ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "simple-git-hooks",
+      "unrs-resolver"
+    ]
   }
 }

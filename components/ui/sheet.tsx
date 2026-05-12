@@ -29,16 +29,13 @@ type Side = "left" | "right" | "top" | "bottom";
 const sideClasses: Record<Side, string> = {
   right:
     "inset-y-0 right-0 h-full w-3/4 max-w-sm border-l border-white/[0.06] data-[state=closed]:translate-x-full",
-  left:
-    "inset-y-0 left-0 h-full w-3/4 max-w-sm border-r border-white/[0.06] data-[state=closed]:-translate-x-full",
-  top:
-    "inset-x-0 top-0 w-full border-b border-white/[0.06] data-[state=closed]:-translate-y-full",
+  left: "inset-y-0 left-0 h-full w-3/4 max-w-sm border-r border-white/[0.06] data-[state=closed]:-translate-x-full",
+  top: "inset-x-0 top-0 w-full border-b border-white/[0.06] data-[state=closed]:-translate-y-full",
   bottom:
     "inset-x-0 bottom-0 w-full border-t border-white/[0.06] data-[state=closed]:translate-y-full",
 };
 
-interface SheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
+interface SheetContentProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
   side?: Side;
 }
 
@@ -59,7 +56,7 @@ const SheetContent = React.forwardRef<
     >
       {children}
       <DialogPrimitive.Close
-        className="absolute right-4 top-4 rounded-full p-1 text-[var(--color-ink-dim)] transition-colors hover:text-[var(--color-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)]"
+        className="absolute top-4 right-4 rounded-full p-1 text-[var(--color-ink-dim)] transition-colors hover:text-[var(--color-ink)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none"
         aria-label="Close"
       >
         <X className="h-4 w-4" />

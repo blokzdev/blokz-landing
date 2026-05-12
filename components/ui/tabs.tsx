@@ -12,7 +12,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex items-center gap-1 rounded-full bg-white/[0.04] p-1 ring-1 ring-inset ring-white/[0.08]",
+      "inline-flex items-center gap-1 rounded-full bg-white/[0.04] p-1 ring-1 ring-white/[0.08] ring-inset",
       className,
     )}
     {...props}
@@ -27,7 +27,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.08em] text-[var(--color-ink-dim)] transition-colors data-[state=active]:bg-[var(--color-accent)]/[0.15] data-[state=active]:text-[var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)]",
+      "inline-flex items-center rounded-full px-4 py-1.5 font-mono text-xs tracking-[0.08em] text-[var(--color-ink-dim)] uppercase transition-colors focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none data-[state=active]:bg-[var(--color-accent)]/[0.15] data-[state=active]:text-[var(--color-accent)]",
       className,
     )}
     {...props}
@@ -42,7 +42,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)]",
+      "focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none",
       className,
     )}
     {...props}
