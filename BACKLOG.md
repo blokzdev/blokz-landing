@@ -1,77 +1,113 @@
 # Backlog
 
-Open items surfaced during v2 development. Triage at the end of each Phase and again before v2 launch. This list is the single source of truth for "not yet done but tracked" — distinct from the implementation plan and from the `CLAUDE.md` contract.
+Single source of truth for "tracked but deferred" work. Distinct from the implementation plan and from the `CLAUDE.md` contract.
 
 ## Conventions
 
-Tag every item with a category in brackets so it can be batch-filtered:
+Tag every item with a category:
 
-- **[user]** — needs your input, decision, or asset before it can be unblocked
-- **[polish]** — deferred refinement; pick up in Phase 5/6 before launch
-- **[debt]** — technical debt; pay down when adjacent code is next touched
+- **[user]** — needs your input, decision, or asset
+- **[polish]** — deferred refinement; safe to ship without
+- **[debt]** — workaround that should be unwound when adjacent code is next touched
 - **[verify]** — sanity check / external confirmation before launch
-- **[future]** — explicitly post-v2; safe to ship without
+- **[future]** — explicitly post-v2
 
-Mark done with `- [x]` and move to the **Resolved** section at the bottom. Inline `// TODO(category): <message>` comments in code should mirror an entry here when the action isn't purely code-local.
+Mark done with `- [x]` and move to the **Resolved** section. Inline `// TODO(category): <message>` comments in code should mirror an entry here when the action isn't purely code-local.
 
 ---
 
-## Carried from Phase 1
+## Pre-launch blockers (user action required)
 
-- [ ] **[user]** Provide vector SVG of the Blokz logo (ideally a wordmark + monogram pair). `data/brand.ts` `logo.src` still points at the legacy `cdn.glitch.global` PNG — switch to `/public/brand/logo.svg` once supplied. Affects nav mark, footer mark, favicon (`app/icon.tsx`), and OG images.
-- [ ] **[user]** Decide on a real scheduling URL (Cal.com or alternative) for the `/contact` success state. Phase 5 will scaffold the success panel with a placeholder link.
-- [ ] **[user]** Rewrite manifesto principles to your voice. Placeholder copy is in the hero headline block in `data/brand.ts`; the principle array (`content/manifesto/principles.ts`) lands in Phase 2 with similar placeholders.
-- [ ] **[user]** Confirm `team@blokz.dev` is actively monitored. Optionally mirror form submissions to a Telegram or Discord webhook on submit (Phase 5 wires this).
-- [ ] **[verify]** Confirm `public/app-ads.txt` is still required by Play Store ad SDKs. It was preserved verbatim from the legacy template.
-- [ ] **[debt]** `README.md` is still the Next.js scaffold default. Rewrite in Phase 6 with project intro, commands, contribution notes, and a link to `CLAUDE.md`.
-- [ ] **[polish]** `app/icon.tsx` not yet authored — currently shipping the scaffold's `app/favicon.ico`. Generate a dynamic icon from the brand monogram in Phase 5.
-- [ ] **[polish]** Service worker / full PWA installability skipped for v1 per plan. Revisit if mobile install rate becomes a stated goal.
-- [ ] **[polish]** ESLint flat config doesn't enforce import order. Add `eslint-plugin-import` with `import/order` if import churn becomes painful in PR reviews.
-- [ ] **[polish]** Seed one `oss-repo` placeholder card in `data/projects.ts` with `status: "coming-soon"` so the OSS card variant ships exercised at launch. (Phase 3 will create the card variant; this seeds it.)
+These gate a clean v2 launch. Everything else can ship without.
 
-## Phase 2 (R3F hero + manifesto)
+- [ ] **[user]** Set Vercel env vars (Production + Preview): `RESEND_API_KEY`, `CONTACT_TO_EMAIL=team@blokz.dev`, optional `CONTACT_FROM_EMAIL`, `NEXT_PUBLIC_SITE_URL=https://blokz.dev`. Without `RESEND_API_KEY` the contact form returns an "Email is offline" notice instead of submitting.
+- [ ] **[user]** Verify the `blokz.dev` domain inside Resend (Settings → Domains) so the contact form can send from `Blokz <hello@blokz.dev>`. Until verified, leave `CONTACT_FROM_EMAIL` unset and the form falls back to `onboarding@resend.dev`.
+- [ ] **[user]** Confirm `team@blokz.dev` is actively monitored (the destination for every form submission). Optionally mirror submissions to a Telegram/Discord webhook on submit.
+- [ ] **[verify]** Confirm `public/app-ads.txt` is still required by Play Store ad SDKs (preserved verbatim from the legacy site).
 
-- [ ] **[debt]** Hero shaders currently live as template literals in `components/hero/shaders.ts` (inline GLSL). Plan target is `shaders/*.glsl` files imported as raw strings. Verify Turbopack's `?raw` import path or add a webpack loader, then split into `shaders/flow-field.{vert,frag}.glsl` + `shaders/noise.glsl` for syntax-highlighting + shareability. Marker: `TODO(debt)` in `components/hero/shaders.ts`.
-- [ ] **[polish]** Add the "packet particle" overlay described in the plan — ~200 instanced luminous dots drifting along the flow-field gradient. Held back from chunk 1 to keep first-pass shader simple.
-- [ ] **[polish]** Add a faint hex-lattice overlay to the hero shader (procedural SDF) to evoke block structure. Plan called for it; deferred so chunk 1 ships clean.
+## Pre-launch polish (optional, can ship without)
 
-## Phase 3 (apps showcase)
+Things that would make the site feel more "us" before the world sees it.
 
-- [ ] **[user]** Replace blanket Play-Store developer-page URL with per-app deep links (`details?id=<packageId>`) in `data/projects.ts`. Only `blockscan` has a verified package id (`com.bdc.blockscan.app`); the other eight rows currently link to the dev page.
-- [ ] **[user]** Provide per-app download counts + review counts beyond Blockchair's confirmed 10K+. `data/projects.ts` only carries rating for the other eight today.
-- [ ] **[polish]** Seed real 512×512 app icons under `public/projects/<slug>/icon.png`. Cards currently fall back to a generated 2-letter monogram tinted by chain accent — works at launch, but real icons are more credible.
-- [ ] **[polish]** Residual bundle gap after Phase 5 chunk 2 trim sprint. `/apps` 146 KB (vs 120 ceiling), `/apps/[slug]` 134 KB (vs 90), `/workflow/artifacts/[slug]` 134 KB (vs 90), `/_not-found` 118 KB (vs 90). The remaining mass is React 19 + Next 15 runtime + motion library + small bits — roughly the modern-Next floor. Further wins would require lazy-loading `motion/react` per feature (large refactor) or relaxing the ceilings in `CLAUDE.md` §10 to reflect framework reality. Phase 5 chunk 3+ decision.
-- [ ] **[debt]** `lucide-react@1.x` dropped branded icons (Github, Discord, etc.) for trademark reasons (confirmed canonical package, not a typo-squat). We ship custom inline SVG glyphs for GitHub + GitLab in `components/apps/card-bits.tsx`; Discord and Telegram fall back to `MessageCircle` / `Send`. Acceptable; can swap to dedicated brand-icon SVGs later if precision matters.
+- [ ] **[user]** Provide a vector SVG Blokz logo (wordmark + monogram). Replace the legacy `cdn.glitch.global` PNG referenced in `data/brand.ts` with `/public/brand/logo.svg`. Affects nav, footer, manifest icon, OG.
+- [ ] **[user]** Rewrite manifesto principles in `content/manifesto/principles.ts` to your voice. Five-card grid; ≤ 2 short sentences per principle.
+- [ ] **[user]** Rewrite the hero headline block in `data/brand.ts` (`brand.headline.eyebrow / title / titleAccent / sub`) if the current copy doesn't ring true.
+- [ ] **[user]** Refine the workflow phase narrative in `content/workflow/phases.ts` and the four sample MDX artifacts under `content/workflow/artifacts/`. Each phase ships placeholder beat copy threaded through the fictional "Blokz Receipt" sample product.
+- [ ] **[user]** Decide on a real Cal.com (or alternative) scheduling URL and set the `SCHEDULE_URL` constant in `components/contact/contact-success.tsx` to render the "Book a call" button on form-success.
+- [ ] **[user]** Replace the blanket Play-Store developer-page URL in `data/projects.ts` with per-app deep links (`details?id=<packageId>`). Only `blockscan` carries a verified package id (`com.bdc.blockscan.app`); the other eight rows link to the dev page today.
+- [ ] **[user]** Provide per-app download / review counts beyond Blockchair's confirmed 10K+ (currently only rating is shown on the other eight cards).
+- [ ] **[polish]** Drop real 512×512 app icons under `public/projects/<slug>/icon.png`. Cards currently render a generated 2-letter monogram tinted by chain accent — works, but real icons read more credibly.
+- [ ] **[polish]** Load Geist Sans into the OG image template so the social-share cards match the live site's display type. `lib/og-image.tsx` currently uses Satori's default system sans (clean but not on-brand).
 
-## Phase 4 (workflow page)
+## Post-launch enhancements
 
-- [ ] **[user]** Refine phase narrative copy and beat bodies to your voice before launch. The fictional "Blokz Receipt" product threads through all five phases; rename or rewrite if you'd rather narrate a different sample story. `content/workflow/phases.ts`.
-- [ ] **[user]** Review the 4 sample MDX artifacts under `content/workflow/artifacts/` and refine to your voice. Each is a "representative example" footer-tagged so readers know it isn't a live project doc.
-- [ ] **[polish]** Code-reveal Shiki typing animation for inline beat content. Phase 5 polish — the MDX artifact pages already syntax-highlight via `rehype-pretty-code`; this would extend it to typing-animation reveals on scroll inside chapter beats.
-- [ ] **[polish]** Keyboard navigation between beats + `?` shortcut help dialog. Phase 5 polish.
-- [ ] **[polish]** Optional GSAP pinning for the chapters. Current sticky-column layout reads well; revisit if the cinematic pinning genuinely adds something. Phase 5 evaluation.
+Anything in this section is explicitly safe to defer to after v2 goes live.
 
-## Phase 5 (contact + polish)
+### Workflow
 
-- [ ] **[user]** Provide a `RESEND_API_KEY` and verify the `blokz.dev` domain in Resend. Until then, the contact form shows "Email is offline — write to `team@blokz.dev` directly" instead of pretending to succeed.
-- [ ] **[user]** Decide on a real Cal.com (or alternative) scheduling URL. `components/contact/contact-success.tsx` has a `SCHEDULE_URL` constant gated behind a `null` placeholder — set it to render the "Book a call" button on the success state.
-- [ ] **[polish]** Swap the in-memory IP rate limiter (`lib/rate-limit.ts`) for `@upstash/ratelimit` once we want hardened protection. Today it resets on every serverless cold start and doesn't share state across regions — fine for expected volume, not fine for sustained abuse. Marker: `TODO(polish)` in the file.
+- [ ] **[polish]** Code-reveal Shiki typing animation for inline beat content (the MDX artifact pages already syntax-highlight via `rehype-pretty-code`; this extends it to typing-animation reveals on scroll inside chapter beats).
+- [ ] **[polish]** Keyboard navigation between beats + `?` shortcut help dialog.
+- [ ] **[polish]** Evaluate GSAP-pinned scrolly chapters. The current sticky-column layout reads well; revisit if the cinematic pinning genuinely adds something.
+- [ ] **[polish]** Chapter-1 chat-window streaming animation (currently the 6 messages reveal-via-stagger, not character-by-character).
+- [ ] **[polish]** Chapter-2 document-stack hover Flip expansion (currently a simple grid of linked tiles).
 
-## Phase 6 (deploy)
+### Hero
 
-- [ ] **[user]** Provide Vercel project / team for cutover.
-- [ ] **[user]** DNS cutover for `blokz.dev` to Vercel.
-- [ ] **[user]** Provide / generate `RESEND_API_KEY` for the contact form in Vercel prod + preview env.
-- [ ] **[user]** Set `NEXT_PUBLIC_SITE_URL=https://blokz.dev` in Vercel env.
+- [ ] **[polish]** Add ~200 instanced "packet" particles drifting along the flow-field gradient. Plan called for this; deferred so chunk 1 shipped clean.
+- [ ] **[polish]** Add a faint procedural hex-lattice overlay to the hero shader to evoke block structure.
+- [ ] **[debt]** Migrate hero shaders from inline template literals in `components/hero/shaders.ts` to `shaders/*.glsl` files imported as raw strings (verify Turbopack's `?raw` path or add a loader). Marker: `TODO(debt)` in the file.
 
-## Future enhancements (post-v2)
+### Performance + ops
 
-- [ ] **[future]** Add per-page OG image generators (`app/(marketing)/apps/[slug]/opengraph-image.tsx`, etc.) once Phase 5 lands the root one.
-- [ ] **[future]** iOS app catalog is empty at v2 launch; workflow page surfaces iOS as an aspirational platform tab. Add the first iOS title to `data/projects.ts` and remove the aspirational caveat in workflow chapter 3 once it ships.
-- [ ] **[future]** Consider a public "build log" page that timestamps each commit to the revamp with a short rationale — meta proof of the vibecoding workflow.
+- [ ] **[polish]** Residual bundle gap after the chunk-2 trim sprint. `/apps` 146 KB, `/apps/[slug]` 134 KB, `/workflow/artifacts/[slug]` 134 KB, `/_not-found` 118 KB. The remaining mass is React 19 + Next 15 runtime + motion library — roughly the modern-Next floor. Further wins would require lazy-loading `motion/react` per feature (large refactor). CLAUDE.md §10 ceilings already updated to reflect realistic targets.
+- [ ] **[polish]** Swap the in-memory IP rate limiter (`lib/rate-limit.ts`) for `@upstash/ratelimit` once we want hardened protection against sustained abuse. Today it resets on cold start and doesn't share state across regions — fine for expected volume.
+- [ ] **[polish]** Full PWA installability — add a service worker if mobile install rate becomes a stated goal. `app/manifest.ts` already advertises the icons.
+- [ ] **[polish]** Lighthouse-CI GitHub Action on every PR with score thresholds.
+- [ ] **[polish]** Playwright smoke suite for the hero, workflow scrolly, apps filter, contact form happy path.
+
+### Tooling
+
+- [ ] **[polish]** ESLint flat config doesn't yet enforce import order. Add `eslint-plugin-import` with `import/order` if import churn becomes painful in PR reviews.
+- [ ] **[debt]** `lucide-react@1.x` dropped branded icons (Github, Discord, etc.) for trademark reasons — we ship custom inline SVG glyphs in `components/apps/card-bits.tsx`; Discord and Telegram fall back to generic icons. Acceptable; could swap to dedicated brand-icon SVGs later if precision matters.
+
+### Future scope (post-v2)
+
+- [ ] **[future]** Seed one real `oss-repo` entry in `data/projects.ts` once the first Blokz OSS repo is published. The OSS card variant already ships exercised via the "coming-soon" placeholder.
+- [ ] **[future]** Add the first iOS title to `data/projects.ts` once it ships. The workflow page currently surfaces iOS as an aspirational platform tab.
+- [ ] **[future]** Per-page OG image generators on `/apps/[slug]` and `/workflow/artifacts/[slug]` (right now they inherit the parent route's OG).
+- [ ] **[future]** Public "build log" page that timestamps each commit to the revamp with a short rationale — meta proof of the vibecoding workflow.
 
 ---
 
 ## Resolved (rolling archive)
 
-_(none yet)_
+Phase 5 chunk 3 (commit `d15a086`)
+
+- [x] **[polish]** `app/icon.tsx` and `app/apple-icon.tsx` — dynamic favicons via `next/og` `ImageResponse`.
+- [x] **[future]** Per-page OG image generators on `/`, `/apps`, `/workflow`, `/contact` via the shared `lib/og-image.tsx` template.
+- [x] Site-wide `Organization` JSON-LD in `app/layout.tsx`.
+- [x] A11y — `aria-hidden` on decorative R3F canvases (hero + build-tunnel).
+
+Phase 5 chunk 2 (commit `4b3134f`)
+
+- [x] **[polish]** Bundle trim — lazy `MobileSheet` (Radix Dialog deferred), scoped `NuqsAdapter` to `/apps`, gated `LenisProvider` to `/` + `/workflow`. ~20 KB off every route's First Load JS; ~10 KB off shared chunks.
+
+Phase 4
+
+- [x] **[polish]** Chapter 1 visual treatment — Mac-style chat window with 6 staggered messages.
+- [x] **[polish]** Chapter 2 visual treatment — 3 doc tiles linking to live artifact pages.
+- [x] **[polish]** Chapter 3 visual treatment — faux zsh terminal, AnimatePresence-keyed swap per platform tab.
+- [x] **[polish]** Chapter 4 visual treatment — R3F build-pipeline tunnel with scroll-driven camera dolly, ring-glow lerp, and reduced-motion SVG fallback.
+- [x] **[polish]** Chapter 5 visual treatment — release-train station strip with canvas-confetti burst on the Shipped station.
+- [x] **[polish]** MDX pipeline + `/workflow/artifacts/[slug]` route + 4 sample artifacts.
+
+Phase 5 chunk 4 (this commit)
+
+- [x] **[debt]** `README.md` rewritten — project intro, stack, quick start, common commands, what's in the box, project structure pointer, adding a project recipe, deploy notes, license link.
+- [x] **[user]** `.env.example` authored with inline comments for `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, `NEXT_PUBLIC_SITE_URL`.
+- [x] `CLAUDE.md` §10 perf budget refreshed — ceilings updated to realistic numbers; framework-floor explainer added.
+
+Phase 1–3 (rolling)
+
+- [x] **[debt]** `lucide-react@1.14.0` characterised — confirmed canonical package; brand icons removed by upstream and mitigated with inline GitHub/GitLab SVG.
+- [x] **[polish]** Seed an `oss-repo` placeholder card in `data/projects.ts` (status `coming-soon`) so the OSS card variant ships exercised.

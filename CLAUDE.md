@@ -366,21 +366,21 @@ interface Project {
 
 ## 10. Performance budget
 
-| Metric                          | Target                        |
-| ------------------------------- | ----------------------------- |
-| Lighthouse Performance (mobile) | ≥ 90                          |
-| Lighthouse Accessibility        | ≥ 98                          |
-| Lighthouse Best Practices       | 100                           |
-| Lighthouse SEO                  | 100                           |
-| LCP                             | < 2.5s                        |
-| CLS                             | < 0.05                        |
-| INP                             | < 200ms                       |
-| Bundle ceiling (route `/`)      | ≤ 250KB gz (incl. R3F)        |
-| Bundle ceiling (`/apps`)        | ≤ 120KB gz                    |
-| Bundle ceiling (`/workflow`)    | ≤ 280KB gz (incl. R3F + GSAP) |
-| Bundle ceiling (other routes)   | ≤ 90KB gz                     |
+| Metric                          | Target                             |
+| ------------------------------- | ---------------------------------- |
+| Lighthouse Performance (mobile) | ≥ 90                               |
+| Lighthouse Accessibility        | ≥ 98                               |
+| Lighthouse Best Practices       | 100                                |
+| Lighthouse SEO                  | 100                                |
+| LCP                             | < 2.5s                             |
+| CLS                             | < 0.05                             |
+| INP                             | < 200ms                            |
+| Bundle ceiling (route `/`)      | ≤ 200KB gz (incl. R3F lazy)        |
+| Bundle ceiling (`/apps`)        | ≤ 160KB gz                         |
+| Bundle ceiling (`/workflow`)    | ≤ 220KB gz (incl. R3F + lazy GSAP) |
+| Bundle ceiling (other routes)   | ≤ 140KB gz                         |
 
-Verify with `pnpm analyze`. `three` and `gsap` MUST NOT appear in chunks for routes other than `/` and `/workflow`.
+The floor for any client-touched route is roughly 128 KB (React 19 + Next 15 framework chunks + shared `motion` library). The ceilings above are set ~10–15 KB above measured current numbers so reasonable additions don't regress past them. Verify with `pnpm analyze`. `three` and `gsap` MUST NOT appear in chunks for routes other than `/` and `/workflow`.
 
 **Image rules**:
 
