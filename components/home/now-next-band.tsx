@@ -18,7 +18,7 @@ export function NowNextBand() {
           <p className="text-eyebrow text-[var(--color-accent)]">{"// Now"}</p>
           <h2 className="text-3xl sm:text-4xl">
             <span className="text-display text-[var(--color-ink)]">
-              Vibecoding studio since 2020.
+              Building cool things since 2020.
             </span>
           </h2>
           <p className="text-base text-[var(--color-ink-dim)]">
