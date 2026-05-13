@@ -72,11 +72,14 @@ export function ScrollCue() {
           />
         </span>
 
-        <motion.span
-          aria-hidden
-          className="block h-2 w-2 -translate-y-1 rotate-45 border-r border-b border-[var(--color-accent)]"
-          animate={arrowControls}
-        />
+        {/* Chevron: the rotated-square shape owns its own transform
+            (rotate + small upward offset) on an inner static span, while the
+            outer motion span owns only the y-tick animation. Keeping the two
+            transforms on separate elements prevents motion from clobbering
+            rotate(45deg) and shifting the chevron visually. */}
+        <motion.span aria-hidden className="block" animate={arrowControls}>
+          <span className="block h-2 w-2 -translate-y-1 rotate-45 border-r border-b border-[var(--color-accent)]" />
+        </motion.span>
       </motion.button>
     </div>
   );
