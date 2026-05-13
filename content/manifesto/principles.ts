@@ -17,10 +17,10 @@ export const principles: ReadonlyArray<Principle> = [
     body: "Working code beats perfect plans. We deploy daily, learn from production, refine in tight loops.",
   },
   {
-    id: "decentralization-is-ux",
+    id: "research-rooted",
     number: "02",
-    title: "Decentralization is a UX problem.",
-    body: "Web3 won't win on principle. We bridge the gap between crypto's promise and software people actually want to use.",
+    title: "Research-rooted. User-driven.",
+    body: "We start product ideas in the literature — edge models, multi-agent systems, memory, retrieval — then pick problems by user pain, not by stack hype. The paper informs the spec; the user defines done.",
   },
   {
     id: "agent-led",
@@ -38,6 +38,6 @@ export const principles: ReadonlyArray<Principle> = [
     id: "multi-platform",
     number: "05",
     title: "Multi-platform, single voice.",
-    body: "Same product on Android, web, Windows, iOS — same tone, same primitives, same opinionated defaults.",
+    body: "AI assistant, chain explorer, or anything in between — same product on web, Android, Windows, iOS, with the same tone, the same primitives, the same opinionated defaults.",
   },
 ];

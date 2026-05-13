@@ -39,8 +39,9 @@ export default function AppsPage() {
             </span>
           </h1>
           <p className="mt-6 max-w-2xl text-base text-[var(--color-ink-dim)] sm:text-lg">
-            {live} live, {total - live} on the way. Blockchain explorers, web3 utilities, and the
-            open-source tooling we use to ship them — all built end-to-end with Claude Code.
+            {live} live, {total - live} on the way. AI apps in motion, blockchain explorers in
+            production, and the open-source tooling we use to ship them — all built end-to-end with
+            Claude Code.
           </p>
         </header>
 

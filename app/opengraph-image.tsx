@@ -6,8 +6,8 @@ export const alt = "Blokz.dev — vibecoded apps, shipping web3 forward.";
 
 export default function Image() {
   return renderOgImage({
-    eyebrow: "// Vibecoding studio",
+    eyebrow: "// AI app studio",
     titleA: "Vibecoded apps.",
-    titleB: "Shipping web3 forward.",
+    titleB: "AI at the frontier.",
   });
 }

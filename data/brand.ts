@@ -2,14 +2,14 @@ export const brand = {
   name: "Blokz",
   legalName: "Blokz Development Co.",
   domain: "blokz.dev",
-  tagline: "Apps for a decentralized, transparent, sustainable future.",
+  tagline: "Apps at the AI frontier. Built end-to-end with Claude Code.",
   positioning:
-    "We design, prompt, and ship production-grade blockchain tools — built end-to-end with Claude Code.",
+    "We design, prompt, and ship production-grade apps for B2B and B2C — grounded in current research (edge AI, multi-agent systems, memory architectures, distributed inference). Web3 when it earns its place. Mobile, web, desktop, anywhere users are.",
   headline: {
-    eyebrow: "BLOKZ.DEV // VIBECODING STUDIO",
+    eyebrow: "BLOKZ.DEV // AI APP STUDIO",
     title: "Vibecoded apps.",
-    titleAccent: "Shipping web3 forward.",
-    sub: "We design, prompt, and ship production-grade blockchain tools — built end-to-end with Claude Code.",
+    titleAccent: "AI at the frontier.",
+    sub: "Sophisticated AI apps for real problems — built end-to-end with Claude Code. Research-rooted. User-driven. Production-ready.",
   },
   logo: {
     src: "https://cdn.glitch.global/d470e077-214b-4bf9-ac27-4933bce2a4c9/blokz-logo-circle-blue-640px.png?v=1676232520196",
@@ -20,7 +20,7 @@ export const brand = {
   social: {
     telegram: "https://t.me/blokzdev",
     github: "https://github.com/blokzdev",
-    linkedin: "https://www.linkedin.com/company/blokz/",
+    linkedin: "https://www.linkedin.com/company/blokzdev/",
     twitter: "https://twitter.com/blokzdev/",
     gdev: "https://g.dev/blokz",
     email: "team@blokz.dev",
