@@ -38,7 +38,7 @@ export function ChapterEnvironment({ note, platformKey }: Readonly<Props>) {
       <AnimatePresence mode="wait" initial={false}>
         <motion.ol
           key={platformKey}
-          className="flex flex-col gap-2.5 px-5 py-5 font-mono text-xs leading-relaxed"
+          className="flex [scrollbar-width:thin] flex-col gap-2.5 overflow-x-auto px-4 py-4 font-mono text-xs leading-relaxed sm:px-5 sm:py-5 [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:bg-white/10"
           initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={reduced ? undefined : { opacity: 0 }}
@@ -47,7 +47,7 @@ export function ChapterEnvironment({ note, platformKey }: Readonly<Props>) {
           {commands.map((cmd, i) => (
             <motion.li
               key={`${platformKey}-${i}`}
-              className="flex items-start gap-2.5"
+              className="flex items-start gap-2.5 whitespace-nowrap"
               initial={reduced ? false : { opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{

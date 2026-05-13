@@ -56,14 +56,15 @@ export function ChapterShip() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="relative overflow-hidden rounded-2xl bg-[var(--color-surface)]/70 p-6 ring-1 ring-white/[0.08] backdrop-blur-xl ring-inset">
-        {/* Connecting line behind stations */}
+      <div className="relative overflow-hidden rounded-2xl bg-[var(--color-surface)]/70 p-5 ring-1 ring-white/[0.08] backdrop-blur-xl ring-inset sm:p-6">
+        {/* Connecting line behind stations — hidden on mobile where the 2-row
+            grid makes a single horizontal line geometrically meaningless. */}
         <div
           aria-hidden
-          className="absolute top-1/2 right-6 left-6 h-px -translate-y-[18px] bg-gradient-to-r from-[var(--color-accent)]/0 via-[var(--color-accent)]/40 to-[var(--color-accent)]/0"
+          className="absolute top-1/2 right-6 left-6 hidden h-px -translate-y-[18px] bg-gradient-to-r from-[var(--color-accent)]/0 via-[var(--color-accent)]/40 to-[var(--color-accent)]/0 sm:block"
         />
 
-        <ol className="relative grid grid-cols-6 items-start gap-2">
+        <ol className="relative grid grid-cols-3 items-start gap-x-2 gap-y-4 sm:grid-cols-6 sm:gap-2">
           {STATIONS.map((station, i) => {
             const Icon = station.icon;
             const isShip = station.id === "ship";
@@ -102,7 +103,7 @@ export function ChapterShip() {
 
       <motion.div
         className={cn(
-          "flex items-center justify-between rounded-2xl bg-[var(--color-canvas)]/60 px-5 py-4 ring-1 transition-colors ring-inset",
+          "flex flex-col items-start gap-3 rounded-2xl bg-[var(--color-canvas)]/60 px-5 py-4 ring-1 transition-colors ring-inset sm:flex-row sm:items-center sm:justify-between sm:gap-4",
           stamped ? "ring-[var(--color-accent)]/40" : "ring-white/[0.08]",
         )}
         initial={reduced ? false : { opacity: 0, y: 12 }}
