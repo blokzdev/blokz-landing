@@ -15,7 +15,7 @@ const CHANNELS: ReadonlyArray<{ label: string; href: string; display: string }> 
   { label: "Email", href: `mailto:${brand.social.email}`, display: brand.social.email },
   { label: "Telegram", href: brand.social.telegram, display: "@blokzdev" },
   { label: "GitHub", href: brand.social.github, display: "github.com/blokzdev" },
-  { label: "LinkedIn", href: brand.social.linkedin, display: "linkedin.com/company/blokz" },
+  { label: "LinkedIn", href: brand.social.linkedin, display: "linkedin.com/company/blokzdev" },
 ];
 
 export default function ContactPage() {
