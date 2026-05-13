@@ -48,7 +48,7 @@ export function Manifesto() {
         >
           <p className="text-eyebrow text-[var(--color-accent)]">{"// Manifesto"}</p>
           <h2 className="mt-4 text-4xl sm:text-5xl md:text-6xl">
-            <span className="text-display text-[var(--color-ink)]">Five things we believe.</span>
+            <span className="text-display text-[var(--color-ink)]">What we believe.</span>
           </h2>
         </motion.header>
 

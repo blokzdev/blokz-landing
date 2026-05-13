@@ -8,6 +8,13 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 const EASE_OUT_EXPO = [0.22, 1, 0.36, 1] as const;
 
+const CAPABILITIES = [
+  "Multi-agent",
+  "Edge inference",
+  "Memory architectures",
+  "Built with Claude Code",
+] as const;
+
 export function HeroCopy() {
   const reduced = useReducedMotion();
   const titleWords = brand.headline.title.split(" ");
@@ -26,9 +33,9 @@ export function HeroCopy() {
         {brand.headline.eyebrow}
       </motion.p>
 
-      <h1 className="mt-6 text-5xl leading-[1.02] sm:text-6xl md:text-7xl lg:text-[7.5rem]">
+      <h1 className="mt-6 text-5xl leading-[1.05] sm:text-6xl md:text-7xl lg:text-[7.5rem]">
         <motion.span
-          className="text-display block text-[var(--color-ink)]"
+          className="block font-sans font-medium tracking-[-0.035em] text-[var(--color-ink)]"
           initial="hidden"
           animate="visible"
           variants={{
@@ -71,6 +78,25 @@ export function HeroCopy() {
       >
         {brand.headline.sub}
       </motion.p>
+
+      <motion.ul
+        aria-label="Core capabilities"
+        className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase sm:gap-x-5"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ ...base, delay: reduced ? 0 : 1.25 }}
+      >
+        {CAPABILITIES.map((cap, i) => (
+          <li key={cap} className="flex items-center gap-3 sm:gap-5">
+            {i > 0 && (
+              <span aria-hidden className="text-[var(--color-ink-dim)]/40">
+                ·
+              </span>
+            )}
+            <span>{cap}</span>
+          </li>
+        ))}
+      </motion.ul>
 
       <motion.div
         className="mt-12 flex flex-wrap items-center justify-center gap-3"

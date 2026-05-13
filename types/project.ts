@@ -7,7 +7,7 @@ export type ProjectType =
   | "library"
   | "service";
 
-export type ProjectStatus = "live" | "beta" | "coming-soon" | "archived";
+export type ProjectStatus = "live" | "beta" | "coming-soon" | "deprecated" | "archived";
 
 export type Chain =
   | "bitcoin"

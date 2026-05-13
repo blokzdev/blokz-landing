@@ -103,11 +103,10 @@ export const projects: ReadonlyArray<Project> = [
     description:
       "One app, every Etherscan-family explorer — Ethereum, BNB, Polygon, Optimism, Arbitrum, Base, and more.",
     type: "android-app",
-    status: "live",
+    status: "deprecated",
     platforms: ["android"],
     chains: ["multi-chain"],
     category: "explorer",
-    featured: true,
     media: { icon: "/projects/blockscan/icon.png", accentColor: "#08D9D6" },
     stats: [{ kind: "rating", value: "4.5", raw: 4.5 }],
     links: [
@@ -126,6 +125,7 @@ export const projects: ReadonlyArray<Project> = [
     platforms: ["android"],
     chains: ["ethereum"],
     category: "explorer",
+    featured: true,
     media: { icon: "/projects/etherscan/icon.png", accentColor: "#627EEA" },
     stats: [{ kind: "rating", value: "4.2", raw: 4.2 }],
     links: [
@@ -144,6 +144,7 @@ export const projects: ReadonlyArray<Project> = [
     platforms: ["android"],
     chains: ["tron"],
     category: "explorer",
+    featured: true,
     media: { icon: "/projects/tron-explorer/icon.png", accentColor: "#FF060A" },
     stats: [{ kind: "rating", value: "4.5", raw: 4.5 }],
     links: [
@@ -158,11 +159,10 @@ export const projects: ReadonlyArray<Project> = [
     description:
       "Blockchain-anchored mailboxes — send and receive end-to-end encrypted messages using only a wallet address.",
     type: "android-app",
-    status: "live",
+    status: "deprecated",
     platforms: ["android"],
     chains: ["n-a"],
     category: "messaging",
-    featured: true,
     media: { icon: "/projects/slyfox/icon.png", accentColor: "#A78BFA" },
     stats: [{ kind: "rating", value: "4.5", raw: 4.5 }],
     links: [{ kind: "play-store", url: DEV_PAGE, primary: true }],

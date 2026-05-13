@@ -85,16 +85,21 @@ export const fragmentShader = /* glsl */ `
 
     vec3 col = canvas;
     col = mix(col, deepTeal, smoothstep(0.40, 0.85, fieldN));
-    col = mix(col, accent,   smoothstep(0.65, 0.95, fieldN) * 0.85);
-    col = mix(col, hot,      smoothstep(0.85, 1.00, fieldN) * 0.55);
+    col = mix(col, accent,   smoothstep(0.65, 0.95, fieldN) * 0.55);
+    col = mix(col, hot,      smoothstep(0.85, 1.00, fieldN) * 0.30);
 
     // Soft glow toward bottom-center.
     float glow = 1.0 - smoothstep(0.0, 0.6, distance(uv, vec2(0.5, 0.12)));
-    col += accent * glow * 0.12;
+    col += accent * glow * 0.08;
 
     // Vignette.
     float vig = smoothstep(1.05, 0.40, distance(uv, vec2(0.5)));
     col *= vig * 0.94 + 0.06;
+
+    // Structural dot-grid overlay — evokes block structure beneath the field.
+    vec2 cell = fract(uv * vec2(aspect, 1.0) * 60.0) - 0.5;
+    float dotMask = 1.0 - smoothstep(0.02, 0.07, length(cell));
+    col += accent * dotMask * 0.05;
 
     // Subtle grain.
     float grain = snoise(uv * 800.0 + t * 10.0) * 0.015;
