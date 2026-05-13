@@ -30,6 +30,7 @@ export const brand = {
   nav: [
     { href: "/", label: "Home" },
     { href: "/apps", label: "Apps" },
+    { href: "/tools", label: "Tools" },
     { href: "/workflow", label: "Workflow" },
     { href: "/contact", label: "Contact" },
   ],
