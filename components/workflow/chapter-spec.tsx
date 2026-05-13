@@ -66,7 +66,7 @@ export function ChapterSpec({ product }: Readonly<Props>) {
           >
             <Link
               href={`/workflow/artifacts/${product}/${tile.type}`}
-              className="group relative flex h-full flex-col gap-3 overflow-hidden rounded-2xl bg-[var(--color-surface)]/70 p-5 ring-1 ring-white/[0.08] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ring-inset hover:-translate-y-1 hover:bg-[var(--color-surface)]/90 hover:ring-[var(--color-accent)]/30 focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none"
+              className="group relative flex h-full flex-col gap-3 overflow-hidden rounded-2xl bg-[var(--color-surface)]/70 p-4 ring-1 ring-white/[0.08] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ring-inset hover:-translate-y-1 hover:bg-[var(--color-surface)]/90 hover:ring-[var(--color-accent)]/30 focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none sm:p-5"
             >
               <div className="flex items-start justify-between">
                 <Icon className="h-5 w-5 text-[var(--color-accent)]" />

@@ -29,12 +29,17 @@ export function ChapterDevelop() {
         {reduced ? <BuildTunnelFallback /> : <BuildTunnel progress={scrollYProgress} />}
       </div>
       <ul
-        className="grid grid-cols-5 gap-1 font-mono text-[10px] tracking-[0.08em] text-[var(--color-ink-dim)] uppercase"
+        className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[10px] tracking-[0.08em] text-[var(--color-ink-dim)] uppercase sm:grid sm:grid-cols-5 sm:gap-1"
         aria-label="Build pipeline stages"
       >
-        {NODE_LABELS.map((label) => (
-          <li key={label} className="text-center">
-            {label}
+        {NODE_LABELS.map((label, i) => (
+          <li key={label} className="flex items-center gap-3 sm:justify-center sm:gap-0">
+            {i > 0 && (
+              <span aria-hidden className="text-[var(--color-ink-dim)]/40 sm:hidden">
+                ·
+              </span>
+            )}
+            <span className="text-center">{label}</span>
           </li>
         ))}
       </ul>

@@ -26,20 +26,25 @@ export function Workflow() {
 
   return (
     <div className="relative">
-      {/* Sticky product + platform bar under the global nav. */}
-      <div className="sticky top-[64px] z-30 -mx-6 border-y border-white/[0.06] bg-[var(--color-canvas)]/85 px-6 py-3 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3">
-          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase">
+      {/* Sticky product + platform bar under the global nav. Mobile collapses
+          the labels to keep the bar slim; desktop keeps the label/control pair. */}
+      <div className="sticky top-[64px] z-30 -mx-6 border-y border-white/[0.06] bg-[var(--color-canvas)]/85 px-6 py-2 backdrop-blur-xl sm:py-3">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:gap-3">
+          <div className="flex items-center gap-3 sm:justify-between">
+            <p className="hidden font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase sm:block">
               Sample product
             </p>
-            <ProductTabs product={product} onChange={setProduct} />
+            <div className="-mx-2 flex min-w-0 flex-1 [scrollbar-width:none] overflow-x-auto px-2 sm:flex-initial [&::-webkit-scrollbar]:hidden">
+              <ProductTabs product={product} onChange={setProduct} />
+            </div>
           </div>
-          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase">
+          <div className="flex items-center gap-3 sm:justify-between">
+            <p className="hidden font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase sm:block">
               Building for
             </p>
-            <PlatformTabs platform={platform} onChange={setPlatform} />
+            <div className="-mx-2 flex min-w-0 flex-1 [scrollbar-width:none] overflow-x-auto px-2 sm:flex-initial [&::-webkit-scrollbar]:hidden">
+              <PlatformTabs platform={platform} onChange={setPlatform} />
+            </div>
           </div>
         </div>
       </div>

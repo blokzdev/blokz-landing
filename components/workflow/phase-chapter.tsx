@@ -23,9 +23,9 @@ export function PhaseChapter({ phase, platform, index, scene }: Readonly<Props>)
     <section
       id={`phase-${phase.id}`}
       aria-labelledby={`phase-${phase.id}-title`}
-      className="relative border-t border-white/[0.06] px-6 py-32 sm:py-40"
+      className="relative border-t border-white/[0.06] px-6 py-20 sm:py-32 md:py-40"
     >
-      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
+      <div className="mx-auto grid max-w-7xl gap-10 sm:gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
         <motion.header
           className={cn(
             "relative flex flex-col lg:sticky lg:top-32 lg:self-start",
@@ -38,7 +38,7 @@ export function PhaseChapter({ phase, platform, index, scene }: Readonly<Props>)
         >
           <span
             aria-hidden
-            className="text-display text-7xl text-[var(--color-accent)]/30 sm:text-8xl lg:text-[10rem]"
+            className="text-display text-6xl text-[var(--color-accent)]/30 sm:text-8xl lg:text-[10rem]"
           >
             {phase.number}
           </span>
@@ -69,7 +69,7 @@ export function PhaseChapter({ phase, platform, index, scene }: Readonly<Props>)
             {phase.beats.map((beat, i) => (
               <motion.li
                 key={beat.id}
-                className="rounded-2xl bg-white/[0.03] p-5 ring-1 ring-white/[0.06] ring-inset"
+                className="rounded-2xl bg-white/[0.03] p-4 ring-1 ring-white/[0.06] ring-inset sm:p-5"
                 initial={reduced ? false : { opacity: 0, y: 16, filter: "blur(6px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true, amount: 0.35 }}
@@ -93,7 +93,7 @@ export function PhaseChapter({ phase, platform, index, scene }: Readonly<Props>)
           </ol>
 
           <motion.div
-            className="rounded-2xl bg-[var(--color-surface)]/60 p-6 ring-1 ring-white/[0.08] backdrop-blur-xl ring-inset"
+            className="rounded-2xl bg-[var(--color-surface)]/60 p-5 ring-1 ring-white/[0.08] backdrop-blur-xl ring-inset sm:p-6"
             initial={reduced ? false : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.35 }}

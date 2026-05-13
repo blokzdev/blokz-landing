@@ -80,7 +80,7 @@ export function ChapterConceptualize({ product }: Readonly<Props>) {
         </p>
       </header>
 
-      <ol className="flex flex-col gap-3 p-5">
+      <ol className="flex flex-col gap-3 p-4 sm:p-5">
         {messages.map((m, i) => (
           <motion.li
             key={`${product}-${i}`}
@@ -92,7 +92,7 @@ export function ChapterConceptualize({ product }: Readonly<Props>) {
           >
             <div
               className={cn(
-                "max-w-[78%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
+                "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed sm:max-w-[78%]",
                 m.speaker === "you"
                   ? "bg-[var(--color-accent)]/[0.14] text-[var(--color-ink)] ring-1 ring-[var(--color-accent)]/30 ring-inset"
                   : "bg-white/[0.04] text-[var(--color-ink)] ring-1 ring-white/[0.08] ring-inset",
