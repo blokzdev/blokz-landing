@@ -1,0 +1,43 @@
+# Prompt library — Edge Memo
+
+> **Concept artifact.** Edge Memo is the third product threaded through the Blokz workflow. This file outlines the prompt shape; the full draft lands with Sub-plan B-3.
+
+Because Edge Memo runs on-device with quantized small models, every prompt is short, structured, and tuned against the recording goldset. The full prompt library will reflect that constraint — these placeholder entries describe the shape, not the final wording.
+
+## 01 — Summarise a meeting transcript
+
+The core summary prompt. Versioned in `ios/Memo/Pipeline/Prompts/Summary.swift`; every change ships paired with a faithfulness-score delta.
+
+> You are summarising a meeting transcript for the participant. Produce three short paragraphs:
+>
+> 1. **Context** — who was on the call (if known) and what they were trying to decide.
+> 2. **Decisions** — what was agreed, in the words used.
+> 3. **Open threads** — what wasn't decided and what blocks each thread.
+>
+> Each paragraph ≤ 60 words. No emoji. No marketing prose. If a paragraph is unsupported, write "Not covered."
+
+## 02 — Extract action items
+
+Runs immediately after the summary, on the same model.
+
+> Extract action items from this transcript. Each action must be:
+>
+> - assignee (a name from the transcript, or "Unassigned"),
+> - verb-led ("Send the brief", "Schedule the follow-up"),
+> - have a due hint if one is present in the transcript ("by Friday", "after the demo").
+>
+> Skip any action that is purely speculative or hypothetical. Output as a JSON array.
+
+## 03 — Audit a goldset regression
+
+Use when the WER or summary-faithfulness score drops between releases.
+
+> The goldset scorer regressed on `<NAME>`. Read the goldset entry, the new transcript, and the previous transcript. Answer:
+>
+> 1. Is the regression in transcription (WER) or downstream (summary, actions)?
+> 2. What kind of audio is involved (length, accent, content)?
+> 3. What single change to the pipeline would most likely undo the regression without harming the rest of the set?
+
+---
+
+_Full prompt library lands with Sub-plan B-3._

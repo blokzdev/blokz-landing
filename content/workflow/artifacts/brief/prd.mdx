@@ -1,0 +1,78 @@
+# PRD — Blokz Brief
+
+## 1. Problem
+
+Research moves faster than the average product builder can read. Engineers, product managers, and indie hackers tracking AI capability shifts open ten arxiv tabs a week, skim the abstracts, and lose the threads inside an hour. Skim culture loses the methods, the baselines, and the limits — the parts that actually decide whether the paper matters for what you're building.
+
+The digest should already exist.
+
+## 2. Target user
+
+- **Primary**: AI-adjacent builders (engineers, PMs, founders) who skim 3–10 arxiv papers a week and want structured takeaways.
+- **Secondary**: researchers prepping reading groups; podcasters and writers building primary-source bibliographies.
+
+JTBD: _"When a paper drops on arxiv, I want a one-page structured digest I can scan in two minutes — claims, methods, baselines, limits, takeaway — without losing the methods to skim culture."_
+
+## 3. Hypothesis
+
+> If we hand a user a structured five-section digest for any arxiv paper, they will share it 4× more than they share the raw abstract — and return to digest 3+ papers per week.
+
+**Success metric**: digests shared per active session ≥ 0.5 within 30 days of launch. (Baseline: arxiv share rate is essentially zero outside of dedicated reading-group threads.)
+
+## 4. MVP scope
+
+**In**:
+
+- Single input: arxiv URL _or_ ID (auto-strips version suffix).
+- Five-section digest: claims, methods, baselines, limits, takeaway.
+- Optional "why it matters" angle, derived from the user-provided focus area.
+- PDF + share-card export.
+- Native share sheet on mobile (web.share()), copy-link + PDF on desktop.
+
+**Out** (post-MVP):
+
+- Multi-paper batching ("digest this reading list").
+- Conference proceedings (NeurIPS, ICML) ingestion.
+- Highlight-and-annotate workflow.
+- Personal library / read-later.
+
+## 5. User flows
+
+1. Land on `/` → paste arxiv URL → digest streams in under 6 seconds.
+2. Optional: set a focus area ("multi-agent systems", "memory") → "why it matters" section adapts.
+3. Tap **Share** → native share sheet on mobile, copy-link + PDF on desktop.
+4. Recipient opens link → same digest, same fields, served from cache.
+
+## 6. Constraints
+
+- **Perf**: first byte ≤ 2s on 4G mobile; streamed completion ≤ 8s.
+- **A11y**: WCAG 2.1 AA, full keyboard nav, reduced-motion safe.
+- **Privacy**: no analytics on paper content; user-typed focus areas never persisted.
+- **Fidelity**: rubric score ≥ 0.85 vs. the goldset before a prompt change can ship.
+- **Cost**: < \$100/mo infra for first 10K WAU (assumes cache hit ratio ≥ 70%).
+
+## 7. Distribution per platform
+
+| Platform | Channel                                      | Beta cohort        |
+| -------- | -------------------------------------------- | ------------------ |
+| Web      | blokz.dev/brief, edge-cached                 | invite link        |
+| Android  | Play Console internal track → closed beta    | 50 researchers     |
+| iOS      | TestFlight invite cohort → App Store Connect | 50 researchers     |
+| Windows  | Tauri shell, MSIX on GitHub Releases         | LinkedIn followers |
+
+## 8. Risks
+
+- **Arxiv API rate limits** → mitigate with a Supabase digest cache (24h TTL for new papers, indefinite for stable IDs).
+- **Hallucinated claims** → goldset scorer gates every prompt change; "why it matters" section explicitly bounded to the abstract + intro context.
+- **Source-of-truth drift**: arxiv papers get revised. Mitigation: cache key includes version suffix; UI shows "based on v2" if a newer version exists.
+- **Copyright**: digests are derivative, transformative, short-form, source-linked. Standard fair-use posture for editorial summaries.
+
+## 9. Open questions
+
+- Stream the digest in (visible LLM call) or wait-then-show (cleaner UX)? Lean: stream.
+- Multi-language at MVP, or English-only? Lean: English-only at launch, broaden post-MVP.
+- Should we surface arxiv-extracted figures inline, or text-only? Lean: text-only at MVP; figures are a layout rabbit hole.
+
+---
+
+_This artifact is a representative example. Real PRDs live next to the products they describe._

@@ -1,0 +1,49 @@
+# PRD — Eval Forge
+
+> **Concept artifact.** Eval Forge is the second product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-2.
+
+## 1. Problem
+
+Shipping a Claude-powered feature without an eval suite is shipping on vibes. Most teams know this, and most teams ship without one anyway — the activation energy is too high to hand-author eval cases at the moment of feature work, and the harness scaffolding is a half-day sidequest no one wants.
+
+The eval gate should already exist.
+
+## 2. Target user
+
+- **Primary**: engineers shipping Claude features inside a TypeScript codebase, who already use Vitest.
+- **Secondary**: PMs and tech leads who want a numeric grade per feature to gate merges with.
+
+JTBD: _"When I add a Claude feature, I want a passing-or-failing eval gate behind it before the PR opens — without writing the harness myself."_
+
+## 3. Hypothesis
+
+> If we hand a user a runnable Vitest eval suite + golden set + GitHub Action from a spec section, they will gate at least 70% of Claude-feature PRs behind it within 30 days of installation.
+
+**Success metric**: % of Claude-feature PRs in the target repo with a passing forge-generated eval check.
+
+## 4. MVP scope
+
+**In**:
+
+- CLI: `forge generate ./spec.md --feature user-bio-rewrite` emits the test suite + goldset + Action.
+- Web dashboard: paste a spec section, get the same output as a downloadable zip.
+- 3 eval kinds at MVP: exact-match, rubric-score (Claude-as-judge), and human-review queue.
+
+**Out** (post-MVP):
+
+- Multi-feature batching ("eval my whole codebase").
+- Non-TypeScript harness targets (Python, Go).
+- Self-hosted dashboard.
+
+## 5. Distribution
+
+CLI via `cargo install forge-cli` + winget; dashboard at `forge.blokz.dev`. Mobile companions read-only.
+
+## 6. Risks
+
+- **Generated suites are noisy** → mitigate with the meta-eval scorer; tune prompts on a curated reference set.
+- **Claude-as-judge bias** → emit human-review queue alongside, never as the only gate.
+
+---
+
+_Full PRD lands with Sub-plan B-2._

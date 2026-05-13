@@ -7,6 +7,29 @@ export const WORKFLOW_PLATFORMS: ReadonlyArray<WorkflowPlatform> = [
   "ios",
 ];
 
+export type WorkflowProduct = "brief" | "forge" | "memo";
+
+export const WORKFLOW_PRODUCTS: ReadonlyArray<WorkflowProduct> = ["brief", "forge", "memo"];
+
+export type ArtifactType = "claude-md" | "prd" | "spec" | "prompt-library";
+
+export const ARTIFACT_TYPES: ReadonlyArray<ArtifactType> = [
+  "claude-md",
+  "prd",
+  "spec",
+  "prompt-library",
+];
+
+export interface WorkflowProductMeta {
+  id: WorkflowProduct;
+  name: string;
+  short: string;
+  tagline: string;
+  description: string;
+  defaultPlatform: WorkflowPlatform;
+  accentColor: string;
+}
+
 export interface PlatformNote {
   title: string;
   body: string;
@@ -25,5 +48,4 @@ export interface Phase {
   summary: string;
   beats: ReadonlyArray<ChapterBeat>;
   platformNotes: Record<WorkflowPlatform, PlatformNote>;
-  artifactSlugs?: ReadonlyArray<string>;
 }

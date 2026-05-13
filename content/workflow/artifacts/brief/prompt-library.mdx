@@ -1,0 +1,90 @@
+# Prompt library — Blokz Brief
+
+Reusable prompts threaded through the Blokz Brief workflow. Copy, adapt, ratify. Each prompt assumes you've already read `CLAUDE.md` for the project at hand.
+
+## 01 — Plan a feature
+
+Use at the start of every new feature. The agent outputs a numbered task list; you edit before any code is touched.
+
+> Read `CLAUDE.md` and the relevant section of `tech-spec.mdx`. Then, for feature `<NAME>`, draft a numbered task list with concrete file paths.
+>
+> Each task must be:
+>
+> - ≤ 1 hour of agent work,
+> - independent enough to land as its own commit,
+> - written as an imperative ("Add X", "Refactor Y").
+>
+> End with a verification step listing the commands (including `pnpm test:eval`) and manual checks that prove the feature is done.
+
+## 02 — Extract a digest from an arxiv paper
+
+The product's core prompt. Versioned in `lib/extract.ts`; every change ships paired with an eval-score delta.
+
+> You are a structured-summary writer for the arxiv research community. Given the paper below, produce exactly five sections, each ≤ 80 words:
+>
+> 1. **Claims** — the headline contributions in plain language.
+> 2. **Methods** — the approach, including model size, dataset, training setup.
+> 3. **Baselines** — what was compared against, with the headline metric.
+> 4. **Limits** — what the authors explicitly call out as constraints.
+> 5. **Takeaway** — one sentence that a builder could act on.
+>
+> Rules:
+>
+> - Quote no more than 12 words per section verbatim.
+> - If a section is unsupported by the paper, write "Not covered." — never speculate.
+> - No emoji. No marketing language. No "this groundbreaking paper".
+
+## 03 — Audit a prompt change
+
+Use when proposing a change to a prompt in `lib/extract.ts`.
+
+> The prompt at `lib/extract.ts:<NAME>` is being changed. Read the diff and answer:
+>
+> 1. Which axes of the rubric (faithfulness / coverage / brevity) does this change target?
+> 2. Which axes could it regress?
+> 3. Which goldset entries are most likely to shift score, and in which direction?
+>
+> Output a short paragraph per question. Do not run the scorer — only predict the shape of the result.
+
+## 04 — Write release notes from a goldset delta
+
+Use after merging to main, before promoting a digest prompt to production.
+
+> Given this prompt diff plus the goldset score table (before vs. after), draft user-facing release notes:
+>
+> - One sentence summary at the top.
+> - Two sections: **Improved** (axes where scores went up), **Watch** (axes that regressed even slightly).
+> - Each entry is a single line, user-facing language, no jargon.
+> - Skip anything that is purely internal.
+
+## 05 — Generate test cases for a new section type
+
+Use when adding a new digest section (e.g., "open questions").
+
+> Given the spec for the new digest section `<NAME>`, generate a Vitest test plan as a list of `describe` and `it` headings only.
+>
+> Include:
+>
+> - happy paths (multiple paper lengths),
+> - boundary cases (no relevant content; section explicitly absent in source),
+> - hallucination guardrails (verify the model returns "Not covered." rather than speculating),
+> - one explicit non-goal,
+> - one perf assertion (latency budget).
+>
+> Do not write the test bodies — only the structure.
+
+## 06 — Refactor on the third repetition
+
+Use when you spot the same shape three times.
+
+> Three places in this codebase do `<DESCRIBE THE SHAPE>`:
+>
+> - `<file:line>`
+> - `<file:line>`
+> - `<file:line>`
+>
+> Propose a single shared abstraction. Show the proposed signature and call sites. Do not apply the change — I want to see the shape first.
+
+---
+
+_Prompts evolve with the product. Edit freely; commit improvements back._

@@ -1,0 +1,113 @@
+# CLAUDE.md — Blokz Brief
+
+This file is the contract between the agent and the Blokz Brief codebase. Read end-to-end before touching anything non-trivial. The product is a web-first reader that turns any arxiv link into a printable, shareable paper digest: key claims, methods, baselines, limits, plus a "why it matters" angle.
+
+## 1. Overview
+
+One input field, one structured output. Paste an arxiv URL or ID; get back a 5-section digest — claims, methods, baselines, limits, takeaway — exportable as PDF or share-card.
+
+Brand line: _Papers, printed plain._
+
+## 2. Tech stack
+
+| Layer      | Choice                            | Why                            | Version |
+| ---------- | --------------------------------- | ------------------------------ | ------- |
+| Framework  | Next.js (App Router, RSC)         | SSG + Edge, native MDX         | 15.x    |
+| UI runtime | React 19                          | RSC + Compiler                 | 19.x    |
+| Styling    | Tailwind v4 (`@theme`)            | CSS-first tokens               | 4.x     |
+| LLM        | Anthropic SDK (claude-sonnet-4-x) | Structured extraction          | latest  |
+| Data       | arxiv-api + Supabase digest cache | Rate-limit safe, repeat reads  | latest  |
+| Eval       | Vitest + custom rubric scorer     | Digest fidelity over a goldset | latest  |
+| Hosting    | Vercel (Edge for /api/digest)     | SSG + Edge caching             | n/a     |
+
+## 3. Commands
+
+```bash
+pnpm install         # install deps (pnpm only)
+pnpm dev             # next dev --turbopack
+pnpm build           # next build
+pnpm typecheck       # tsc --noEmit
+pnpm test            # vitest
+pnpm test:eval       # run the digest goldset scorer
+```
+
+## 4. Folder map
+
+```
+app/
+  (marketing)/             # nav + footer chrome
+    page.tsx               # /  — home + paste input
+    p/[arxivId]/page.tsx   # /p/<id> — digest detail
+  api/
+    digest/route.ts        # Edge runtime, arxiv + Claude + cache
+    og/[arxivId]/route.tsx # dynamic OG image
+components/
+  digest/                  # DigestCard, ClaimList, MethodBox, ShareSheet
+  paste-input.tsx          # the one input
+  ui/                      # shadcn primitives
+lib/
+  arxiv.ts                 # arxiv fetch + metadata parse
+  extract.ts               # Claude prompts for structured extraction
+  supabase.ts              # digest cache client
+  format.ts                # citation/abstract formatters
+content/
+  faq.mdx                  # explainer copy
+eval/
+  goldset/                 # 30 hand-graded digests as ground truth
+  rubric.ts                # scoring axes (faithfulness, coverage, brevity)
+```
+
+## 5. Conventions
+
+- **File names** kebab-case (`digest-card.tsx`). **Exports** PascalCase.
+- **RSC by default**. Add `"use client"` only when motion, hooks, or browser APIs are involved.
+- **No barrel files** — they hurt tree-shaking.
+- **`cn()` helper** for conditional class composition. Never string-concat Tailwind classes.
+- **Prompts live in `lib/extract.ts`** as named const exports; they're versioned and the eval-set scorer runs on every change.
+
+## 6. Agent guardrails
+
+✅ Free to touch: components, content, lib utilities, Tailwind class usage anywhere, shadcn primitives.
+
+🛑 Confirm before touching:
+
+- Adding or removing an npm dependency.
+- `next.config.ts`, `tsconfig.json`, ESLint or Prettier configs.
+- `.env*`, secrets, deploy config, GitHub Actions.
+- Schema changes in Supabase (run migration locally first).
+- **Prompts in `lib/extract.ts`** — any change must be paired with a re-scored eval-set delta in the PR.
+- Destructive git operations.
+
+## 7. Definition of done
+
+- `pnpm lint` clean.
+- `pnpm typecheck` clean.
+- `pnpm build` succeeds.
+- `pnpm test:eval` shows no regression in the rubric score versus the prior tag.
+- Lighthouse mobile ≥ 90 on a touched route.
+- Manual a11y pass: focus ring visible, keyboard nav works, reduced-motion fallback renders.
+- For UI work: tested at 360 / 768 / 1440 / 1920.
+- PR description includes a screenshot and links the spec section it implements.
+
+## 8. Domain glossary
+
+- **Arxiv ID** — the canonical paper identifier (e.g., `2401.12345`); also accepted as a full URL.
+- **Digest** — the rendered five-section output; the product itself.
+- **Goldset** — the 30 hand-graded ground-truth digests used to score new extraction prompts.
+
+## 9. Environment & secrets
+
+`.env.local` (gitignored — never commit):
+
+```
+ANTHROPIC_API_KEY=
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SITE_URL=
+```
+
+Never log secret values. Never check secrets in. If you find a leaked secret in history, alert the human and recommend rotation.
+
+---
+
+_This artifact is a representative example. Real Blokz CLAUDE.md files for shipped projects live in their repos, not this site._
