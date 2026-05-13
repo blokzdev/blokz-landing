@@ -27,13 +27,14 @@ export function listProjects(opts: ListOptions = {}): ReadonlyArray<Project> {
   });
 
   return [...list].sort((a, b) => {
-    // Featured first, then live > beta > coming-soon > archived, then alpha.
+    // Featured first, then live > beta > coming-soon > deprecated > archived, then alpha.
     if (Boolean(a.featured) !== Boolean(b.featured)) return a.featured ? -1 : 1;
     const statusOrder: Record<ProjectStatus, number> = {
       live: 0,
       beta: 1,
       "coming-soon": 2,
-      archived: 3,
+      deprecated: 3,
+      archived: 4,
     };
     if (statusOrder[a.status] !== statusOrder[b.status]) {
       return statusOrder[a.status] - statusOrder[b.status];

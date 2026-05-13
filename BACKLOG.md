@@ -54,7 +54,7 @@ Anything in this section is explicitly safe to defer to after v2 goes live.
 ### Hero
 
 - [ ] **[polish]** Add ~200 instanced "packet" particles drifting along the flow-field gradient. Plan called for this; deferred so chunk 1 shipped clean.
-- [ ] **[polish]** Add a faint procedural hex-lattice overlay to the hero shader to evoke block structure.
+- [x] **[polish]** Add a faint procedural dot-grid overlay to the hero shader to evoke block structure — landed in Iteration 2 as a 60-cell mask in `components/hero/shaders.ts` (Iteration 2, see Resolved).
 - [ ] **[debt]** Migrate hero shaders from inline template literals in `components/hero/shaders.ts` to `shaders/*.glsl` files imported as raw strings (verify Turbopack's `?raw` path or add a loader). Marker: `TODO(debt)` in the file.
 
 ### Performance + ops
@@ -80,6 +80,20 @@ Anything in this section is explicitly safe to defer to after v2 goes live.
 ---
 
 ## Resolved (rolling archive)
+
+Iteration 2 — Home page refinement + apps lifecycle (this branch)
+
+- [x] Hero copy refreshed in `data/brand.ts` — title `"AI apps,"` / titleAccent `"shipped end-to-end."` / sub now leads with research areas (multi-agent, edge inference, memory). Replaces the four-fragment buzzword stack. Does not lean on the nine legacy Android apps as brand identity.
+- [x] Hero typography rebalanced in `components/hero/hero-copy.tsx` — title line now Geist Sans medium with tight tracking; accent line keeps Instrument Serif italic. Honors CLAUDE.md §10 "serif for display accents."
+- [x] Hero capability strip added — mono `MULTI-AGENT · EDGE INFERENCE · MEMORY ARCHITECTURES · BUILT WITH CLAUDE CODE` between sub and CTAs.
+- [x] Hero shader refined in `components/hero/shaders.ts` — saturation knocked down (accent mix `0.85→0.55`, hot `0.55→0.30`, glow `0.12→0.08`) and a 60-cell procedural dot-grid added to evoke block structure. Closes the long-standing BACKLOG hex-lattice item.
+- [x] New `components/home/now-next-band.tsx` — a two-column glass band between hero and manifesto framing the studio's pivot: NOW (production Android apps, runway) / NEXT (AI for B2B + B2C, agentic engineering, link to `/workflow`).
+- [x] Scroll cue redesigned in `components/hero/scroll-cue.tsx` — replaced the rotated "SCROLL" + vertical line with a "Now · Next" preview label and a small bobbing chevron-down.
+- [x] Manifesto header tightened in `components/manifesto/manifesto.tsx` — "Five things we believe." → "What we believe."
+- [x] `types/project.ts` `ProjectStatus` union extended with `"deprecated"` (between `coming-soon` and `archived`).
+- [x] `components/apps/card-bits.tsx` `STATUS_MAP` extended with a `DEPRECATED` pill (neutral grey variant, dot at 0.7 opacity — same treatment as archived).
+- [x] `lib/projects.ts` `statusOrder` extended so deprecated sorts after coming-soon, before archived.
+- [x] `data/projects.ts` — **Blockscan** and **SlyFox** marked `status: "deprecated"` and dropped from `featured`. **Etherscan** and **TRON Explorer** flagged `featured: true` so the home-page apps preview keeps three live cards covering distinct chains (Blockchair / Etherscan / TRON Explorer).
 
 Iteration 1 — Brand pivot to the AI frontier (Sub-plan A)
 

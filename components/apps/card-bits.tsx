@@ -21,6 +21,7 @@ const STATUS_MAP: Record<
   live: { variant: "success", label: "LIVE" },
   beta: { variant: "accent", label: "BETA" },
   "coming-soon": { variant: "warn", label: "SOON" },
+  deprecated: { variant: "default", label: "DEPRECATED" },
   archived: { variant: "default", label: "ARCHIVED" },
 };
 
