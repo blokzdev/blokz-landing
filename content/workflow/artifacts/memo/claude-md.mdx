@@ -1,0 +1,51 @@
+# CLAUDE.md — Edge Memo
+
+> **Concept artifact.** Edge Memo is the third product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-3.
+
+## 1. Overview
+
+Edge Memo is an iOS-native first meeting-capture app where three small models cooperate locally: one transcribes, one summarises, one extracts action items. Nothing leaves the device by default. Optional self-hosted sync.
+
+Brand line: _Capture on-device. Trust by default._
+
+## 2. Tech stack
+
+| Layer      | Choice                                      | Why                                |
+| ---------- | ------------------------------------------- | ---------------------------------- |
+| Platform   | iOS-native first (SwiftUI, Core ML)         | Background audio, on-device infra  |
+| Transcribe | Whisper variant (Core ML quantized)         | Strong WER for short-form speech   |
+| Summarise  | Small instruction-tuned model on-CoreML     | Local-only, sub-2s for 10-min clip |
+| Extract    | Same model with action-item prompt          | One artifact, two prompts          |
+| Sync       | Optional, self-hosted, end-to-end encrypted | Privacy by default                 |
+
+## 3. Folder map (sketch)
+
+```
+ios/                          # SwiftUI app
+  Memo/
+    Capture/                  # AVAudioEngine + foreground service
+    Pipeline/                 # 3-model harness (transcribe → summary → actions)
+    Sync/                     # Optional E2EE sync client
+    Resources/                # Vendored Core ML model bundles
+android/                      # Compose port, llama.cpp bindings
+sync-server/                  # Optional self-hosted relay (Rust)
+goldset/                      # Recordings + ground-truth transcripts/summaries
+```
+
+## 4. Agent guardrails
+
+✅ Free to touch: SwiftUI components, capture flows, sync UX, content.
+
+🛑 Confirm before touching:
+
+- **Anything that touches the network on the capture path** — the default is offline.
+- Model selection or quantization scheme (affects WER, latency, battery).
+- Schema of the on-disk note format (existing notes have to migrate cleanly).
+
+## 5. Definition of done
+
+Mirrors the Blokz Brief contract — lint clean, types clean, build clean, plus a WER + action-item-recall delta that holds within budget on the recording goldset.
+
+---
+
+_Full contract lands with Sub-plan B-3. Until then, treat this file as the shape, not the source of truth._

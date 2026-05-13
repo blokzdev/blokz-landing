@@ -1,0 +1,47 @@
+# CLAUDE.md — Eval Forge
+
+> **Concept artifact.** Eval Forge is the second product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-2.
+
+## 1. Overview
+
+Eval Forge is a developer tool that emits a Vitest eval suite, a hand-shaped golden set, and a GitHub Action harness for any Claude feature — straight from a spec section. The author pastes a feature spec; the tool returns a runnable eval gate the feature has to pass before it ships.
+
+Brand line: _Eval gates, generated._
+
+## 2. Tech stack
+
+| Layer        | Choice                              | Why                               |
+| ------------ | ----------------------------------- | --------------------------------- |
+| Framework    | Next.js (App Router, RSC) on Vercel | Streaming generation + dashboard  |
+| LLM          | Anthropic SDK                       | Structured eval-case generation   |
+| Eval harness | Vitest                              | First-class CI integration, fast  |
+| CI           | GitHub Actions                      | The runtime users already trust   |
+| CLI          | Rust (clap)                         | Local-first generation before web |
+
+## 3. Folder map (sketch)
+
+```
+app/                          # Next.js dashboard
+crates/forge-cli/             # Rust CLI for local generation
+packages/harness/             # Vitest harness template emitted into target repos
+prompts/                      # Versioned prompt library for eval-case generation
+goldset/                      # Meta-evals: generated suites scored against a reference
+```
+
+## 4. Agent guardrails
+
+✅ Free to touch: dashboard components, CLI subcommands, harness scaffold, content.
+
+🛑 Confirm before touching:
+
+- Prompts in `prompts/` — every change must be paired with a meta-eval delta in the PR.
+- Generator output schema — downstream harness consumers depend on it.
+- Anything in `crates/forge-cli/src/main.rs` that affects flag stability.
+
+## 5. Definition of done
+
+Mirrors the Blokz Brief contract — lint clean, types clean, build clean, plus a meta-eval delta that holds within budget.
+
+---
+
+_Full contract lands with Sub-plan B-2. Until then, treat this file as the shape, not the source of truth._

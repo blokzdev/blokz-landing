@@ -1,0 +1,52 @@
+# PRD — Edge Memo
+
+> **Concept artifact.** Edge Memo is the third product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-3.
+
+## 1. Problem
+
+Cloud meeting-capture is a privacy trade most people would prefer not to make. Sending raw audio to a vendor — even one they nominally trust — leaks conversations that didn't belong in the cloud in the first place: client calls, legal posture, half-baked product strategy. The status-quo cost of avoiding that leak is "take better notes yourself," which most people don't.
+
+The on-device capture should already exist.
+
+## 2. Target user
+
+- **Primary**: consultants, founders, journalists, lawyers — anyone whose meetings include privileged material.
+- **Secondary**: privacy-conscious knowledge workers; researchers capturing field interviews.
+
+JTBD: _"When I'm in a meeting that should not leave my device, I want a recorder that gives me a transcript, summary, and action items without sending a byte off the phone."_
+
+## 3. Hypothesis
+
+> If we hand a user an on-device capture flow whose transcript and summary land within 5 seconds of meeting end, they will capture 3+ meetings per week within 30 days.
+
+**Success metric**: meetings captured per active user per week ≥ 3 within 30 days of installation.
+
+## 4. MVP scope
+
+**In**:
+
+- iOS-native first. Foreground service, background audio entitlement.
+- 3-model on-device pipeline: transcribe → summary → action items.
+- WER ≤ 0.12 on the goldset for 10–30 min clips.
+- Optional self-hosted sync via the user's own server (Tailscale-friendly).
+- Search across past notes (on-device vector index).
+
+**Out** (post-MVP):
+
+- Multi-speaker diarization (initially, all speech treated as one stream).
+- Live in-meeting display (initially, post-meeting only).
+- Vendor-hosted sync (we don't plan to offer it).
+
+## 5. Distribution
+
+iOS-native via TestFlight then App Store; Android via Play Console; Tauri shell on Windows/macOS for laptop capture. No vendor-hosted sync — ever.
+
+## 6. Risks
+
+- **Battery / heat on long meetings** → mitigate with chunked inference + warn the user if a meeting exceeds the warm-budget.
+- **Transcription WER on accented speech** → goldset must include accent-diverse recordings; tune model selection accordingly.
+- **App-Store policy on background audio** → entitlement is well-trodden but requires careful review-notes.
+
+---
+
+_Full PRD lands with Sub-plan B-3._

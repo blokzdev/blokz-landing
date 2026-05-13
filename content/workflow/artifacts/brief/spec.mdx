@@ -1,0 +1,135 @@
+# Tech spec — Blokz Brief
+
+## 1. Architecture
+
+```txt
+User
+ ↓ paste arxiv URL
+Next.js App Router (RSC)
+ ↓
+Edge function: /api/digest
+ ↓ cache hit? → respond
+ ↓ cache miss
+arxiv-api (fetch metadata + abstract + intro)
+ ↓
+Anthropic SDK (structured extraction prompt)
+ ↓ streamed via SSE
+Supabase cache (24h TTL for new, ∞ for stable)
+ ↓
+React render → DigestCard
+ ↓
+Print stylesheet → PDF
+ ↓
+web.share() / Copy link / Download PNG
+```
+
+## 2. Data shapes
+
+```ts
+type Section = "claims" | "methods" | "baselines" | "limits" | "takeaway";
+
+interface Digest {
+  arxivId: string;
+  version: number;
+  title: string;
+  authors: ReadonlyArray<string>;
+  publishedAt: string; // ISO date
+  primaryCategory: string; // e.g., "cs.LG"
+  sections: Record<Section, string>;
+  /** Optional, derived from user-provided focus area. Never persisted. */
+  whyItMatters?: string;
+  /** Score against the goldset rubric (faithfulness, coverage, brevity). */
+  evalScore: { faithfulness: number; coverage: number; brevity: number };
+  generatedAt: string;
+  promptVersion: string;
+}
+```
+
+## 3. API surface
+
+### `POST /api/digest`
+
+Edge runtime, streams Server-Sent Events.
+
+**Request**:
+
+```json
+{ "arxivId": "2401.12345", "focus": "multi-agent systems" }
+```
+
+**Response** (text/event-stream):
+
+```
+event: meta
+data: { "title": "...", "authors": [...], "publishedAt": "..." }
+
+event: section
+data: { "section": "claims", "text": "..." }
+
+event: section
+data: { "section": "methods", "text": "..." }
+
+...
+
+event: done
+data: { "evalScore": { ... }, "promptVersion": "v0.3.1" }
+```
+
+**Errors**: 400 (invalid arxiv ID), 404 (paper not found), 429 (rate-limited), 502 (upstream).
+
+### `GET /api/og/[arxivId]`
+
+ImageResponse — generates a 1200×630 share card with the digest title, authors, and takeaway.
+
+## 4. State management
+
+- **Server**: digest fetched in the Edge route, streamed back.
+- **Client**: user focus area — `useState`, sent in the request body, never persisted.
+- **URL**: arxiv ID as a path param. Focus area as a query string only when shareable.
+
+## 5. Error states
+
+| Case                       | UX                                                          |
+| -------------------------- | ----------------------------------------------------------- |
+| Invalid arxiv ID format    | Inline form error, no API call                              |
+| Paper not found            | Friendly error + link to arxiv search                       |
+| API timeout (12s)          | Retry once, then degraded mode (cached digest if available) |
+| Upstream LLM rate-limited  | Queue + polite "Try again in 60s" message                   |
+| Goldset eval-score < 0.7   | Surface a "low-confidence" badge on the digest              |
+| Newer paper version exists | Inline notice with link to re-digest                        |
+
+## 6. Security & privacy
+
+- **No persistent storage** of user-typed focus areas. Logged only as anonymized buckets ("memory", "edge-ai", "agents") for eval drift tracking.
+- **Rate limit** `/api/digest`: 10 req/min/IP (Upstash Rate Limiting on Edge).
+- **No third-party analytics** on paper content. Vercel Analytics privacy-respecting only.
+- **CSP**: `default-src 'self'`; explicit allow-list for arxiv asset hosts.
+
+## 7. Test strategy
+
+- **Vitest unit**: arxiv-id validators, abstract parsers, prompt builders.
+- **Playwright e2e**: paste → stream → share flow on Chrome, Firefox, mobile Safari.
+- **Eval-set scorer**: 30 hand-graded digests; every prompt change must hold ≥ 0.85 on the rubric.
+- **Visual regression**: digest card across 3 paper-length classes × empty/with-focus = 6 snapshots.
+- **Load**: k6 smoke against `/api/digest` at 20 req/s steady state.
+
+## 8. Rollout
+
+| Stage         | Audience        | Gate                              |
+| ------------- | --------------- | --------------------------------- |
+| Internal beta | 20 testers      | Manual QA + goldset score ≥ 0.85  |
+| 5% canary     | Random sampling | 1 week clean Sentry + flat budget |
+| 100%          | All             | Kill-switch flag operational      |
+
+## 9. Telemetry events
+
+Minimal, all anonymous:
+
+- `digest_rendered` — primary category, latency bucket
+- `digest_shared` — share method (native / copy / pdf / png)
+- `digest_error` — error code, primary category
+- `goldset_score` — emitted per release, ops dashboard tracks drift
+
+---
+
+_This artifact is a representative example. Real specs evolve alongside their implementations._

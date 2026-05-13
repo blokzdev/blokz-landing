@@ -1,0 +1,47 @@
+# Prompt library — Eval Forge
+
+> **Concept artifact.** Eval Forge is the second product threaded through the Blokz workflow. This file outlines the prompt shape; the full draft lands with Sub-plan B-2.
+
+## 01 — Generate eval cases from a spec section
+
+The core prompt. Versioned in `prompts/generate-cases.ts`; every change ships paired with a meta-eval-score delta.
+
+> You are an eval-case author. Given the feature spec below, produce exactly 10 evaluation cases as JSON.
+>
+> Each case must include:
+>
+> - `id` — short kebab-case identifier,
+> - `input` — the exact input the feature would receive,
+> - `expected` — the desired output, OR a rubric specification if exact match isn't appropriate,
+> - `kind` — one of `exact-match`, `rubric-score`, `human-review`,
+> - `notes` — one sentence explaining what this case is testing.
+>
+> Distribution: 5 happy paths, 3 boundary cases, 2 hostile inputs. No emoji. No marketing prose.
+
+## 02 — Rubric design for a fuzzy output
+
+Use when the feature's output isn't deterministic and rubric-score is the right kind.
+
+> Design a 3–5 axis rubric for evaluating outputs of feature `<NAME>`. Each axis must be:
+>
+> - independent (low correlation with the others),
+> - scorable on a 0–1 continuous scale with a Claude judge,
+> - tied to a concrete user-visible behavior (no "quality" abstractions).
+>
+> Output as a TypeScript const matching the `Rubric` type in `packages/harness/rubric.ts`.
+
+## 03 — Audit a generated suite
+
+Use after a generator run, before committing the output.
+
+> Audit the generated suite at `./forge-output/`. Answer:
+>
+> 1. Are happy-path cases meaningfully different from each other, or is the model repeating itself?
+> 2. Are boundary cases actually at the boundary, or are they just middle cases relabeled?
+> 3. Is any case ambiguous enough that a reasonable model could pass or fail on tone alone?
+>
+> Suggest fixes; do not apply them.
+
+---
+
+_Full prompt library lands with Sub-plan B-2._

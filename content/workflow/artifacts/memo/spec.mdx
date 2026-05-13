@@ -1,0 +1,63 @@
+# Tech spec — Edge Memo
+
+> **Concept artifact.** Edge Memo is the third product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-3.
+
+## 1. Architecture
+
+```txt
+AVAudioEngine (foreground service)
+ ↓ 16kHz mono PCM, chunked
+Core ML — Whisper variant (quantized)
+ ↓ transcript segments
+Core ML — small instruction model
+ ├──→ summary prompt → 3-paragraph summary
+ └──→ actions prompt → action-item list
+ ↓
+On-device note store (SQLite + sqlite-vec)
+ ↓ (optional, user-initiated)
+E2EE sync client → self-hosted relay
+```
+
+## 2. Data shapes (sketch)
+
+```ts
+interface Note {
+  id: string;
+  title: string;
+  recordedAt: string;
+  durationSec: number;
+  transcript: { startSec: number; text: string }[];
+  summary: { paragraph: string }[];
+  actions: { text: string; dueHint?: string }[];
+  /** Embedding for on-device search. */
+  embedding: Float32Array;
+  /** Set only when the user opts into sync. */
+  syncedAt?: string;
+}
+```
+
+## 3. On-device pipeline
+
+- **Transcribe**: streaming chunks of 30s, parallelized with capture.
+- **Summarise**: triggered once on meeting-end, runs sequentially after the transcript settles.
+- **Actions**: runs as the second prompt on the same model, immediately after the summary completes.
+
+Target end-to-end latency for a 30-min meeting on iPhone 14 Pro: ≤ 4s after stop.
+
+## 4. Privacy & security
+
+- **Default**: no network access on the capture or pipeline paths. Verified by a build-time entitlement check.
+- **Sync**: opt-in, end-to-end encrypted, user supplies their own relay URL. Server never sees plaintext.
+- **Search index**: stays on-device. The vector store is per-app, encrypted at rest.
+
+## 5. Test strategy
+
+Goldset: 30 recordings spanning lengths (5/15/30 min), accents (US/UK/India/AU), and content types (1:1, group, monologue). Scored on:
+
+- WER (word error rate) — ≤ 0.12 target.
+- Summary-faithfulness rubric (Claude-as-judge over the goldset transcript).
+- Action-item recall vs. hand-annotated ground truth — ≥ 0.8 target.
+
+---
+
+_Full spec lands with Sub-plan B-3._

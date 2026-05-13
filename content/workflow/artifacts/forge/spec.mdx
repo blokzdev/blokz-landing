@@ -1,0 +1,57 @@
+# Tech spec — Eval Forge
+
+> **Concept artifact.** Eval Forge is the second product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-2.
+
+## 1. Architecture
+
+```txt
+Spec section (markdown)
+ ↓
+forge-cli OR forge.blokz.dev dashboard
+ ↓
+Generator: Claude prompt over the spec
+ ↓
+Emits:
+  ├── eval.test.ts        (Vitest harness)
+  ├── goldset.json        (10–30 hand-shaped cases)
+  ├── rubric.ts           (scoring axes)
+  └── .github/workflows/forge.yml
+ ↓
+git commit + push → GitHub Action runs the gate
+```
+
+## 2. Data shapes (sketch)
+
+```ts
+type EvalKind = "exact-match" | "rubric-score" | "human-review";
+
+interface GoldCase {
+  id: string;
+  input: unknown;
+  expected: unknown;
+  kind: EvalKind;
+  rubric?: { axis: string; weight: number }[];
+}
+
+interface RunResult {
+  feature: string;
+  kind: EvalKind;
+  pass: number;
+  fail: number;
+  scoreByAxis?: Record<string, number>;
+}
+```
+
+## 3. API surface (sketch)
+
+- `forge generate <spec.md>` — CLI; emits files to `./forge-output/`.
+- `POST /api/generate` (dashboard) — streams the same output as a zip.
+- `forge run` — CLI wrapper around `vitest run` with forge-aware reporters.
+
+## 4. Test strategy
+
+Meta-evals: a curated reference set of 20 (spec, expected-suite) pairs. Every prompt change re-runs the meta-eval scorer; regressions block merge.
+
+---
+
+_Full spec lands with Sub-plan B-2._
