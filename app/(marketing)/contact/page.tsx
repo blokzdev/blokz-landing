@@ -15,7 +15,7 @@ const CHANNELS: ReadonlyArray<{ label: string; href: string; display: string }> 
   { label: "Email", href: `mailto:${brand.social.email}`, display: brand.social.email },
   { label: "Telegram", href: brand.social.telegram, display: "@blokzdev" },
   { label: "GitHub", href: brand.social.github, display: "github.com/blokzdev" },
-  { label: "LinkedIn", href: brand.social.linkedin, display: "linkedin.com/company/blokz" },
+  { label: "LinkedIn", href: brand.social.linkedin, display: "linkedin.com/company/blokzdev" },
 ];
 
 export default function ContactPage() {
@@ -42,9 +42,10 @@ export default function ContactPage() {
             <span className="text-display text-[var(--color-accent)]">Pitch us.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-base text-[var(--color-ink-dim)] sm:text-lg">
-            We partner with founders shipping web3 apps, OSS authors looking for an agentic
-            co-pilot, and teams who want their roadmap audited by someone fluent in both the spec
-            and the shipping. Tell us the shape of it.
+            We partner with founders building AI apps for B2B or B2C, teams shipping research-rooted
+            software, OSS authors looking for an agentic co-pilot, and product orgs that want their
+            roadmap audited by someone fluent in both the spec and the shipping. Tell us the shape
+            of it.
           </p>
         </header>
 

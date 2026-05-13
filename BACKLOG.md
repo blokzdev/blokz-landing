@@ -32,7 +32,7 @@ Things that would make the site feel more "us" before the world sees it.
 - [ ] **[user]** Provide a vector SVG Blokz logo (wordmark + monogram). Replace the legacy `cdn.glitch.global` PNG referenced in `data/brand.ts` with `/public/brand/logo.svg`. Affects nav, footer, manifest icon, OG.
 - [ ] **[user]** Rewrite manifesto principles in `content/manifesto/principles.ts` to your voice. Five-card grid; ≤ 2 short sentences per principle.
 - [ ] **[user]** Rewrite the hero headline block in `data/brand.ts` (`brand.headline.eyebrow / title / titleAccent / sub`) if the current copy doesn't ring true.
-- [ ] **[user]** Refine the workflow phase narrative in `content/workflow/phases.ts` and the four sample MDX artifacts under `content/workflow/artifacts/`. Each phase ships placeholder beat copy threaded through the fictional "Blokz Receipt" sample product.
+- [ ] **[user]** Workflow narrative migration — Sub-plan B of the AI-frontier pivot. The five `/workflow` chapters thread through a fictional sample product ("Blokz Receipt", a crypto-receipt explorer); with the AI pivot the sample is off-tone. Candidate replacements: **Blokz Brief** (arxiv → structured paper digest), **Eval Forge** (auto-generates an LLM eval suite from a spec), **Edge Memo** (multi-agent on-device meeting capture), or something user-suggested. Touches `content/workflow/phases.ts`, all four `content/workflow/artifacts/*.mdx`, and the intro line in `components/workflow/workflow.tsx`. ~600–800 lines of content; safe to ship independently.
 - [ ] **[user]** Decide on a real Cal.com (or alternative) scheduling URL and set the `SCHEDULE_URL` constant in `components/contact/contact-success.tsx` to render the "Book a call" button on form-success.
 - [ ] **[user]** Replace the blanket Play-Store developer-page URL in `data/projects.ts` with per-app deep links (`details?id=<packageId>`). Only `blockscan` carries a verified package id (`com.bdc.blockscan.app`); the other eight rows link to the dev page today.
 - [ ] **[user]** Provide per-app download / review counts beyond Blockchair's confirmed 10K+ (currently only rating is shown on the other eight cards).
@@ -80,6 +80,18 @@ Anything in this section is explicitly safe to defer to after v2 goes live.
 ---
 
 ## Resolved (rolling archive)
+
+Iteration 1 — Brand pivot to the AI frontier (Sub-plan A)
+
+- [x] **[user]** LinkedIn URL fixed — `data/brand.ts` now `linkedin.com/company/blokzdev/`.
+- [x] Brand positioning sweep — `data/brand.ts` tagline + positioning + headline (eyebrow + titleAccent + sub) refreshed to lead with AI as the frontier, anchored on shipped work, gesturing at web3/edge/multi-agent as stacks chosen by user pain.
+- [x] Manifesto principle 02 — replaced "Decentralization is a UX problem" with "Research-rooted. User-driven." Principle 05 body tweaked to acknowledge AI assistants alongside chain explorers.
+- [x] `/apps`, `/contact` page sub-copy refreshed to match new positioning.
+- [x] Root OG image — eyebrow `// AI APP STUDIO`, titleB `AI at the frontier.`
+- [x] `lib/seo.ts` keywords — dropped web3 emphasis, added AI app studio / applied AI / edge AI / multi-agent systems / memory architectures / B2B AI / B2C AI; kept blockchain + block explorer (real shipped products).
+- [x] `data/projects.ts` — seeded an additional `type: "web-app"` `coming-soon` placeholder ("AI app in motion") so the Web card variant also ships exercised.
+
+Sub-plan B (workflow narrative migration) is now an active **Pre-launch polish** item — see below.
 
 Phase 5 chunk 3 (commit `d15a086`)
 

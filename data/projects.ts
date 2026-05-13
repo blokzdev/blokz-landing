@@ -184,4 +184,22 @@ export const projects: ReadonlyArray<Project> = [
     stats: [{ kind: "custom", value: "soon", label: "ETA" }],
     links: [{ kind: "github", url: "https://github.com/blokzdev", primary: true }],
   },
+  // Web-app placeholder so the Web card variant ships exercised. First Blokz
+  // AI app for B2B/B2C — research-rooted, edge-aware, agentic.
+  // TODO(user): replace with the first real AI product once announced.
+  {
+    slug: "blokz-ai-incoming",
+    name: "AI app in motion",
+    tagline: "First Blokz AI app — research-rooted, agentic, in production.",
+    description:
+      "We're building production-grade AI apps for B2B and B2C — grounded in current research on edge models, multi-agent systems, memory, and retrieval. First reveal coming soon.",
+    type: "web-app",
+    status: "coming-soon",
+    platforms: ["web", "cross-platform"],
+    chains: ["n-a"],
+    category: "experiment",
+    media: { icon: "/projects/blokz-ai-incoming/icon.png", accentColor: "#A78BFA" },
+    stats: [{ kind: "custom", value: "soon", label: "ETA" }],
+    links: [{ kind: "website", url: "https://blokz.dev/contact", primary: true }],
+  },
 ];
