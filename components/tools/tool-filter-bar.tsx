@@ -25,9 +25,9 @@ const PRICING_LABEL: Record<ToolPricing, string> = {
 };
 
 const STANCE_LABEL: Record<ToolStance, string> = {
-  "we-use": "We use",
-  "we-recommend": "We recommend",
-  watching: "Watching",
+  "we-use": "Deployed",
+  "we-recommend": "Recommended",
+  watching: "Tracked",
   contributing: "Contributing",
 };
 
