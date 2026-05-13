@@ -7,8 +7,8 @@ export const brand = {
     "We design, prompt, and ship production-grade apps for B2B and B2C — grounded in current research (edge AI, multi-agent systems, memory architectures, distributed inference). Web3 when it earns its place. Mobile, web, desktop, anywhere users are.",
   headline: {
     eyebrow: "BLOKZ.DEV // AI APP STUDIO",
-    title: "AI apps,",
-    titleAccent: "shipped end-to-end.",
+    title: "AI apps.",
+    titleAccent: "Built by AI.",
     sub: "Research-rooted AI for B2B and B2C — multi-agent systems, edge inference, memory architectures. Built end-to-end with Claude Code.",
   },
   logo: {
