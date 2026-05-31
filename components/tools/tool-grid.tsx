@@ -1,12 +1,12 @@
-import type { Tool } from "@/types/tool";
+import type { App } from "@/types/app";
 import { ToolCard } from "./tool-card";
 
 interface Props {
-  tools: ReadonlyArray<Tool>;
+  apps: ReadonlyArray<App>;
 }
 
-export function ToolGrid({ tools }: Readonly<Props>) {
-  if (tools.length === 0) {
+export function ToolGrid({ apps }: Readonly<Props>) {
+  if (apps.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-white/[0.08] py-16 text-center">
         <p className="font-mono text-[11px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase">
@@ -21,9 +21,9 @@ export function ToolGrid({ tools }: Readonly<Props>) {
 
   return (
     <ul className="grid grid-flow-dense auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {tools.map((tool) => (
-        <li key={tool.slug} className="contents">
-          <ToolCard tool={tool} />
+      {apps.map((app) => (
+        <li key={app.slug} className="contents">
+          <ToolCard app={app} />
         </li>
       ))}
     </ul>

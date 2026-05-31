@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { ArrowUpRight, BookOpen, ExternalLink, Play, Tag } from "lucide-react";
+import { ArrowUpRight, BookOpen, ExternalLink, MessageCircle, Play, Tag } from "lucide-react";
 import type { ComponentType } from "react";
-import type { Tool, ToolLinkKind } from "@/types/tool";
+import type { App, AppCategory, AppLinkKind, AppPricing, BlokzMark } from "@/types/app";
 import { cn } from "@/lib/utils";
 
 // Branded GitHub icon was dropped in lucide-react 1.x — ship our own glyph
@@ -14,17 +14,31 @@ function GithubGlyph({ className }: { className?: string }) {
   );
 }
 
-const CATEGORY_LABEL: Record<Tool["category"], string> = {
+const CATEGORY_LABEL: Record<AppCategory, string> = {
   ide: "IDE / Agent",
-  model: "Model",
+  agent: "Agent",
+  orchestration: "Orchestration",
   mcp: "MCP",
   eval: "Eval",
   infra: "Infra",
   memory: "Memory",
+  "vector-db": "Vector DB",
+  voice: "Voice",
+  vision: "Vision",
+  "image-gen": "Image",
+  video: "Video",
+  audio: "Audio",
+  "3d": "3D",
+  search: "Search",
+  "data-ops": "Data Ops",
+  observability: "Observability",
+  "fine-tuning": "Fine-tuning",
   "research-platform": "Research",
+  "browser-extension": "Browser Ext.",
+  automation: "Automation",
 };
 
-const PRICING_LABEL: Record<Tool["pricing"], string> = {
+const PRICING_LABEL: Record<AppPricing, string> = {
   free: "FREE",
   freemium: "FREEMIUM",
   paid: "PAID",
@@ -32,28 +46,29 @@ const PRICING_LABEL: Record<Tool["pricing"], string> = {
   "byo-key": "BYO KEY",
 };
 
-const STANCE_LABEL: Record<Tool["stance"], string> = {
-  "we-use": "Deployed",
-  "we-recommend": "Recommended",
-  watching: "Tracked",
+// Optional editorial badge. Most listings carry no mark (and so render no
+// stamp + the card uses the neutral ring).
+const MARK_LABEL: Record<BlokzMark, string> = {
+  deployed: "Deployed",
+  vetted: "Vetted",
   contributing: "Contributing",
 };
 
-const STANCE_RING: Record<Tool["stance"], string> = {
-  "we-use": "ring-[var(--color-accent)]/45",
+const MARK_RING: Record<BlokzMark, string> = {
+  deployed: "ring-[var(--color-accent)]/45",
   contributing: "ring-[var(--color-success)]/45",
-  "we-recommend": "ring-white/[0.10]",
-  watching: "ring-[var(--color-violet)]/40",
+  vetted: "ring-[var(--color-violet)]/40",
 };
 
-const STANCE_DOT: Record<Tool["stance"], string> = {
-  "we-use": "bg-[var(--color-accent)]",
+const MARK_DOT: Record<BlokzMark, string> = {
+  deployed: "bg-[var(--color-accent)]",
   contributing: "bg-[var(--color-success)]",
-  "we-recommend": "bg-[var(--color-ink-dim)]",
-  watching: "bg-[var(--color-violet)]",
+  vetted: "bg-[var(--color-violet)]",
 };
 
-const LINK_ICON: Record<ToolLinkKind, ComponentType<{ className?: string }>> = {
+const NEUTRAL_RING = "ring-white/[0.08]";
+
+const LINK_ICON: Record<AppLinkKind, ComponentType<{ className?: string }>> = {
   website: ExternalLink,
   docs: BookOpen,
   github: GithubGlyph,
@@ -61,16 +76,17 @@ const LINK_ICON: Record<ToolLinkKind, ComponentType<{ className?: string }>> = {
   demo: Play,
   video: Play,
   twitter: ExternalLink,
+  discord: MessageCircle,
 };
 
 interface Props {
-  tool: Tool;
+  app: App;
 }
 
-export function ToolCard({ tool }: Readonly<Props>) {
-  const primary = tool.links.find((l) => l.primary) ?? tool.links[0];
-  const secondaries = tool.links.filter((l) => l !== primary);
-  const monogram = tool.name
+export function ToolCard({ app }: Readonly<Props>) {
+  const primary = app.links.find((l) => l.primary) ?? app.links[0];
+  const secondaries = app.links.filter((l) => l !== primary);
+  const monogram = app.name
     .replace(/[^A-Za-z0-9]/g, "")
     .slice(0, 2)
     .toUpperCase();
@@ -79,25 +95,27 @@ export function ToolCard({ tool }: Readonly<Props>) {
     <article
       className={cn(
         "group relative flex h-full flex-col gap-4 overflow-hidden rounded-2xl bg-[var(--color-surface)]/70 p-5 ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ring-inset hover:-translate-y-1 hover:bg-[var(--color-surface)]/90",
-        STANCE_RING[tool.stance],
-        tool.featured && "sm:col-span-2",
+        app.blokzMark ? MARK_RING[app.blokzMark] : NEUTRAL_RING,
+        app.featured && "sm:col-span-2",
       )}
     >
-      {/* Top row: category + pricing + stance pill */}
+      {/* Top row: category + pricing + optional Blokz mark */}
       <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] tracking-[0.12em] uppercase">
         <span className="rounded-full bg-white/[0.05] px-2 py-0.5 text-[var(--color-ink-dim)] ring-1 ring-white/[0.08] ring-inset">
-          {CATEGORY_LABEL[tool.category]}
+          {CATEGORY_LABEL[app.category]}
         </span>
         <span className="rounded-full bg-white/[0.05] px-2 py-0.5 text-[var(--color-ink-dim)] ring-1 ring-white/[0.08] ring-inset">
-          {PRICING_LABEL[tool.pricing]}
+          {PRICING_LABEL[app.pricing]}
         </span>
-        <span className="ml-auto inline-flex items-center gap-1.5 text-[var(--color-ink-dim)]">
-          <span
-            aria-hidden
-            className={cn("block h-1.5 w-1.5 rounded-full", STANCE_DOT[tool.stance])}
-          />
-          {STANCE_LABEL[tool.stance]}
-        </span>
+        {app.blokzMark && (
+          <span className="ml-auto inline-flex items-center gap-1.5 text-[var(--color-ink-dim)]">
+            <span
+              aria-hidden
+              className={cn("block h-1.5 w-1.5 rounded-full", MARK_DOT[app.blokzMark])}
+            />
+            {MARK_LABEL[app.blokzMark]}
+          </span>
+        )}
       </div>
 
       {/* Monogram + name + vendor */}
@@ -106,28 +124,28 @@ export function ToolCard({ tool }: Readonly<Props>) {
           aria-hidden
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-mono text-xs tracking-[0.08em] uppercase ring-1 ring-white/[0.08] ring-inset"
           style={{
-            background: `linear-gradient(135deg, ${tool.accentColor ?? "#08D9D6"}1f, transparent)`,
-            color: tool.accentColor ?? "var(--color-accent)",
+            background: `linear-gradient(135deg, ${app.accentColor ?? "#08D9D6"}1f, transparent)`,
+            color: app.accentColor ?? "var(--color-accent)",
           }}
         >
           {monogram}
         </div>
         <div className="min-w-0">
-          <h3 className="text-lg font-medium text-[var(--color-ink)]">{tool.name}</h3>
-          {tool.vendor && <p className="text-xs text-[var(--color-ink-dim)]">{tool.vendor}</p>}
+          <h3 className="text-lg font-medium text-[var(--color-ink)]">{app.name}</h3>
+          {app.vendor && <p className="text-xs text-[var(--color-ink-dim)]">{app.vendor}</p>}
         </div>
       </div>
 
       {/* Tagline + description */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-[var(--color-ink)]">{tool.tagline}</p>
-        <p className="text-sm leading-relaxed text-[var(--color-ink-dim)]">{tool.description}</p>
+        <p className="text-sm text-[var(--color-ink)]">{app.tagline}</p>
+        <p className="text-sm leading-relaxed text-[var(--color-ink-dim)]">{app.description}</p>
       </div>
 
       {/* Tags */}
-      {tool.tags && tool.tags.length > 0 && (
+      {app.tags && app.tags.length > 0 && (
         <ul className="flex flex-wrap gap-1.5">
-          {tool.tags.map((tag) => (
+          {app.tags.map((tag) => (
             <li
               key={tag}
               className="rounded-full bg-white/[0.03] px-2 py-0.5 font-mono text-[10px] tracking-[0.04em] text-[var(--color-ink-dim)]/80"
