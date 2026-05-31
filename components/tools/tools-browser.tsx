@@ -1,21 +1,21 @@
 "use client";
 import { useMemo } from "react";
 import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
-import { TOOL_CATEGORIES, TOOL_PRICING, TOOL_STANCES } from "@/types/tool";
-import type { Tool } from "@/types/tool";
+import { APP_CATEGORIES, APP_PRICING, BLOKZ_MARKS } from "@/types/app";
+import type { App } from "@/types/app";
 import { ToolFilterBar } from "./tool-filter-bar";
 import { ToolGrid } from "./tool-grid";
 
 interface Props {
-  tools: ReadonlyArray<Tool>;
+  apps: ReadonlyArray<App>;
 }
 
-export function ToolsBrowser({ tools }: Readonly<Props>) {
+export function ToolsBrowser({ apps }: Readonly<Props>) {
   const [filter] = useQueryStates(
     {
-      category: parseAsStringLiteral(TOOL_CATEGORIES),
-      pricing: parseAsStringLiteral(TOOL_PRICING),
-      stance: parseAsStringLiteral(TOOL_STANCES),
+      category: parseAsStringLiteral(APP_CATEGORIES),
+      pricing: parseAsStringLiteral(APP_PRICING),
+      blokzMark: parseAsStringLiteral(BLOKZ_MARKS),
       q: parseAsString,
     },
     { shallow: true, history: "replace" },
@@ -23,18 +23,19 @@ export function ToolsBrowser({ tools }: Readonly<Props>) {
 
   const filtered = useMemo(() => {
     const query = filter.q?.trim().toLowerCase() ?? "";
-    return tools.filter((t) => {
-      if (filter.category && t.category !== filter.category) return false;
-      if (filter.pricing && t.pricing !== filter.pricing) return false;
-      if (filter.stance && t.stance !== filter.stance) return false;
+    return apps.filter((a) => {
+      if (filter.category && a.category !== filter.category) return false;
+      if (filter.pricing && a.pricing !== filter.pricing) return false;
+      if (filter.blokzMark && a.blokzMark !== filter.blokzMark) return false;
       if (query) {
         const haystack = [
-          t.name,
-          t.tagline,
-          t.description,
-          t.vendor ?? "",
-          t.category,
-          ...(t.tags ?? []),
+          a.name,
+          a.tagline,
+          a.description,
+          a.vendor ?? "",
+          a.category,
+          ...(a.tags ?? []),
+          ...(a.modelSupport?.models ?? []),
         ]
           .join(" ")
           .toLowerCase();
@@ -42,12 +43,12 @@ export function ToolsBrowser({ tools }: Readonly<Props>) {
       }
       return true;
     });
-  }, [tools, filter.category, filter.pricing, filter.stance, filter.q]);
+  }, [apps, filter.category, filter.pricing, filter.blokzMark, filter.q]);
 
   return (
     <>
-      <ToolFilterBar total={tools.length} filtered={filtered.length} />
-      <ToolGrid tools={filtered} />
+      <ToolFilterBar total={apps.length} filtered={filtered.length} />
+      <ToolGrid apps={filtered} />
     </>
   );
 }

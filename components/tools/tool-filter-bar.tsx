@@ -2,21 +2,35 @@
 import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { TOOL_CATEGORIES, TOOL_PRICING, TOOL_STANCES } from "@/types/tool";
-import type { ToolCategory, ToolPricing, ToolStance } from "@/types/tool";
+import { APP_CATEGORIES, APP_PRICING, BLOKZ_MARKS } from "@/types/app";
+import type { AppCategory, AppPricing, BlokzMark } from "@/types/app";
 import { cn } from "@/lib/utils";
 
-const CATEGORY_LABEL: Record<ToolCategory, string> = {
+const CATEGORY_LABEL: Record<AppCategory, string> = {
   ide: "IDE",
-  model: "Model",
+  agent: "Agent",
+  orchestration: "Orchestration",
   mcp: "MCP",
   eval: "Eval",
   infra: "Infra",
   memory: "Memory",
+  "vector-db": "Vector DB",
+  voice: "Voice",
+  vision: "Vision",
+  "image-gen": "Image",
+  video: "Video",
+  audio: "Audio",
+  "3d": "3D",
+  search: "Search",
+  "data-ops": "Data Ops",
+  observability: "Observability",
+  "fine-tuning": "Fine-tuning",
   "research-platform": "Research",
+  "browser-extension": "Browser Ext.",
+  automation: "Automation",
 };
 
-const PRICING_LABEL: Record<ToolPricing, string> = {
+const PRICING_LABEL: Record<AppPricing, string> = {
   free: "Free",
   freemium: "Freemium",
   paid: "Paid",
@@ -24,10 +38,9 @@ const PRICING_LABEL: Record<ToolPricing, string> = {
   "byo-key": "BYO key",
 };
 
-const STANCE_LABEL: Record<ToolStance, string> = {
-  "we-use": "Deployed",
-  "we-recommend": "Recommended",
-  watching: "Tracked",
+const MARK_LABEL: Record<BlokzMark, string> = {
+  deployed: "Deployed",
+  vetted: "Vetted",
   contributing: "Contributing",
 };
 
@@ -39,9 +52,9 @@ interface Props {
 export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
   const [filter, setFilter] = useQueryStates(
     {
-      category: parseAsStringLiteral(TOOL_CATEGORIES),
-      pricing: parseAsStringLiteral(TOOL_PRICING),
-      stance: parseAsStringLiteral(TOOL_STANCES),
+      category: parseAsStringLiteral(APP_CATEGORIES),
+      pricing: parseAsStringLiteral(APP_PRICING),
+      blokzMark: parseAsStringLiteral(BLOKZ_MARKS),
       q: parseAsString,
     },
     { shallow: true, history: "replace" },
@@ -58,19 +71,19 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
     return () => clearTimeout(handle);
   }, [text, setFilter]);
 
-  const setCategory = (value: ToolCategory | null) => void setFilter({ category: value });
-  const setPricing = (value: ToolPricing | null) => void setFilter({ pricing: value });
-  const setStance = (value: ToolStance | null) => void setFilter({ stance: value });
+  const setCategory = (value: AppCategory | null) => void setFilter({ category: value });
+  const setPricing = (value: AppPricing | null) => void setFilter({ pricing: value });
+  const setMark = (value: BlokzMark | null) => void setFilter({ blokzMark: value });
 
   const clearAll = () => {
     setText("");
-    void setFilter({ category: null, pricing: null, stance: null, q: null });
+    void setFilter({ category: null, pricing: null, blokzMark: null, q: null });
   };
 
   const hasFilter =
     filter.category !== null ||
     filter.pricing !== null ||
-    filter.stance !== null ||
+    filter.blokzMark !== null ||
     (filter.q?.length ?? 0) > 0;
 
   return (
@@ -86,8 +99,8 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
               type="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Search tools, vendors, tags…"
-              aria-label="Search tools"
+              placeholder="Search apps, vendors, tags, models…"
+              aria-label="Search apps"
               className="h-9 w-full rounded-full bg-white/[0.04] pr-10 pl-9 font-mono text-[11px] tracking-[0.04em] text-[var(--color-ink)] ring-1 ring-white/[0.08] transition-colors ring-inset placeholder:text-[var(--color-ink-dim)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none"
             />
             {text.length > 0 && (
@@ -105,7 +118,7 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
             className="hidden font-mono text-[10px] tracking-[0.08em] text-[var(--color-ink-dim)] uppercase sm:block"
             aria-live="polite"
           >
-            {hasFilter ? `${filtered} of ${total}` : `${total} tools`}
+            {hasFilter ? `${filtered} of ${total}` : `${total} apps`}
           </p>
         </div>
 
@@ -114,7 +127,7 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
             <Chip active={filter.category === null} onClick={() => setCategory(null)}>
               All
             </Chip>
-            {TOOL_CATEGORIES.map((c) => (
+            {APP_CATEGORIES.map((c) => (
               <Chip
                 key={c}
                 active={filter.category === c}
@@ -129,7 +142,7 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
             <Chip active={filter.pricing === null} onClick={() => setPricing(null)}>
               All
             </Chip>
-            {TOOL_PRICING.map((p) => (
+            {APP_PRICING.map((p) => (
               <Chip
                 key={p}
                 active={filter.pricing === p}
@@ -140,17 +153,17 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
             ))}
           </FilterRow>
 
-          <FilterRow label="Stance">
-            <Chip active={filter.stance === null} onClick={() => setStance(null)}>
+          <FilterRow label="Blokz mark">
+            <Chip active={filter.blokzMark === null} onClick={() => setMark(null)}>
               All
             </Chip>
-            {TOOL_STANCES.map((s) => (
+            {BLOKZ_MARKS.map((m) => (
               <Chip
-                key={s}
-                active={filter.stance === s}
-                onClick={() => setStance(filter.stance === s ? null : s)}
+                key={m}
+                active={filter.blokzMark === m}
+                onClick={() => setMark(filter.blokzMark === m ? null : m)}
               >
-                {STANCE_LABEL[s]}
+                {MARK_LABEL[m]}
               </Chip>
             ))}
           </FilterRow>

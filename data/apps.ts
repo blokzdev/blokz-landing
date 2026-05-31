@@ -1,20 +1,34 @@
-import type { Tool } from "@/types/tool";
+import type { App } from "@/types/app";
 
-// Curated picks — what the Blokz studio uses, recommends, or is tracking.
-// Read as taste, not SEO. Edit freely; commit improvements back.
+// AI apps directory. Comprehensive third-party listings; the Blokz studio
+// adds an optional editorial badge (blokzMark) to entries we use, contribute
+// to, or have personally vetted. Most listings carry no badge.
+//
+// Migrated from the curated `tools` data in Iteration 3 chunk C. The 3 model
+// entries (Claude, Gemini, Llama) were dropped — models are foundations,
+// not browsable apps. Per-app `modelSupport` now describes which models each
+// listing uses / supports.
+//
+// Edit freely; further entries land via batched data PRs (chunks A1, A2, A3...).
 
-export const tools: ReadonlyArray<Tool> = [
+export const apps: ReadonlyArray<App> = [
   // ── IDE / Agent surfaces ───────────────────────────────────────────────
   {
     slug: "claude-code",
     name: "Claude Code",
-    tagline: "Anthropic's official CLI/IDE/web agent. Primary author at Blokz.",
+    tagline: "Anthropic's official CLI / IDE / web agent. Primary author at Blokz.",
     description:
       "Claude Code is our lead architect. It reads the spec, drafts the diff, runs the tests, and opens the PR — across CLI, IDE extensions, the desktop app, and the web. Everything on blokz.dev was built with it.",
     category: "ide",
     pricing: "freemium",
-    stance: "we-use",
+    blokzMark: "deployed",
     vendor: "Anthropic",
+    platforms: ["macos", "windows", "linux", "cli", "vscode-extension", "web"],
+    modelSupport: {
+      kind: "single-model",
+      models: ["Claude Opus", "Claude Sonnet", "Claude Haiku"],
+      notes: "Anthropic-only; runs against your API key or a Claude Pro/Max plan.",
+    },
     accentColor: "#08D9D6",
     featured: true,
     tags: ["agentic", "cli", "ide", "mcp", "subagents"],
@@ -33,8 +47,14 @@ export const tools: ReadonlyArray<Tool> = [
       "Fork of VS Code with deep model integration — multi-line tab completion, agent mode, chat with codebase context. Strong for fast iteration on existing repos.",
     category: "ide",
     pricing: "freemium",
-    stance: "we-recommend",
+    blokzMark: "vetted",
     vendor: "Anysphere",
+    platforms: ["macos", "windows", "linux"],
+    modelSupport: {
+      kind: "multi-model",
+      models: ["Claude", "GPT-5", "Gemini", "DeepSeek"],
+      notes: "Bundled plan covers all providers; BYO key also supported.",
+    },
     accentColor: "#37F3FF",
     tags: ["ide", "multi-model", "vscode-fork"],
     links: [
@@ -51,8 +71,13 @@ export const tools: ReadonlyArray<Tool> = [
       "Agent-first IDE that pairs autocomplete with Cascade, a planning-then-acting agent. Strong terminal integration; good when the diff spans many files.",
     category: "ide",
     pricing: "freemium",
-    stance: "watching",
     vendor: "Codeium",
+    platforms: ["macos", "windows", "linux"],
+    modelSupport: {
+      kind: "multi-model",
+      models: ["Claude", "GPT", "Gemini"],
+      notes: "Bundled subscription includes the model spend.",
+    },
     accentColor: "#A78BFA",
     tags: ["ide", "agentic", "cascade"],
     links: [
@@ -69,74 +94,19 @@ export const tools: ReadonlyArray<Tool> = [
       "Open-source CLI for AI pair-programming directly against your git repo. Brings any model (Claude, Gemini, GPT, local) into a tight commit-per-task loop.",
     category: "ide",
     pricing: "open-source",
-    stance: "we-recommend",
+    blokzMark: "vetted",
     vendor: "Paul Gauthier",
+    platforms: ["macos", "windows", "linux", "cli"],
+    modelSupport: {
+      kind: "byo-key",
+      models: ["Claude", "Gemini", "GPT", "Local (Ollama, llama.cpp)"],
+    },
     accentColor: "#5EEAD4",
     tags: ["cli", "open-source", "self-hosted", "multi-model"],
     links: [
       { kind: "website", url: "https://aider.chat", primary: true },
       { kind: "github", url: "https://github.com/Aider-AI/aider" },
       { kind: "docs", url: "https://aider.chat/docs/" },
-    ],
-    addedAt: "2025-02-01",
-  },
-
-  // ── Models ─────────────────────────────────────────────────────────────
-  {
-    slug: "claude",
-    name: "Claude",
-    tagline: "Anthropic's frontier model family. Opus / Sonnet / Haiku.",
-    description:
-      "Our primary model. Opus for hard reasoning and long-form architecture; Sonnet for the bulk of coding work; Haiku for fast, cheap pipeline steps. Long context, strong tool use, careful refusal posture.",
-    category: "model",
-    pricing: "byo-key",
-    stance: "we-use",
-    vendor: "Anthropic",
-    accentColor: "#D97757",
-    featured: true,
-    tags: ["frontier", "long-context", "tool-use", "vision"],
-    links: [
-      { kind: "website", url: "https://claude.com", primary: true },
-      { kind: "docs", url: "https://docs.anthropic.com" },
-      { kind: "pricing", url: "https://www.anthropic.com/pricing" },
-    ],
-    addedAt: "2025-02-01",
-  },
-  {
-    slug: "gemini",
-    name: "Gemini",
-    tagline: "Google's frontier model family. Strong multimodal + long context.",
-    description:
-      "Used at Blokz for tasks that benefit from a million-token context (whole-repo grep, video reasoning) and as a second opinion in multi-model harnesses. Gemini CLI ships an agentic surface.",
-    category: "model",
-    pricing: "byo-key",
-    stance: "we-use",
-    vendor: "Google DeepMind",
-    accentColor: "#627EEA",
-    featured: true,
-    tags: ["frontier", "multimodal", "long-context", "video"],
-    links: [
-      { kind: "website", url: "https://deepmind.google/technologies/gemini/", primary: true },
-      { kind: "docs", url: "https://ai.google.dev/gemini-api/docs" },
-      { kind: "pricing", url: "https://ai.google.dev/pricing" },
-    ],
-    addedAt: "2025-02-01",
-  },
-  {
-    slug: "llama",
-    name: "Llama",
-    tagline: "Meta's open-weights model family. Self-host or BYO.",
-    description:
-      "Open weights at multiple sizes (1B–405B+). Strong when you need on-device inference, full control, or are running into rate-limit walls on hosted frontier models.",
-    category: "model",
-    pricing: "open-source",
-    stance: "we-recommend",
-    vendor: "Meta",
-    accentColor: "#A78BFA",
-    tags: ["open-weights", "self-hosted", "on-device"],
-    links: [
-      { kind: "website", url: "https://www.llama.com", primary: true },
-      { kind: "docs", url: "https://huggingface.co/meta-llama" },
     ],
     addedAt: "2025-02-01",
   },
@@ -150,8 +120,10 @@ export const tools: ReadonlyArray<Tool> = [
       "Official GitHub MCP server. Wired into Claude Code and most agentic surfaces to read PRs, post comments, create branches, and run secret-scanning. Used daily at Blokz.",
     category: "mcp",
     pricing: "open-source",
-    stance: "we-use",
+    blokzMark: "deployed",
     vendor: "GitHub",
+    platforms: ["api", "cli"],
+    modelSupport: { kind: "model-agnostic" },
     accentColor: "#8FA3BA",
     tags: ["mcp", "git", "code-review", "open-source"],
     links: [
@@ -171,8 +143,10 @@ export const tools: ReadonlyArray<Tool> = [
       "MCP server that exposes Supabase project ops — list tables, apply migrations, deploy edge functions, fetch advisors. Removes a context-switch cliff between code and database.",
     category: "mcp",
     pricing: "open-source",
-    stance: "we-use",
+    blokzMark: "deployed",
     vendor: "Supabase",
+    platforms: ["api", "cli"],
+    modelSupport: { kind: "model-agnostic" },
     accentColor: "#3ECF8E",
     tags: ["mcp", "database", "postgres", "open-source"],
     links: [
@@ -189,8 +163,10 @@ export const tools: ReadonlyArray<Tool> = [
       "Vercel-native MCP server for deploying directly from chat, inspecting build/runtime logs, and reading deployment metadata. Pairs naturally with the Vercel CLI.",
     category: "mcp",
     pricing: "open-source",
-    stance: "we-use",
+    blokzMark: "deployed",
     vendor: "Vercel",
+    platforms: ["api", "cli"],
+    modelSupport: { kind: "model-agnostic" },
     accentColor: "#E8F1F8",
     tags: ["mcp", "deploy", "logs", "open-source"],
     links: [
@@ -209,8 +185,13 @@ export const tools: ReadonlyArray<Tool> = [
       "YAML-driven eval harness. Pair a prompt with a goldset, define rubrics, run across multiple models in CI. Strong for catching prompt regressions before they hit production.",
     category: "eval",
     pricing: "open-source",
-    stance: "we-recommend",
+    blokzMark: "vetted",
     vendor: "Promptfoo",
+    platforms: ["cli", "macos", "windows", "linux"],
+    modelSupport: {
+      kind: "byo-key",
+      models: ["Claude", "GPT", "Gemini", "Local"],
+    },
     accentColor: "#5EEAD4",
     tags: ["eval", "ci", "rubric", "open-source"],
     links: [
@@ -228,8 +209,12 @@ export const tools: ReadonlyArray<Tool> = [
       "Production-grade eval orchestration with a dashboard, dataset versioning, and OpenTelemetry tracing. Useful once eval volume outgrows a CI YAML file.",
     category: "eval",
     pricing: "freemium",
-    stance: "watching",
     vendor: "Braintrust",
+    platforms: ["web", "api"],
+    modelSupport: {
+      kind: "byo-key",
+      models: ["Claude", "GPT", "Gemini", "Custom"],
+    },
     accentColor: "#FBBF24",
     tags: ["eval", "tracing", "datasets", "production"],
     links: [
@@ -249,8 +234,10 @@ export const tools: ReadonlyArray<Tool> = [
       "Hosts blokz.dev. Next.js-native, fast deploys, edge functions for the contact API, free Speed Insights tier. Strong default for the React/Next ecosystem.",
     category: "infra",
     pricing: "freemium",
-    stance: "we-use",
+    blokzMark: "deployed",
     vendor: "Vercel",
+    platforms: ["web", "api", "cli"],
+    modelSupport: { kind: "model-agnostic" },
     accentColor: "#E8F1F8",
     featured: true,
     tags: ["hosting", "edge", "nextjs", "ci"],
@@ -269,8 +256,10 @@ export const tools: ReadonlyArray<Tool> = [
       "Default backend layer at Blokz when an app needs persistence + auth + realtime. Open-source, self-hostable, very low friction to local dev with the CLI.",
     category: "infra",
     pricing: "freemium",
-    stance: "we-use",
+    blokzMark: "deployed",
     vendor: "Supabase",
+    platforms: ["web", "api", "cli"],
+    modelSupport: { kind: "model-agnostic" },
     accentColor: "#3ECF8E",
     tags: ["postgres", "auth", "realtime", "open-source"],
     links: [
@@ -288,8 +277,10 @@ export const tools: ReadonlyArray<Tool> = [
       "When the app needs to run close to users globally, or when an isolate-per-request model fits the workload better than Node functions. R2 for storage, D1 for SQLite-at-the-edge.",
     category: "infra",
     pricing: "freemium",
-    stance: "we-recommend",
+    blokzMark: "vetted",
     vendor: "Cloudflare",
+    platforms: ["web", "api", "cli"],
+    modelSupport: { kind: "model-agnostic" },
     accentColor: "#F38020",
     tags: ["edge", "workers", "storage", "global"],
     links: [
@@ -309,8 +300,12 @@ export const tools: ReadonlyArray<Tool> = [
       "Persistent memory store + retrieval pipeline for agent applications. Handles per-user/per-session/per-agent scope cleanly; pairs with OpenAI, Anthropic, and local models.",
     category: "memory",
     pricing: "freemium",
-    stance: "watching",
     vendor: "Mem0",
+    platforms: ["api", "cli"],
+    modelSupport: {
+      kind: "byo-key",
+      models: ["Claude", "GPT", "Gemini", "Local"],
+    },
     accentColor: "#A78BFA",
     tags: ["memory", "agents", "rag", "self-hosted"],
     links: [
@@ -328,8 +323,12 @@ export const tools: ReadonlyArray<Tool> = [
       "Open-source framework for building stateful agents — memory blocks, context-window management, tool-use primitives baked in. Useful as a reference architecture for long-running agents.",
     category: "memory",
     pricing: "open-source",
-    stance: "watching",
     vendor: "Letta",
+    platforms: ["api", "cli", "macos", "windows", "linux"],
+    modelSupport: {
+      kind: "byo-key",
+      models: ["Claude", "GPT", "Local"],
+    },
     accentColor: "#37F3FF",
     tags: ["memory", "stateful", "agents", "open-source"],
     links: [
@@ -349,8 +348,13 @@ export const tools: ReadonlyArray<Tool> = [
       "Source-of-truth for open-weights models and datasets. Daily-paper feed for tracking research; Spaces for trying ideas without setting up infra. Heavy use at Blokz for any model we don't pay an API for.",
     category: "research-platform",
     pricing: "freemium",
-    stance: "we-use",
+    blokzMark: "deployed",
     vendor: "Hugging Face",
+    platforms: ["web", "api", "cli"],
+    modelSupport: {
+      kind: "model-agnostic",
+      notes: "Hosts the models; you pick which.",
+    },
     accentColor: "#FBBF24",
     tags: ["models", "datasets", "papers", "open-source"],
     links: [
@@ -367,8 +371,10 @@ export const tools: ReadonlyArray<Tool> = [
       "Tag-and-track arxiv papers without drowning in the firehose. We track papers across edge inference, multi-agent harnesses, and memory architectures here — the spine of the Blokz Brief sample product.",
     category: "research-platform",
     pricing: "free",
-    stance: "we-use",
+    blokzMark: "deployed",
     vendor: "Andrej Karpathy",
+    platforms: ["web"],
+    modelSupport: { kind: "model-agnostic" },
     accentColor: "#5EEAD4",
     tags: ["arxiv", "papers", "research", "open-source"],
     links: [
