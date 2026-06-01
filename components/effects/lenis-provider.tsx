@@ -4,11 +4,10 @@ import { usePathname } from "next/navigation";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 // Smooth-scroll only benefits long, narrative-heavy routes where inertia
-// reads as cinematic. On form pages, list pages, and artifact viewers,
-// inertial scroll feels heavy and slightly disorienting. Listing the
-// opt-in routes here keeps the lenis runtime out of every other route's
-// chunk graph.
-const SMOOTH_ROUTES: ReadonlySet<string> = new Set(["/", "/workflow"]);
+// reads as cinematic. The directory at `/` is grid-heavy with filter +
+// search interactions — inertial scroll fights the interaction model
+// there. Smooth-scroll lives on the narrative routes only.
+const SMOOTH_ROUTES: ReadonlySet<string> = new Set(["/about", "/workflow"]);
 
 interface LenisInstance {
   raf: (time: number) => void;
