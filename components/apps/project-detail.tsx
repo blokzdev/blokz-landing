@@ -36,11 +36,11 @@ export function ProjectDetail({ project }: Readonly<Props>) {
 
       <div className="relative mx-auto max-w-4xl">
         <Link
-          href="/apps"
+          href="/about#portfolio"
           className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.08em] text-[var(--color-ink-dim)] uppercase transition-colors hover:text-[var(--color-ink)]"
         >
           <ArrowLeft className="h-3 w-3" />
-          All apps
+          Back to portfolio
         </Link>
 
         <header className="mt-10 flex flex-col items-start gap-6 sm:flex-row sm:items-center">
@@ -128,7 +128,7 @@ function projectJsonLd(
     "@type": "SoftwareApplication",
     name: project.name,
     description: project.description,
-    url: `${siteUrl}/apps/${project.slug}`,
+    url: `${siteUrl}/portfolio/${project.slug}`,
     applicationCategory: project.category ?? "Utilities",
     operatingSystem,
     offers: { "@type": "Offer", price: 0, priceCurrency: "USD" },

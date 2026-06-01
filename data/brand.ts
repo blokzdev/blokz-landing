@@ -28,10 +28,9 @@ export const brand = {
     flowPage: "https://flow.page/blokz",
   },
   nav: [
-    { href: "/", label: "Home" },
-    { href: "/apps", label: "Apps" },
-    { href: "/tools", label: "Tools" },
+    { href: "/", label: "Apps" },
     { href: "/workflow", label: "Workflow" },
+    { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ],
 } as const;

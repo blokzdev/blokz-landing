@@ -16,11 +16,11 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
-  if (!project) return buildMetadata({ title: "Not found", path: `/apps/${slug}` });
+  if (!project) return buildMetadata({ title: "Not found", path: `/portfolio/${slug}` });
   return buildMetadata({
     title: project.name,
     description: project.description,
-    path: `/apps/${project.slug}`,
+    path: `/portfolio/${project.slug}`,
   });
 }
 

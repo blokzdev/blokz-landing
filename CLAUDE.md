@@ -73,13 +73,17 @@ Pre-push (auto): `pnpm typecheck`.
 app/                              # Next App Router
   (marketing)/                    # route group sharing nav + footer
     layout.tsx                    #   sets <SiteNav/> + <SiteFooter/>
-    page.tsx                      #   home (hero, manifesto, apps preview, workflow teaser, contact)
-    apps/
-      page.tsx                    #   /apps — full showcase + filter
-      [slug]/page.tsx             #   /apps/<slug> — per-project detail
+    page.tsx                      #   / — AI apps directory (filter + search, 70 entries)
+    about/
+      page.tsx                    #   /about — studio identity + portfolio listing
+                                  #            (hero, Now/Next, manifesto, full portfolio grid)
+      opengraph-image.tsx         #   per-route OG
+    portfolio/
+      [slug]/page.tsx             #   /portfolio/<slug> — per-project detail (SSG, 11 entries)
     workflow/
       page.tsx                    #   /workflow — 5-chapter scrolly
-      artifacts/[slug]/page.tsx   #   /workflow/artifacts/<slug> — full MDX viewer
+      artifacts/[product]/[type]/page.tsx
+                                  #   /workflow/artifacts/<product>/<type> — MDX viewer
     contact/page.tsx              #   /contact — dedicated contact page
   api/
     contact/route.ts              # Edge runtime, Resend email send
