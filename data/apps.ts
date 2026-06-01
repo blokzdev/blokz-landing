@@ -38,6 +38,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "github", url: "https://github.com/anthropics/claude-code" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "cursor",
@@ -62,6 +63,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://cursor.com/pricing" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "windsurf",
@@ -85,6 +87,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://windsurf.com/pricing" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "aider",
@@ -109,6 +112,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://aider.chat/docs/" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── MCP servers ────────────────────────────────────────────────────────
@@ -134,6 +138,7 @@ export const apps: ReadonlyArray<App> = [
       },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "mcp-supabase",
@@ -154,26 +159,25 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://supabase.com/docs/guides/getting-started/mcp" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "mcp-vercel",
     name: "Vercel MCP",
     tagline: "Deploys + build logs + runtime logs in agent context.",
     description:
-      "Vercel-native MCP server for deploying directly from chat, inspecting build/runtime logs, and reading deployment metadata. Pairs naturally with the Vercel CLI.",
+      "Vercel-native MCP server for deploying directly from chat, inspecting build/runtime logs, and reading deployment metadata. Original github.com/vercel/mcp community URL is no longer published; first-party MCP integration ships via the Vercel docs.",
     category: "mcp",
     pricing: "open-source",
-    blokzMark: "deployed",
     vendor: "Vercel",
     platforms: ["api", "cli"],
     modelSupport: { kind: "model-agnostic" },
     accentColor: "#E8F1F8",
-    tags: ["mcp", "deploy", "logs", "open-source"],
-    links: [
-      { kind: "github", url: "https://github.com/vercel/mcp", primary: true },
-      { kind: "docs", url: "https://vercel.com/docs/mcp" },
-    ],
+    tags: ["mcp", "deploy", "logs"],
+    links: [{ kind: "docs", url: "https://vercel.com/docs/mcp", primary: true }],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
+    status: "archived",
   },
 
   // ── Eval / observability ───────────────────────────────────────────────
@@ -200,6 +204,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://promptfoo.dev/docs/getting-started" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "braintrust",
@@ -223,6 +228,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.braintrust.dev/pricing" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Infra ──────────────────────────────────────────────────────────────
@@ -247,6 +253,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://vercel.com/pricing" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "supabase",
@@ -268,6 +275,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "github", url: "https://github.com/supabase/supabase" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "cloudflare",
@@ -289,6 +297,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.cloudflare.com/plans/" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Memory / context ───────────────────────────────────────────────────
@@ -314,6 +323,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.mem0.ai" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "letta",
@@ -337,6 +347,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.letta.com" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Research platforms ─────────────────────────────────────────────────
@@ -362,6 +373,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://huggingface.co/docs" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "arxiv-sanity",
@@ -382,6 +394,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "github", url: "https://github.com/karpathy/arxiv-sanity-lite" },
     ],
     addedAt: "2025-02-01",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Agent surfaces ─────────────────────────────────────────────────────
@@ -406,16 +419,17 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.devin.ai" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "manus",
     name: "Manus",
     tagline: "General-purpose autonomous agent for research, ops, and content.",
     description:
-      "Cloud agent that browses, drafts, schedules, and follows multi-step instructions over hours. Closer to a virtual operator than a coding tool — strong for non-code knowledge work.",
+      "Cloud agent that browses, drafts, schedules, and follows multi-step instructions over hours. Closer to a virtual operator than a coding tool — strong for non-code knowledge work. Acquired by Meta; product continues to ship.",
     category: "agent",
     pricing: "freemium",
-    vendor: "Monica / Manus AI",
+    vendor: "Meta (formerly Monica / Manus AI)",
     platforms: ["web"],
     modelSupport: {
       kind: "single-model",
@@ -425,6 +439,7 @@ export const apps: ReadonlyArray<App> = [
     tags: ["autonomous", "general-purpose", "ops", "browser"],
     links: [{ kind: "website", url: "https://manus.im", primary: true }],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "cline",
@@ -435,7 +450,7 @@ export const apps: ReadonlyArray<App> = [
     category: "agent",
     pricing: "open-source",
     blokzMark: "vetted",
-    vendor: "Cline community",
+    vendor: "Cline Bot Inc.",
     platforms: ["vscode-extension"],
     modelSupport: {
       kind: "byo-key",
@@ -449,6 +464,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.cline.bot" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "openhands",
@@ -467,11 +483,12 @@ export const apps: ReadonlyArray<App> = [
     accentColor: "#A78BFA",
     tags: ["autonomous", "swe-agent", "sandbox", "open-source", "self-hosted"],
     links: [
-      { kind: "website", url: "https://www.all-hands.dev", primary: true },
+      { kind: "website", url: "https://www.openhands.dev", primary: true },
       { kind: "github", url: "https://github.com/All-Hands-AI/OpenHands" },
       { kind: "docs", url: "https://docs.all-hands.dev" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "bolt-new",
@@ -494,6 +511,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://support.bolt.new" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "v0",
@@ -512,10 +530,11 @@ export const apps: ReadonlyArray<App> = [
     accentColor: "#E8F1F8",
     tags: ["ui-gen", "react", "tailwind", "shadcn"],
     links: [
-      { kind: "website", url: "https://v0.dev", primary: true },
-      { kind: "docs", url: "https://v0.dev/docs" },
+      { kind: "website", url: "https://v0.app", primary: true },
+      { kind: "docs", url: "https://v0.app/docs" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Orchestration ──────────────────────────────────────────────────────
@@ -539,6 +558,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://python.langchain.com" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "langgraph",
@@ -559,6 +579,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://langchain-ai.github.io/langgraph/" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "crewai",
@@ -579,6 +600,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.crewai.com" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "n8n",
@@ -599,6 +621,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.n8n.io" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "vercel-ai-sdk",
@@ -620,6 +643,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://sdk.vercel.ai/docs" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "inngest",
@@ -640,6 +664,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://www.inngest.com/docs" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Vector DB ──────────────────────────────────────────────────────────
@@ -663,6 +688,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.pinecone.io/pricing/" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "weaviate",
@@ -683,6 +709,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://weaviate.io/developers/weaviate" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "qdrant",
@@ -703,6 +730,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://qdrant.tech/documentation/" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "chroma",
@@ -723,6 +751,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.trychroma.com" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "pgvector",
@@ -743,6 +772,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://github.com/pgvector/pgvector#getting-started" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "turbopuffer",
@@ -763,6 +793,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://turbopuffer.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Voice ──────────────────────────────────────────────────────────────
@@ -789,6 +820,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://elevenlabs.io/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "vapi",
@@ -813,6 +845,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://vapi.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "cartesia",
@@ -836,6 +869,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://cartesia.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "deepgram",
@@ -859,6 +893,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://deepgram.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Vision ─────────────────────────────────────────────────────────────
@@ -882,6 +917,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://roboflow.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "landing-ai",
@@ -901,6 +937,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://landing.ai/docs" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "voxel51",
@@ -921,6 +958,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.voxel51.com" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Image gen ──────────────────────────────────────────────────────────
@@ -946,6 +984,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.midjourney.com" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "ideogram",
@@ -968,6 +1007,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://developer.ideogram.ai" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "krea",
@@ -991,6 +1031,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.krea.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "magnific",
@@ -1013,6 +1054,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://magnific.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Video ──────────────────────────────────────────────────────────────
@@ -1039,6 +1081,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://runwayml.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "sora",
@@ -1061,6 +1104,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://help.openai.com/en/collections/11627661-sora" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "luma-dream-machine",
@@ -1083,6 +1127,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.lumalabs.ai" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "heygen",
@@ -1106,6 +1151,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.heygen.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Audio ──────────────────────────────────────────────────────────────
@@ -1132,6 +1178,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://suno.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "udio",
@@ -1154,6 +1201,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.udio.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "descript",
@@ -1177,6 +1225,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.descript.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Search ─────────────────────────────────────────────────────────────
@@ -1204,6 +1253,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.perplexity.ai/pro" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "tavily",
@@ -1224,6 +1274,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://tavily.com/#pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "exa",
@@ -1244,6 +1295,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://exa.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "brave-search-api",
@@ -1264,6 +1316,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://brave.com/search/api/" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Observability ──────────────────────────────────────────────────────
@@ -1286,6 +1339,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://docs.helicone.ai" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "langfuse",
@@ -1307,6 +1361,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://langfuse.com/docs" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "langsmith",
@@ -1327,6 +1382,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.langchain.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "arize-phoenix",
@@ -1342,11 +1398,12 @@ export const apps: ReadonlyArray<App> = [
     accentColor: "#A78BFA",
     tags: ["open-source", "tracing", "rag", "retrieval-debugging"],
     links: [
-      { kind: "website", url: "https://phoenix.arize.com", primary: true },
+      { kind: "website", url: "https://arize.com/phoenix/", primary: true },
       { kind: "github", url: "https://github.com/Arize-ai/phoenix" },
       { kind: "docs", url: "https://docs.arize.com/phoenix" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Fine-tuning ────────────────────────────────────────────────────────
@@ -1373,6 +1430,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.together.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "modal",
@@ -1393,6 +1451,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://modal.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "openpipe",
@@ -1416,6 +1475,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://openpipe.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "fireworks-ai",
@@ -1439,6 +1499,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://fireworks.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Browser extension ──────────────────────────────────────────────────
@@ -1464,6 +1525,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://sider.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "maxai",
@@ -1486,6 +1548,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.maxai.me/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "glasp",
@@ -1508,6 +1571,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "docs", url: "https://help.glasp.co" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 
   // ── Automation ─────────────────────────────────────────────────────────
@@ -1531,6 +1595,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://zapier.com/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "make",
@@ -1551,6 +1616,7 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.make.com/en/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
   {
     slug: "lindy",
@@ -1573,5 +1639,17 @@ export const apps: ReadonlyArray<App> = [
       { kind: "pricing", url: "https://www.lindy.ai/pricing" },
     ],
     addedAt: "2026-05-13",
+    lastVerifiedAt: "2026-06-01",
   },
 ];
+
+// Cheap dev-time guard. Every directory entry must declare at least one
+// platform so visitors know where the app runs. Runs at module load on the
+// server (RSC), throws loudly during dev/build if an entry slips through.
+if (process.env.NODE_ENV !== "production") {
+  for (const app of apps) {
+    if (app.platforms.length === 0) {
+      throw new Error(`App "${app.slug}" has no platforms. Every entry needs ≥1.`);
+    }
+  }
+}

@@ -6,6 +6,9 @@ import { APP_CATEGORIES, APP_PRICING, BLOKZ_MARKS } from "@/types/app";
 import type { AppCategory, AppPricing, BlokzMark } from "@/types/app";
 import { cn } from "@/lib/utils";
 
+type StatusFilter = "active" | "archived" | "all";
+const STATUS_FILTERS: ReadonlyArray<StatusFilter> = ["active", "archived", "all"];
+
 const CATEGORY_LABEL: Record<AppCategory, string> = {
   ide: "IDE",
   agent: "Agent",
@@ -44,6 +47,12 @@ const MARK_LABEL: Record<BlokzMark, string> = {
   contributing: "Contributing",
 };
 
+const STATUS_LABEL: Record<StatusFilter, string> = {
+  active: "Active",
+  archived: "Archived",
+  all: "All",
+};
+
 interface Props {
   total: number;
   filtered: number;
@@ -55,6 +64,7 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
       category: parseAsStringLiteral(APP_CATEGORIES),
       pricing: parseAsStringLiteral(APP_PRICING),
       blokzMark: parseAsStringLiteral(BLOKZ_MARKS),
+      status: parseAsStringLiteral(STATUS_FILTERS),
       q: parseAsString,
     },
     { shallow: true, history: "replace" },
@@ -74,16 +84,23 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
   const setCategory = (value: AppCategory | null) => void setFilter({ category: value });
   const setPricing = (value: AppPricing | null) => void setFilter({ pricing: value });
   const setMark = (value: BlokzMark | null) => void setFilter({ blokzMark: value });
+  const setStatus = (value: StatusFilter | null) => void setFilter({ status: value });
 
   const clearAll = () => {
     setText("");
-    void setFilter({ category: null, pricing: null, blokzMark: null, q: null });
+    void setFilter({ category: null, pricing: null, blokzMark: null, status: null, q: null });
   };
+
+  // Status defaults to "active" when absent; treat "active" as the unfiltered
+  // state for the "has filter" check so the Clear All button doesn't flicker
+  // on every page load.
+  const statusActive = (filter.status ?? "active") !== "active";
 
   const hasFilter =
     filter.category !== null ||
     filter.pricing !== null ||
     filter.blokzMark !== null ||
+    statusActive ||
     (filter.q?.length ?? 0) > 0;
 
   return (
@@ -166,6 +183,21 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
                 {MARK_LABEL[m]}
               </Chip>
             ))}
+          </FilterRow>
+
+          <FilterRow label="Status">
+            {STATUS_FILTERS.map((s) => {
+              const isCurrent = (filter.status ?? "active") === s;
+              return (
+                <Chip
+                  key={s}
+                  active={isCurrent}
+                  onClick={() => setStatus(s === "active" ? null : s)}
+                >
+                  {STATUS_LABEL[s]}
+                </Chip>
+              );
+            })}
           </FilterRow>
         </div>
 
