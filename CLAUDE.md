@@ -78,6 +78,9 @@ app/                              # Next App Router
       page.tsx                    #   /about — studio identity + portfolio listing
                                   #            (hero, Now/Next, manifesto, full portfolio grid)
       opengraph-image.tsx         #   per-route OG
+    apps/
+      [slug]/page.tsx             #   /apps/<slug> — per-app directory detail (SSG, 70 entries)
+      [slug]/opengraph-image.tsx  #   per-app OG
     portfolio/
       [slug]/page.tsx             #   /portfolio/<slug> — per-project detail (SSG, 11 entries)
     workflow/

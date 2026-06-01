@@ -105,6 +105,16 @@ export function ToolCard({ app }: Readonly<Props>) {
         app.featured && "sm:col-span-2",
       )}
     >
+      {/* Stretched-link overlay — clicking anywhere on the card (except the
+          interactive CTAs below, which lift to z-[2]) navigates to the detail
+          page. Keeps the Open / docs / github CTAs as direct external paths. */}
+      <Link
+        href={`/apps/${app.slug}`}
+        aria-label={`View ${app.name} details`}
+        className="absolute inset-0 z-[1] rounded-2xl focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none"
+      >
+        <span className="sr-only">View {app.name} details</span>
+      </Link>
       {/* Top row: category + pricing + optional Blokz mark */}
       <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] tracking-[0.12em] uppercase">
         <span className="rounded-full bg-white/[0.05] px-2 py-0.5 text-[var(--color-ink-dim)] ring-1 ring-white/[0.08] ring-inset">
@@ -174,8 +184,9 @@ export function ToolCard({ app }: Readonly<Props>) {
         </ul>
       )}
 
-      {/* Links */}
-      <div className="mt-auto flex flex-wrap items-center gap-2 pt-2">
+      {/* Links — lifted above the stretched-link overlay so they capture
+          clicks before the card-level navigation fires. */}
+      <div className="relative z-[2] mt-auto flex flex-wrap items-center gap-2 pt-2">
         {primary && (
           <Link
             href={primary.url}

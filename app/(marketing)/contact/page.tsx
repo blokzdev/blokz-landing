@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { ContactForm } from "@/components/contact/contact-form";
 import { GlowOrb } from "@/components/effects/glow-orb";
@@ -50,7 +51,11 @@ export default function ContactPage() {
         </header>
 
         <div className="mt-16 grid gap-12 lg:grid-cols-[1.6fr_1fr] lg:gap-20">
-          <ContactForm />
+          {/* useSearchParams() inside ContactForm requires a Suspense boundary
+              for SSG. Fallback renders nothing (the form will hydrate in). */}
+          <Suspense fallback={null}>
+            <ContactForm />
+          </Suspense>
 
           <aside className="flex flex-col gap-8">
             <section>

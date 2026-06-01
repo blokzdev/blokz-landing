@@ -46,6 +46,11 @@ export async function submitContact(formData: FormData): Promise<ContactResult> 
   const email = String(formData.get("email") ?? "").trim();
   const projectType = String(formData.get("projectType") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
+  // Optional, only present when the visitor arrived from an app-detail page's
+  // "Submit a correction" deeplink (?subject=Update+for+<App>).
+  const customSubject = String(formData.get("subject") ?? "")
+    .trim()
+    .slice(0, 200);
 
   if (!name) return { ok: false, error: "What should we call you?" };
   if (!email) return { ok: false, error: "We need an email to write back." };
@@ -65,7 +70,9 @@ export async function submitContact(formData: FormData): Promise<ContactResult> 
   }
 
   const projectLabel = PROJECT_LABELS[projectType] ?? "Unspecified";
-  const subject = `[blokz.dev] ${projectLabel} — ${name}`;
+  const subject = customSubject
+    ? `[blokz.dev] ${customSubject} — ${name}`
+    : `[blokz.dev] ${projectLabel} — ${name}`;
   const text = [
     `From: ${name} <${email}>`,
     `Project type: ${projectLabel}`,
