@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { useState, useTransition } from "react";
 import { ArrowRight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { submitContact, type ContactResult } from "@/app/(marketing)/contact/actions";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,11 @@ export function ContactForm() {
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [messageLength, setMessageLength] = useState(0);
+  // Pre-fill the optional subject from URL — directory app-detail pages link
+  // here with ?subject=Update+for+<App> so a "Submit a correction" click
+  // arrives already labelled.
+  const searchParams = useSearchParams();
+  const prefillSubject = searchParams.get("subject") ?? "";
 
   if (submitted) return <ContactSuccess />;
 
@@ -104,6 +110,22 @@ export function ContactForm() {
           ))}
         </select>
       </Field>
+
+      {/* Optional subject — pre-filled when arriving from an app-detail page's
+          "Submit a correction" link. Empty otherwise; the server falls back
+          to a generated subject built from project type + name. */}
+      {prefillSubject && (
+        <Field id="subject" label="Subject (optional)">
+          <input
+            id="subject"
+            name="subject"
+            type="text"
+            defaultValue={prefillSubject}
+            maxLength={200}
+            className={inputClass}
+          />
+        </Field>
+      )}
 
       <Field id="message" label="What do you want to build?" hint={`${messageLength}/1,000`}>
         <textarea
