@@ -1,7 +1,7 @@
 "use client";
 import { useMemo } from "react";
 import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
-import { APP_CATEGORIES, APP_PRICING, BLOKZ_MARKS } from "@/types/app";
+import { APP_CATEGORIES, APP_PRICING, APP_STATUSES, BLOKZ_MARKS } from "@/types/app";
 import type { App } from "@/types/app";
 import { ToolFilterBar } from "./tool-filter-bar";
 import { ToolGrid } from "./tool-grid";
@@ -10,12 +10,15 @@ interface Props {
   apps: ReadonlyArray<App>;
 }
 
+const STATUS_FILTERS = [...APP_STATUSES, "all"] as const;
+
 export function ToolsBrowser({ apps }: Readonly<Props>) {
   const [filter] = useQueryStates(
     {
       category: parseAsStringLiteral(APP_CATEGORIES),
       pricing: parseAsStringLiteral(APP_PRICING),
       blokzMark: parseAsStringLiteral(BLOKZ_MARKS),
+      status: parseAsStringLiteral(STATUS_FILTERS),
       q: parseAsString,
     },
     { shallow: true, history: "replace" },
@@ -23,10 +26,20 @@ export function ToolsBrowser({ apps }: Readonly<Props>) {
 
   const filtered = useMemo(() => {
     const query = filter.q?.trim().toLowerCase() ?? "";
+    // Default behaviour: hide archived. Visitors opt in via ?status=archived
+    // or ?status=all. Search ignores the status filter so historical lookups
+    // still resolve (the archived treatment makes the lifecycle clear inline).
+    const statusMode = filter.status ?? "active";
     return apps.filter((a) => {
       if (filter.category && a.category !== filter.category) return false;
       if (filter.pricing && a.pricing !== filter.pricing) return false;
       if (filter.blokzMark && a.blokzMark !== filter.blokzMark) return false;
+      if (!query) {
+        const appStatus = a.status ?? "active";
+        if (statusMode === "active" && appStatus !== "active") return false;
+        if (statusMode === "archived" && appStatus !== "archived") return false;
+        // statusMode === "all" passes both through.
+      }
       if (query) {
         const haystack = [
           a.name,
@@ -43,7 +56,7 @@ export function ToolsBrowser({ apps }: Readonly<Props>) {
       }
       return true;
     });
-  }, [apps, filter.category, filter.pricing, filter.blokzMark, filter.q]);
+  }, [apps, filter.category, filter.pricing, filter.blokzMark, filter.status, filter.q]);
 
   return (
     <>

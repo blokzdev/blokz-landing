@@ -99,6 +99,13 @@ export const APP_PLATFORMS: ReadonlyArray<AppPlatform> = [
   "vscode-extension",
 ];
 
+// Lifecycle status. Absence on an entry = "active" — most listings carry no
+// status. Archived entries stay in the data file as historical record but
+// hide from the default browse; visitors can opt-in via the Status filter.
+export type AppStatus = "active" | "archived";
+
+export const APP_STATUSES: ReadonlyArray<AppStatus> = ["active", "archived"];
+
 export type ModelSupportKind =
   | "single-model" // App is built around one provider/model.
   | "multi-model" // App supports a handful of providers natively.
@@ -150,7 +157,8 @@ export interface App {
   /** Optional editorial badge — see BlokzMark. */
   blokzMark?: BlokzMark;
   vendor?: string;
-  platforms?: ReadonlyArray<AppPlatform>;
+  /** Required. At least one platform so visitors know where the app runs. */
+  platforms: ReadonlyArray<AppPlatform>;
   modelSupport?: ModelSupport;
   tags?: ReadonlyArray<string>;
   accentColor?: string;
@@ -160,6 +168,11 @@ export interface App {
   screenshots?: ReadonlyArray<AppScreenshot>;
   /** ISO date; powers "recent" sort. */
   addedAt?: string;
+  /** Lifecycle status. Absence = "active". Archived hides from default browse. */
+  status?: AppStatus;
+  /** ISO date of the most recent freshness audit. Refreshed whenever the entry
+   * is re-verified. Cycle entries oldest-first in future audit chunks. */
+  lastVerifiedAt?: string;
   /** Gates an MDX long-form page at content/apps/<slug>.mdx in chunk C. */
   hasLongForm?: boolean;
 }

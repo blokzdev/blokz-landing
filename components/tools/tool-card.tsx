@@ -90,12 +90,18 @@ export function ToolCard({ app }: Readonly<Props>) {
     .replace(/[^A-Za-z0-9]/g, "")
     .slice(0, 2)
     .toUpperCase();
+  const isArchived = app.status === "archived";
 
   return (
     <article
       className={cn(
-        "group relative flex h-full flex-col gap-4 overflow-hidden rounded-2xl bg-[var(--color-surface)]/70 p-5 ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ring-inset hover:-translate-y-1 hover:bg-[var(--color-surface)]/90",
-        app.blokzMark ? MARK_RING[app.blokzMark] : NEUTRAL_RING,
+        "group relative flex h-full flex-col gap-4 overflow-hidden rounded-2xl bg-[var(--color-surface)]/70 p-5 ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ring-inset",
+        // Archived: muted overall, no hover-lift (it's a historical record, not
+        // a live recommendation).
+        isArchived
+          ? "opacity-60 ring-white/[0.06]"
+          : "hover:-translate-y-1 hover:bg-[var(--color-surface)]/90",
+        !isArchived && (app.blokzMark ? MARK_RING[app.blokzMark] : NEUTRAL_RING),
         app.featured && "sm:col-span-2",
       )}
     >
@@ -107,14 +113,26 @@ export function ToolCard({ app }: Readonly<Props>) {
         <span className="rounded-full bg-white/[0.05] px-2 py-0.5 text-[var(--color-ink-dim)] ring-1 ring-white/[0.08] ring-inset">
           {PRICING_LABEL[app.pricing]}
         </span>
-        {app.blokzMark && (
-          <span className="ml-auto inline-flex items-center gap-1.5 text-[var(--color-ink-dim)]">
+        {/* Archived takes precedence over Blokz mark — a dead tool can't carry
+            an editorial recommendation. */}
+        {isArchived ? (
+          <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-white/[0.04] px-2 py-0.5 text-[var(--color-ink-dim)] ring-1 ring-white/[0.10] ring-inset">
             <span
               aria-hidden
-              className={cn("block h-1.5 w-1.5 rounded-full", MARK_DOT[app.blokzMark])}
+              className="block h-1.5 w-1.5 rounded-full bg-[var(--color-ink-dim)]"
             />
-            {MARK_LABEL[app.blokzMark]}
+            ARCHIVED
           </span>
+        ) : (
+          app.blokzMark && (
+            <span className="ml-auto inline-flex items-center gap-1.5 text-[var(--color-ink-dim)]">
+              <span
+                aria-hidden
+                className={cn("block h-1.5 w-1.5 rounded-full", MARK_DOT[app.blokzMark])}
+              />
+              {MARK_LABEL[app.blokzMark]}
+            </span>
+          )
         )}
       </div>
 
