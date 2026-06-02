@@ -1,5 +1,5 @@
 "use client";
-import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
+import { parseAsArrayOf, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { APP_CATEGORIES, APP_PRICING, BLOKZ_MARKS } from "@/types/app";
@@ -8,6 +8,9 @@ import { cn } from "@/lib/utils";
 
 type StatusFilter = "active" | "archived" | "all";
 const STATUS_FILTERS: ReadonlyArray<StatusFilter> = ["active", "archived", "all"];
+
+export type SortMode = "featured" | "recent" | "alpha";
+export const SORT_MODES: ReadonlyArray<SortMode> = ["featured", "recent", "alpha"];
 
 const CATEGORY_LABEL: Record<AppCategory, string> = {
   ide: "IDE",
@@ -53,6 +56,12 @@ const STATUS_LABEL: Record<StatusFilter, string> = {
   all: "All",
 };
 
+const SORT_LABEL: Record<SortMode, string> = {
+  featured: "Featured",
+  recent: "Recent",
+  alpha: "A → Z",
+};
+
 interface Props {
   total: number;
   filtered: number;
@@ -61,17 +70,16 @@ interface Props {
 export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
   const [filter, setFilter] = useQueryStates(
     {
-      category: parseAsStringLiteral(APP_CATEGORIES),
-      pricing: parseAsStringLiteral(APP_PRICING),
-      blokzMark: parseAsStringLiteral(BLOKZ_MARKS),
+      category: parseAsArrayOf(parseAsStringLiteral(APP_CATEGORIES)).withDefault([]),
+      pricing: parseAsArrayOf(parseAsStringLiteral(APP_PRICING)).withDefault([]),
+      blokzMark: parseAsArrayOf(parseAsStringLiteral(BLOKZ_MARKS)).withDefault([]),
       status: parseAsStringLiteral(STATUS_FILTERS),
+      sort: parseAsStringLiteral(SORT_MODES),
       q: parseAsString,
     },
     { shallow: true, history: "replace" },
   );
 
-  // Debounced text input so we don't spam URL writes on every keystroke.
-  // Local state initializes from URL once; "Clear all" resets both in sync.
   const [text, setText] = useState(filter.q ?? "");
   useEffect(() => {
     const handle = setTimeout(() => {
@@ -81,27 +89,47 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
     return () => clearTimeout(handle);
   }, [text, setFilter]);
 
-  const setCategory = (value: AppCategory | null) => void setFilter({ category: value });
-  const setPricing = (value: AppPricing | null) => void setFilter({ pricing: value });
-  const setMark = (value: BlokzMark | null) => void setFilter({ blokzMark: value });
+  const toggleCategory = (value: AppCategory) => {
+    const has = filter.category.includes(value);
+    const next = has ? filter.category.filter((v) => v !== value) : [...filter.category, value];
+    void setFilter({ category: next.length > 0 ? next : null });
+  };
+  const togglePricing = (value: AppPricing) => {
+    const has = filter.pricing.includes(value);
+    const next = has ? filter.pricing.filter((v) => v !== value) : [...filter.pricing, value];
+    void setFilter({ pricing: next.length > 0 ? next : null });
+  };
+  const toggleMark = (value: BlokzMark) => {
+    const has = filter.blokzMark.includes(value);
+    const next = has ? filter.blokzMark.filter((v) => v !== value) : [...filter.blokzMark, value];
+    void setFilter({ blokzMark: next.length > 0 ? next : null });
+  };
   const setStatus = (value: StatusFilter | null) => void setFilter({ status: value });
+  const setSort = (value: SortMode) =>
+    void setFilter({ sort: value === "featured" ? null : value });
 
   const clearAll = () => {
     setText("");
-    void setFilter({ category: null, pricing: null, blokzMark: null, status: null, q: null });
+    void setFilter({
+      category: null,
+      pricing: null,
+      blokzMark: null,
+      status: null,
+      sort: null,
+      q: null,
+    });
   };
 
-  // Status defaults to "active" when absent; treat "active" as the unfiltered
-  // state for the "has filter" check so the Clear All button doesn't flicker
-  // on every page load.
   const statusActive = (filter.status ?? "active") !== "active";
 
   const hasFilter =
-    filter.category !== null ||
-    filter.pricing !== null ||
-    filter.blokzMark !== null ||
+    filter.category.length > 0 ||
+    filter.pricing.length > 0 ||
+    filter.blokzMark.length > 0 ||
     statusActive ||
     (filter.q?.length ?? 0) > 0;
+
+  const sortMode = filter.sort ?? "featured";
 
   return (
     <div className="sticky top-16 z-30 -mx-6 mb-10 border-y border-white/[0.06] bg-[var(--color-canvas)]/85 px-6 py-4 backdrop-blur-xl sm:top-20">
@@ -131,6 +159,23 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
               </button>
             )}
           </div>
+          <label className="hidden items-center gap-2 sm:flex">
+            <span className="font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)]/70 uppercase">
+              Sort
+            </span>
+            <select
+              value={sortMode}
+              onChange={(e) => setSort(e.target.value as SortMode)}
+              aria-label="Sort apps"
+              className="h-9 rounded-full bg-white/[0.04] px-3 font-mono text-[11px] tracking-[0.04em] text-[var(--color-ink)] ring-1 ring-white/[0.08] transition-colors ring-inset focus-visible:ring-2 focus-visible:ring-[var(--color-accent-hot)] focus-visible:outline-none"
+            >
+              {SORT_MODES.map((m) => (
+                <option key={m} value={m} className="bg-[var(--color-canvas)]">
+                  {SORT_LABEL[m]}
+                </option>
+              ))}
+            </select>
+          </label>
           <p
             className="hidden font-mono text-[10px] tracking-[0.08em] text-[var(--color-ink-dim)] uppercase sm:block"
             aria-live="polite"
@@ -141,45 +186,42 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
 
         <div className="-mx-2 flex [scrollbar-width:none] flex-col gap-3 overflow-x-auto px-2 [&::-webkit-scrollbar]:hidden">
           <FilterRow label="Category">
-            <Chip active={filter.category === null} onClick={() => setCategory(null)}>
+            <Chip
+              active={filter.category.length === 0}
+              onClick={() => void setFilter({ category: null })}
+            >
               All
             </Chip>
             {APP_CATEGORIES.map((c) => (
-              <Chip
-                key={c}
-                active={filter.category === c}
-                onClick={() => setCategory(filter.category === c ? null : c)}
-              >
+              <Chip key={c} active={filter.category.includes(c)} onClick={() => toggleCategory(c)}>
                 {CATEGORY_LABEL[c]}
               </Chip>
             ))}
           </FilterRow>
 
           <FilterRow label="Pricing">
-            <Chip active={filter.pricing === null} onClick={() => setPricing(null)}>
+            <Chip
+              active={filter.pricing.length === 0}
+              onClick={() => void setFilter({ pricing: null })}
+            >
               All
             </Chip>
             {APP_PRICING.map((p) => (
-              <Chip
-                key={p}
-                active={filter.pricing === p}
-                onClick={() => setPricing(filter.pricing === p ? null : p)}
-              >
+              <Chip key={p} active={filter.pricing.includes(p)} onClick={() => togglePricing(p)}>
                 {PRICING_LABEL[p]}
               </Chip>
             ))}
           </FilterRow>
 
           <FilterRow label="Blokz mark">
-            <Chip active={filter.blokzMark === null} onClick={() => setMark(null)}>
+            <Chip
+              active={filter.blokzMark.length === 0}
+              onClick={() => void setFilter({ blokzMark: null })}
+            >
               All
             </Chip>
             {BLOKZ_MARKS.map((m) => (
-              <Chip
-                key={m}
-                active={filter.blokzMark === m}
-                onClick={() => setMark(filter.blokzMark === m ? null : m)}
-              >
+              <Chip key={m} active={filter.blokzMark.includes(m)} onClick={() => toggleMark(m)}>
                 {MARK_LABEL[m]}
               </Chip>
             ))}

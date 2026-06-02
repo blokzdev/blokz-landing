@@ -20,7 +20,7 @@ export function ToolGrid({ apps }: Readonly<Props>) {
   }
 
   return (
-    <ul className="grid grid-flow-dense auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {apps.map((app) => (
         <li key={app.slug} className="contents">
           <ToolCard app={app} />

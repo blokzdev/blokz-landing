@@ -102,7 +102,6 @@ export function ToolCard({ app }: Readonly<Props>) {
           ? "opacity-60 ring-white/[0.06]"
           : "hover:-translate-y-1 hover:bg-[var(--color-surface)]/90",
         !isArchived && (app.blokzMark ? MARK_RING[app.blokzMark] : NEUTRAL_RING),
-        app.featured && "sm:col-span-2",
       )}
     >
       {/* Stretched-link overlay — clicking anywhere on the card (except the
