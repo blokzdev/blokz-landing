@@ -39,11 +39,33 @@ const nextConfig: NextConfig = {
   // /tools (now /) and the Blokz portfolio used to live at /apps + /apps/[slug]
   // (now consolidated into /about + /portfolio/[slug]). Permanent so the old
   // URLs preserve SEO authority across the rename.
+  //
+  // The /apps/:slug redirect is scoped to only the 11 legacy portfolio slugs —
+  // not a blanket match — because /apps/[slug] is now an active SSG route
+  // hosting the AI apps directory detail pages (chunk C). A blanket redirect
+  // would intercept those before the route handler runs.
   async redirects() {
+    const legacySlugs = [
+      "blockchair",
+      "bitcoin-explorer",
+      "blockexplorer",
+      "bsctrace",
+      "viewblock",
+      "blockscan",
+      "etherscan",
+      "tron-explorer",
+      "slyfox",
+      "blokz-oss",
+      "blokz-ai-incoming",
+    ].join("|");
     return [
       { source: "/tools", destination: "/", permanent: true },
       { source: "/apps", destination: "/about", permanent: true },
-      { source: "/apps/:slug", destination: "/portfolio/:slug", permanent: true },
+      {
+        source: `/apps/:slug(${legacySlugs})`,
+        destination: "/portfolio/:slug",
+        permanent: true,
+      },
       // /portfolio namespace root has no listing of its own (the portfolio
       // section lives inside /about). Non-permanent so we can restore a
       // dedicated listing later without an SEO penalty.
