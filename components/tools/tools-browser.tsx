@@ -3,6 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { parseAsArrayOf, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
 import { APP_CATEGORIES, APP_PRICING, APP_STATUSES, BLOKZ_MARKS } from "@/types/app";
 import type { App, BlokzMark } from "@/types/app";
+import { sponsored as sponsoredPool } from "@/data/sponsored";
+import { interleave } from "@/lib/interleave";
 import { SORT_MODES, ToolFilterBar } from "./tool-filter-bar";
 import { ToolGrid } from "./tool-grid";
 import { FeaturedCarousel } from "./featured-carousel";
@@ -13,6 +15,10 @@ interface Props {
 
 const STATUS_FILTERS = [...APP_STATUSES, "all"] as const;
 const BATCH_SIZE = 24;
+// One sponsored slot every N organic positions in the default browse. Tuned
+// light-touch — with one self-promo card the page shows the Blokz pitch ~twice
+// per default browse. Dial down by raising the constant.
+const SPONSORED_INTERVAL = 12;
 
 // Same priority used in lib/apps.ts — keeps the two sort paths aligned.
 const markOrder: Record<BlokzMark, number> = {
@@ -134,13 +140,17 @@ export function ToolsBrowser({ apps }: Readonly<Props>) {
   }, [visibleCount, filtered.length]);
 
   const visible = filtered.slice(0, visibleCount);
+  // Sponsored slots only appear in the unfiltered default browse — narrow
+  // searches stay clean. Pagination math holds: visibleCount counts organic
+  // entries; ads are layered on top of each batch.
+  const items = !filtersApplied ? interleave(visible, sponsoredPool, SPONSORED_INTERVAL) : visible;
   const hasMore = visibleCount < filtered.length;
 
   return (
     <>
       {!filtersApplied && <FeaturedCarousel apps={apps} />}
       <ToolFilterBar total={apps.length} filtered={filtered.length} />
-      <ToolGrid apps={visible} />
+      <ToolGrid items={items} />
       {hasMore && (
         <>
           <div ref={sentinelRef} aria-hidden className="h-8" />
