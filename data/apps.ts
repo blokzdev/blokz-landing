@@ -49,6 +49,7 @@ export const apps: ReadonlyArray<App> = [
     category: "ide",
     pricing: "freemium",
     blokzMark: "vetted",
+    featured: true,
     vendor: "Anysphere",
     platforms: ["macos", "windows", "linux"],
     modelSupport: {
@@ -547,6 +548,7 @@ export const apps: ReadonlyArray<App> = [
     category: "orchestration",
     pricing: "open-source",
     blokzMark: "vetted",
+    featured: true,
     vendor: "LangChain",
     platforms: ["api", "cli"],
     modelSupport: { kind: "model-agnostic" },
@@ -677,6 +679,7 @@ export const apps: ReadonlyArray<App> = [
     category: "vector-db",
     pricing: "freemium",
     blokzMark: "vetted",
+    featured: true,
     vendor: "Pinecone",
     platforms: ["api"],
     modelSupport: { kind: "model-agnostic" },
@@ -806,6 +809,7 @@ export const apps: ReadonlyArray<App> = [
     category: "voice",
     pricing: "freemium",
     blokzMark: "vetted",
+    featured: true,
     vendor: "ElevenLabs",
     platforms: ["web", "api"],
     modelSupport: {
@@ -971,6 +975,7 @@ export const apps: ReadonlyArray<App> = [
     category: "image-gen",
     pricing: "paid",
     blokzMark: "vetted",
+    featured: true,
     vendor: "Midjourney",
     platforms: ["web"],
     modelSupport: {
@@ -1067,6 +1072,7 @@ export const apps: ReadonlyArray<App> = [
     category: "video",
     pricing: "freemium",
     blokzMark: "vetted",
+    featured: true,
     vendor: "Runway",
     platforms: ["web"],
     modelSupport: {
@@ -1164,6 +1170,7 @@ export const apps: ReadonlyArray<App> = [
     category: "audio",
     pricing: "freemium",
     blokzMark: "vetted",
+    featured: true,
     vendor: "Suno",
     platforms: ["web", "ios", "android"],
     modelSupport: {
@@ -1238,6 +1245,7 @@ export const apps: ReadonlyArray<App> = [
     category: "search",
     pricing: "freemium",
     blokzMark: "vetted",
+    featured: true,
     vendor: "Perplexity AI",
     platforms: ["web", "ios", "android", "macos", "windows", "api"],
     modelSupport: {
@@ -1584,6 +1592,7 @@ export const apps: ReadonlyArray<App> = [
     category: "automation",
     pricing: "freemium",
     blokzMark: "vetted",
+    featured: true,
     vendor: "Zapier",
     platforms: ["web", "api"],
     modelSupport: { kind: "model-agnostic" },

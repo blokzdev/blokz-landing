@@ -18,10 +18,10 @@ export const metadata: Metadata = buildMetadata({
 
 export default function HomePage() {
   const total = allApps.length;
-  const deployed = allApps.filter((a) => a.blokzMark === "deployed").length;
+  const categories = new Set(allApps.map((a) => a.category)).size;
 
   return (
-    <div className="relative overflow-hidden px-6 pt-32 pb-32 sm:pt-40">
+    <div className="relative overflow-hidden px-6 pt-24 pb-32 sm:pt-32">
       <GlowOrb
         className="-top-32 left-1/2 -translate-x-1/2"
         size={720}
@@ -30,15 +30,14 @@ export default function HomePage() {
       />
 
       <div className="relative mx-auto max-w-7xl">
-        <header className="mb-12 max-w-3xl">
+        <header className="mb-8 max-w-3xl">
           <p className="text-eyebrow text-[var(--color-accent)]">AI Apps Directory</p>
           <h1 className="mt-4 text-5xl sm:text-6xl md:text-7xl">
             <span className="text-display text-[var(--color-ink)]">Find the AI app</span>{" "}
             <span className="text-display text-[var(--color-accent)]">for the job.</span>
           </h1>
-          <p className="mt-6 max-w-2xl text-base text-[var(--color-ink-dim)] sm:text-lg">
-            {total} apps across IDEs, agents, MCP servers, infra, and more. {deployed} carry the
-            Blokz mark — apps we use ourselves every day. Searchable, filterable, growing weekly.
+          <p className="mt-5 font-mono text-[11px] tracking-[0.12em] text-[var(--color-ink-dim)] uppercase">
+            {total} apps · {categories} categories · curated and growing
           </p>
         </header>
 
