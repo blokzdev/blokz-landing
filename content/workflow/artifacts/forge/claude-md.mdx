@@ -1,47 +1,99 @@
 # CLAUDE.md — Eval Forge
 
-> **Concept artifact.** Eval Forge is the second product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-2.
+This file is the contract between the agent and the Eval Forge codebase. Read end-to-end before touching anything non-trivial. The product is a developer tool that emits a Vitest eval suite, a hand-shaped golden set, and a GitHub Action harness for any Claude feature — straight from a spec section. The author pastes a feature spec; the tool returns a runnable eval gate the feature has to pass before it ships.
 
 ## 1. Overview
 
-Eval Forge is a developer tool that emits a Vitest eval suite, a hand-shaped golden set, and a GitHub Action harness for any Claude feature — straight from a spec section. The author pastes a feature spec; the tool returns a runnable eval gate the feature has to pass before it ships.
+One spec section in, one eval gate out. Point the CLI (or the dashboard) at a feature spec; get back `eval.test.ts`, `goldset.json`, `rubric.ts`, and a `forge.yml` workflow — wired to fail a PR until the feature clears its gate.
 
 Brand line: _Eval gates, generated._
 
 ## 2. Tech stack
 
-| Layer        | Choice                              | Why                               |
-| ------------ | ----------------------------------- | --------------------------------- |
-| Framework    | Next.js (App Router, RSC) on Vercel | Streaming generation + dashboard  |
-| LLM          | Anthropic SDK                       | Structured eval-case generation   |
-| Eval harness | Vitest                              | First-class CI integration, fast  |
-| CI           | GitHub Actions                      | The runtime users already trust   |
-| CLI          | Rust (clap)                         | Local-first generation before web |
+| Layer        | Choice                              | Why                               | Version |
+| ------------ | ----------------------------------- | --------------------------------- | ------- |
+| Framework    | Next.js (App Router, RSC) on Vercel | Streaming generation + dashboard  | 15.x    |
+| LLM          | Anthropic SDK (claude-sonnet-4-x)   | Structured eval-case generation   | latest  |
+| Eval harness | Vitest                              | First-class CI, fast cold start   | latest  |
+| CI           | GitHub Actions                      | The runtime users already trust   | n/a     |
+| CLI          | Rust (clap)                         | Local-first generation before web | latest  |
+| Meta-eval    | Vitest + reference-pair scorer      | Grades the generator's own output | latest  |
 
-## 3. Folder map (sketch)
+## 3. Commands
+
+```bash
+pnpm install              # dashboard + harness workspace (pnpm only)
+pnpm dev                  # next dev --turbopack (dashboard)
+pnpm build                # next build
+pnpm typecheck            # tsc --noEmit
+pnpm test                 # vitest (harness + dashboard units)
+pnpm test:meta            # score the generator against the reference pairs
+cargo run -- generate ... # forge-cli local generation (from crates/forge-cli)
+cargo test                # CLI integration tests
+```
+
+## 4. Folder map
 
 ```
 app/                          # Next.js dashboard
-crates/forge-cli/             # Rust CLI for local generation
+  (app)/page.tsx              # paste a spec → stream generated suite
+  api/generate/route.ts       # Edge: spec → Claude → zipped output (SSE)
+crates/forge-cli/             # Rust CLI (clap) for local generation
+  src/main.rs                 # flag surface — stability matters
 packages/harness/             # Vitest harness template emitted into target repos
-prompts/                      # Versioned prompt library for eval-case generation
-goldset/                      # Meta-evals: generated suites scored against a reference
+  rubric.ts                   # Rubric type + scoring axes
+prompts/                      # Versioned generation prompts (one const per concern)
+goldset/                      # Meta-evals: (spec, expected-suite) reference pairs
 ```
 
-## 4. Agent guardrails
+## 5. Conventions
 
-✅ Free to touch: dashboard components, CLI subcommands, harness scaffold, content.
+- **File names** kebab-case (`generate-cases.ts`). **Exports** PascalCase.
+- **RSC by default**. Add `"use client"` only for the streaming run view and form state.
+- **No barrel files** — they hurt tree-shaking and jump-to-definition.
+- **`cn()` helper** for conditional class composition. Never string-concat Tailwind classes.
+- **Prompts live in `prompts/`** as named const exports; they're versioned and the meta-eval scorer runs on every change.
+- **The emitted harness is the contract** — its file layout is depended on by every target repo, so treat the template as a public API.
+
+## 6. Agent guardrails
+
+✅ Free to touch: dashboard components, CLI subcommands, harness scaffold, content, Tailwind class usage.
 
 🛑 Confirm before touching:
 
 - Prompts in `prompts/` — every change must be paired with a meta-eval delta in the PR.
-- Generator output schema — downstream harness consumers depend on it.
+- Generator output schema (`GoldCase`, `RunResult`) — downstream harness consumers depend on it.
 - Anything in `crates/forge-cli/src/main.rs` that affects flag stability.
+- `next.config.ts`, `tsconfig.json`, ESLint/Prettier, `.env*`, secrets, deploy config, GitHub Actions.
+- Destructive git operations.
 
-## 5. Definition of done
+## 7. Definition of done
 
-Mirrors the Blokz Brief contract — lint clean, types clean, build clean, plus a meta-eval delta that holds within budget.
+- `pnpm lint`, `pnpm typecheck`, `pnpm build` clean.
+- `cargo test` + `cargo clippy` clean for any CLI change.
+- `pnpm test:meta` shows no regression in the generator score versus the prior tag.
+- For UI work: focus ring visible, keyboard nav works, tested at 360 / 768 / 1440 / 1920.
+- PR description includes a before/after meta-eval table and links the spec section it implements.
+
+## 8. Domain glossary
+
+- **Eval kind** — `exact-match`, `rubric-score`, or `human-review`; how a generated case is graded.
+- **Goldset** — the curated reference pairs used to score the _generator itself_, not a product feature.
+- **Meta-eval** — running the generator over a known spec and scoring its output against the reference suite.
+- **Gate** — the GitHub Action check that blocks a merge until the feature's eval suite passes.
+
+## 9. Environment & secrets
+
+`.env.local` (gitignored — never commit):
+
+```
+ANTHROPIC_API_KEY=
+GITHUB_TOKEN=            # for the Action that opens the gate PR
+NEXT_PUBLIC_SITE_URL=
+```
+
+Never log secret values. Never check secrets in. If you find a leaked secret in history, alert the human and recommend rotation.
 
 ---
 
-_Full contract lands with Sub-plan B-2. Until then, treat this file as the shape, not the source of truth._
+_This artifact is a representative example. Real Blokz CLAUDE.md files for shipped projects live in their repos, not this site._

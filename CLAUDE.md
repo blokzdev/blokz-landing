@@ -1,16 +1,16 @@
 # CLAUDE.md
 
-This file is the contract between you (Claude) and this codebase. Read it end-to-end before making non-trivial changes. It documents the v2 architecture, conventions, and agent guardrails for the Blokz.dev landing site. Reference the implementation plan at `/root/.claude/plans/this-repo-is-my-jazzy-spark.md` for the high-level vision.
+This file is the contract between you (Claude) and this codebase. Read it end-to-end before making non-trivial changes. It documents the v2 architecture, conventions, and agent guardrails for the Blokz.dev landing site. For the forward-looking plan of record (iterations + chunks) see `Roadmap.md`; for tracked-but-deferred items see `BACKLOG.md`. (The original `/root/.claude/plans/*.md` lives only in the ephemeral dev environment and is not the source of truth.)
 
 ---
 
 ## 1. Overview
 
-**Blokz.dev** is the marketing site for **Blokz Development Company**, a vibecoding studio shipping production blockchain / web3 apps (nine published Android explorers and growing). The site is itself a demonstration of agentic engineering: it is built end-to-end with Claude Code, with the workflow it preaches visualized on `/workflow`.
+**Blokz.dev** is the marketing site for **Blokz Development Company**, a vibecoding studio building AI apps for B2B and B2C — with a heritage of nine published Android blockchain explorers. The site is itself a demonstration of agentic engineering: it is built end-to-end with Claude Code, with the workflow it preaches visualized on `/workflow`.
 
-Brand line: _Apps for a decentralized, transparent, sustainable future._
+Brand line (source of truth: `data/brand.ts`): _Apps at the AI frontier. Built end-to-end with Claude Code._
 
-The repo currently still holds the legacy v1 Glitch template. **v2 will replace it wholesale** — only `.git/`, `LICENSE`, and the brand-asset URLs (captured in §13) are preserved.
+v2 is the live site (this codebase). The legacy v1 Glitch template is preserved only on the `glitch` branch; `main` is v2.
 
 ---
 
@@ -24,10 +24,9 @@ The repo currently still holds the legacy v1 Glitch template. **v2 will replace 
 | Styling          | Tailwind CSS v4 (CSS-first `@theme`)                    | No JS config file; tokens in `globals.css`                       | 4.1.x   |
 | Component prims  | shadcn/ui (Radix + Tailwind, copied into `ui/`)         | Owned components, no runtime dep                                 | latest  |
 | Motion (DOM)     | `motion` (formerly framer-motion)                       | Shared layout, scroll, gestures                                  | 12.x    |
-| Motion (scroll)  | `gsap` + `@gsap/react` + ScrollTrigger                  | Pinned timelines, scrub-driven scenes                            | 3.13.x  |
-| Smooth scroll    | `lenis`                                                 | Inertial scroll; integrates with ScrollTrigger                   | 1.1.x   |
-| 3D / shaders     | `three` + `@react-three/fiber` + `drei`                 | Hero + workflow chapter 4 build-vis                              | 0.170+  |
-| Postprocessing   | `@react-three/postprocessing`                           | Bloom on accents                                                 | 3.x     |
+| Motion (scroll)  | `motion` + sticky CSS layout (NOT gsap)                 | The planned GSAP/ScrollTrigger scrolly was dropped; not a dep    | —       |
+| Smooth scroll    | `lenis`                                                 | Inertial smooth scroll on `/` + `/workflow`                      | 1.3.x   |
+| 3D / shaders     | `three` + `@react-three/fiber` + `drei`                 | Hero flow-field + workflow chapter-4 build-tunnel                | 0.184.x |
 | Content          | `@next/mdx`, `rehype-pretty-code` (Shiki), `remark-gfm` | Manifesto/projects/workflow as MDX                               | latest  |
 | URL state        | `nuqs`                                                  | `/apps` filter state in URL                                      | latest  |
 | Forms            | Native form + server action + `resend`                  | Contact form → `team@blokz.dev`                                  | 4.x     |
@@ -39,7 +38,7 @@ The repo currently still holds the legacy v1 Glitch template. **v2 will replace 
 | Hooks            | `simple-git-hooks` + `lint-staged`                      | Lighter than husky                                               | latest  |
 | Package manager  | `pnpm`                                                  | Mandatory (`engine-strict=true`, pinned via `packageManager`)    | 10.x    |
 | Runtime          | Node                                                    | LTS                                                              | ≥20.11  |
-| Deploy           | Vercel                                                  | SSG + Edge for `/api/contact`                                    | n/a     |
+| Deploy           | Vercel                                                  | SSG + a contact **server action** (`contact/actions.ts`)         | n/a     |
 | Tests (optional) | Playwright                                              | Smoke tests on hero/workflow                                     | 1.48+   |
 
 Don't add a dependency without confirming with the user (see §11). Don't change a pinned major version without confirmation.
@@ -50,16 +49,16 @@ Don't add a dependency without confirming with the user (see §11). Don't change
 
 ```bash
 pnpm install         # install deps (pnpm only — npm/yarn rejected by engine-strict)
-pnpm dev             # next dev (Turbopack)
-pnpm build           # next build (SSG + Edge route compilation)
+pnpm dev             # next dev --turbopack
+pnpm build           # next build --turbopack (SSG)
 pnpm start           # serve production build locally
 pnpm lint            # eslint
 pnpm lint:fix        # eslint --fix
 pnpm format          # prettier --write .
+pnpm format:check    # prettier --check .
 pnpm typecheck       # tsc --noEmit
-pnpm analyze         # ANALYZE=true pnpm build (next-bundle-analyzer)
-pnpm test            # playwright test (optional, present after Phase 6)
-pnpm test:smoke      # playwright test --grep @smoke
+pnpm analyze         # ANALYZE=true next build (bundle analyzer)
+# Note: no `pnpm test` yet — a Playwright smoke suite is a tracked BACKLOG item, not set up.
 ```
 
 Pre-commit (auto): `lint-staged` → eslint --fix + prettier --write on staged files.
@@ -73,158 +72,156 @@ Pre-push (auto): `pnpm typecheck`.
 app/                              # Next App Router
   (marketing)/                    # route group sharing nav + footer
     layout.tsx                    #   sets <SiteNav/> + <SiteFooter/>
-    page.tsx                      #   / — AI apps directory (filter + search, 70 entries)
+    page.tsx                      #   / — AI-apps DIRECTORY (data/apps.ts; filter+search+sort, ~70 entries)
     about/
-      page.tsx                    #   /about — studio identity + portfolio listing
-                                  #            (hero, Now/Next, manifesto, full portfolio grid)
+      page.tsx                    #   /about — studio identity (Hero, Now/Next, manifesto, portfolio grid)
       opengraph-image.tsx         #   per-route OG
     apps/
-      [slug]/page.tsx             #   /apps/<slug> — per-app directory detail (SSG, 70 entries)
+      [slug]/page.tsx             #   /apps/<slug> — directory-app detail (SSG; renders components/tools/app-detail)
       [slug]/opengraph-image.tsx  #   per-app OG
     portfolio/
-      [slug]/page.tsx             #   /portfolio/<slug> — per-project detail (SSG, 11 entries)
+      [slug]/page.tsx             #   /portfolio/<slug> — Blokz shipped-PROJECT detail (data/projects.ts, SSG)
     workflow/
-      page.tsx                    #   /workflow — 5-chapter scrolly
+      page.tsx                    #   /workflow — 5-phase narrative (components/workflow/workflow.tsx)
       artifacts/[product]/[type]/page.tsx
-                                  #   /workflow/artifacts/<product>/<type> — MDX viewer
-    contact/page.tsx              #   /contact — dedicated contact page
-  api/
-    contact/route.ts              # Edge runtime, Resend email send
+                                  #   /workflow/artifacts/<product>/<type> — MDX artifact viewer (SSG, 12)
+      opengraph-image.tsx
+    contact/
+      page.tsx                    #   /contact — dedicated contact page
+      actions.ts                  #   server action → Resend  (NOT an /api/* route)
+      opengraph-image.tsx
   manifest.ts                     # PWA manifest (typed)
   robots.ts                       # robots.txt
-  sitemap.ts                      # sitemap.xml
+  sitemap.ts                      # sitemap.xml (apps + projects + workflow + static)
   opengraph-image.tsx             # root OG image (per-route can override)
-  icon.tsx                        # dynamic favicon
+  icon.tsx / apple-icon.tsx       # dynamic favicons via next/og
   globals.css                     # Tailwind v4 @theme block + base/utility layers
-  layout.tsx                      # root layout: fonts, providers, analytics
+  layout.tsx                      # root layout: fonts, providers, analytics, Organization JSON-LD
+
+# ── TWO content tracks — keep them straight ──────────────────────────────
+#   DIRECTORY = the curated AI-apps list (the / homepage).
+#               data/apps.ts · types/app.ts · lib/apps.ts · components/tools/*
+#   PORTFOLIO = Blokz's own shipped apps (/about grid + /portfolio/<slug>).
+#               data/projects.ts · types/project.ts · lib/projects.ts · components/apps/*
+# ─────────────────────────────────────────────────────────────────────────
 
 components/
-  ui/                             # shadcn primitives (button, badge, tabs, sheet, dialog, tooltip, separator)
-  nav/{site-nav, mobile-sheet}.tsx
+  ui/                             # shadcn primitives present: button, badge, tabs, sheet, dialog, tooltip, separator
+  nav/{site-nav, mobile-sheet, mobile-sheet-portal}.tsx
   footer/site-footer.tsx
   hero/
-    r3f-hero.tsx                  # client; R3F canvas wrapper, dynamic-imported with ssr:false
+    hero.tsx                      # server shell: text-first copy + dynamic R3F canvas
+    r3f-hero.tsx                  # client; R3F canvas, dynamic-imported ssr:false
     flow-field-plane.tsx          # the shader mesh
-    hero-copy.tsx                 # HTML overlay (eyebrow, headline, CTAs)
+    shaders.ts                    # inline GLSL (vert/frag) — there is NO top-level shaders/ dir
+    hero-copy.tsx                 # headline overlay (eyebrow, title, CTAs)
+    hero-fallback.tsx             # reduced-motion / no-WebGL fallback
     scroll-cue.tsx
+  home/now-next-band.tsx          # /about Now/Next band
   manifesto/{manifesto, principle-card}.tsx
-  apps/
-    project-grid.tsx              # bento masonry container
-    project-card.tsx              # dispatcher by type
-    project-card-android.tsx
-    project-card-oss.tsx
-    project-card-web.tsx
-    project-filter-bar.tsx        # filter chips + nuqs URL state
-    project-detail.tsx            # /apps/[slug] body
+  tools/                          # ── DIRECTORY (App) ──
+    tools-browser.tsx             #   client orchestrator: filter state, infinite scroll, sponsored interleave
+    tool-filter-bar.tsx           #   sticky filter + search + sort bar (nuqs URL state)
+    tool-grid.tsx / tool-card.tsx #   responsive grid + the App card
+    featured-carousel.tsx         #   featured rail (scroll-snap)
+    sponsored-card.tsx            #   sponsored slot card
+    app-detail.tsx                #   /apps/[slug] body
+  apps/                           # ── PORTFOLIO (Project) ──
+    apps-browser.tsx / apps-preview.tsx
+    project-grid.tsx              #   bento grid container
+    project-card{,-android,-oss,-web}.tsx   # dispatcher + variants
+    project-filter-bar.tsx
+    project-detail.tsx            #   /portfolio/[slug] body
+    card-bits.tsx                 #   shared chips / monogram / status glyphs
   workflow/
-    workflow-scrolly.tsx          # GSAP ScrollTrigger orchestrator
-    phase-chapter.tsx
-    platform-tabs.tsx             # Web/Android/Windows/iOS segmented control
+    workflow.tsx                  # client orchestrator: product + platform tabs, renders chapters
+    phase-chapter.tsx             # default phase shell (alternating layout)
+    product-tabs.tsx / platform-tabs.tsx   # segmented controls
+    chapter-{conceptualize,spec,environment,develop,ship}.tsx   # bespoke scenes
+    build-tunnel.tsx / build-tunnel-fallback.tsx   # chapter-4 R3F scene + reduced-motion fallback
     artifact-frame.tsx            # styled MDX viewer with "open full" CTA
-    build-visualization.tsx       # chapter-4 R3F scene (dynamic-imported)
-    code-reveal.tsx               # Shiki + typing motion
   contact/{contact-form, contact-success}.tsx
-  effects/
-    lenis-provider.tsx
-    reduced-motion-provider.tsx
-    noise-overlay.tsx
-    glow-orb.tsx
-    magnetic-button.tsx
+  effects/{lenis-provider, reduced-motion-provider, noise-overlay, glow-orb, magnetic-button}.tsx
   seo/json-ld.tsx                 # JSON-LD blob renderer
 
-content/                          # all MDX + typed content lives here
-  projects/<slug>.mdx             # long-form per project (optional; gate via hasLongForm)
-  manifesto/principles.ts         # typed array — no MDX needed
+content/                          # typed content + MDX
+  manifesto/principles.ts         # typed array — no MDX
   workflow/
-    phases.ts                     # phase metadata
-    phase-1-conceptualize.mdx
-    phase-2-spec.mdx
-    phase-3-environment.mdx
-    phase-4-development.mdx
-    phase-5-review-ship.mdx
+    phases.ts                     # per-product phase metadata (brief / forge / memo)
+    products.ts                   # the 3 sample products
     artifacts/
-      claude-md-example.mdx
-      prd-example.mdx
-      spec-example.mdx
-      prompt-library.mdx
+      index.ts                    # artifact registry + dynamic loaders + per-type SEO metadata
+      {brief,forge,memo}/{claude-md,prd,spec,prompt-library}.mdx   # 12 artifacts
 
 data/                             # source-of-truth, typed
-  projects.ts                     # all projects (Project[])
-  brand.ts                        # logos, social handles, contact addresses
+  apps.ts                         # DIRECTORY: all directory apps (App[])
+  projects.ts                     # PORTFOLIO: Blokz's shipped projects (Project[])
+  sponsored.ts                    # sponsored directory slots
+  brand.ts                        # logo, social handles, contact, hero copy
   chains.ts                       # chain metadata (icon, color, label)
 
 lib/
   utils.ts                        # cn() + small formatters
-  projects.ts                     # query helpers (listProjects, getProject, etc.)
-  mdx.ts                          # MDX compile config (server)
+  apps.ts                         # directory query helpers (listApps, getApp, relatedApps, …)
+  projects.ts                     # portfolio query helpers (listProjects, getProject, …)
+  interleave.ts                   # deterministic sponsored-slot interleave
   rate-limit.ts                   # contact rate-limit (in-memory; upgrade path: Upstash)
-  analytics.ts                    # Vercel Analytics wrapper
-  seo.ts                          # buildMetadata() helper
-
-shaders/                          # raw GLSL
-  flow-field.vert.glsl
-  flow-field.frag.glsl
-  noise.glsl                      # shared simplex/curl noise
+  og-image.tsx                    # shared OG image template (Satori)
+  seo.ts                          # buildMetadata() + siteUrl
 
 hooks/
-  use-reduced-motion.ts
-  use-mouse.ts
-  use-scroll-progress.ts
-  use-media-query.ts
+  use-reduced-motion.ts  use-mouse.ts  use-scroll-progress.ts  use-media-query.ts
+  use-workflow-product.ts  use-workflow-platform.ts
 
 types/
-  project.ts                      # ProjectType, ProjectStatus, Project, ProjectLink, ProjectStat, ProjectMedia, Chain, Platform, LinkKind
-  workflow.ts                     # Phase, ChapterBeat, PlatformVariant
+  app.ts                          # DIRECTORY: App, AppCategory, AppPricing, BlokzMark, AppPlatform, AppLinkKind, ModelSupport, …
+  project.ts                      # PORTFOLIO: Project, ProjectType, ProjectStatus, Chain, Platform, LinkKind, …
+  sponsored.ts                    # Sponsored slot
+  workflow.ts                     # WorkflowProduct, ArtifactType, Phase, …
 
 public/
   brand/                          # rehosted Blokz logo + favicons
-  projects/<slug>/                # icon, screenshots (1x + 2x)
-  og/                             # static OG fallbacks
+  projects/<slug>/                # portfolio icons / screenshots
   app-ads.txt                     # ported from v1 (Play Store ad SDK requirement)
 
-CLAUDE.md                         # this file
-README.md
-LICENSE
-.nvmrc                            # 20.11.x
-.npmrc                            # engine-strict=true, package-manager-strict=true
-next.config.ts
-tsconfig.json
-eslint.config.mjs
-prettier.config.mjs
-package.json
-pnpm-lock.yaml
+CLAUDE.md  README.md  Roadmap.md  BACKLOG.md  LICENSE
+.nvmrc  .npmrc  next.config.ts  tsconfig.json  eslint.config.mjs  prettier.config.mjs
+package.json  pnpm-lock.yaml
 ```
 
 ---
 
 ## 5. Content authoring
 
-### Add a new project
+> Two tracks, two recipes — see the "TWO content tracks" callout in §4. The `/` homepage
+> directory is the **App** track; `/about` + `/portfolio` is the **Project** track.
 
-1. Append a `Project` entry to `data/projects.ts`. Required: `slug`, `name`, `tagline`, `description`, `type`, `status`, `platforms`, `chains`, `media.icon`, `stats`, `links` (with at least one `primary: true`).
+### Add a directory app (the `/` directory — App track)
+
+1. Append an `App` entry to `data/apps.ts` (schema in `types/app.ts`). Required: `slug`, `name`, `tagline`, `description`, `category`, `pricing`, `platforms`, `links` (≥1 `primary: true`). Optional: `vendor`, `blokzMark` (`deployed`/`vetted`/`contributing`), `status`, `tags`, `modelSupport`, `addedAt`, `lastVerifiedAt`, `featured`, `accentColor`.
+2. One card renders all apps — `components/tools/tool-card.tsx` (no per-type dispatch); the detail body is `components/tools/app-detail.tsx`.
+3. Set `featured: true` to surface it in the featured carousel (use sparingly).
+4. Run `pnpm dev` and verify it appears on `/`, that the category/pricing/mark/status filter chips include it, and that `/apps/<slug>` renders.
+
+### Add a portfolio project (the `/about` + `/portfolio` track — Project track)
+
+1. Append a `Project` entry to `data/projects.ts` (schema in `types/project.ts`). Required: `slug`, `name`, `tagline`, `description`, `type`, `status`, `platforms`, `chains`, `media.icon`, `stats`, `links` (≥1 `primary: true`).
 2. Drop assets in `public/projects/<slug>/`: `icon.png` (512×512 source), screenshots if any.
-3. Optional long-form: create `content/projects/<slug>.mdx` and set `hasLongForm: true`. The detail page renders the MDX after the project header.
-4. Pick the right `type` so the correct card variant renders:
-   - `android-app` / `ios-app` → mobile card (Play/App Store badge, rating, downloads)
-   - `web-app` → web card (cover image, live-URL chip, uptime/version)
-   - `oss-repo` → OSS card (GitHub badge, stars/forks, language chip, violet accent)
-   - `library` / `service` → defaults to OSS card unless added later
-   - `desktop-app` → defaults to mobile card layout; add a `-desktop` variant if it diverges
-5. Set `featured: true` for projects that should span 2 columns in the bento grid (use sparingly — max 3 at a time).
-6. Run `pnpm dev` and verify it appears on `/apps` and that all filter chips include it correctly.
+3. Pick the right `type` so the correct card variant renders (dispatch in `components/apps/project-card.tsx`):
+   - `android-app` / `ios-app` → mobile card · `web-app` → web card · `oss-repo` / `library` / `service` → OSS card · `desktop-app` → mobile card layout.
+4. Set `featured: true` for projects that should lead the `/about` portfolio preview (use sparingly).
+5. Run `pnpm dev` and verify it appears on `/about` and `/portfolio/<slug>`.
 
 ### Add a new workflow phase
 
-1. Add a phase entry to `content/workflow/phases.ts` with id, title, summary, beat list, and per-platform overrides.
-2. Create `content/workflow/phase-<n>-<slug>.mdx` with the chapter narrative (used by the reduced-motion fallback and SEO).
-3. Add visual treatment in `components/workflow/` if the chapter needs a bespoke scene; otherwise the default `phase-chapter.tsx` shell handles it.
-4. The platform tabs and ScrollTrigger orchestration in `workflow-scrolly.tsx` pick up new phases automatically as long as the `phases.ts` order is correct.
+1. Add a phase entry to the relevant product array in `content/workflow/phases.ts` — each of `brief`/`forge`/`memo` carries the same five phases with a `beats` list and per-platform `platformNotes`.
+2. If the chapter needs a bespoke visual, add `components/workflow/chapter-<id>.tsx` and wire it into `workflow.tsx`'s `renderScene()`; otherwise `phase-chapter.tsx` handles it.
+3. There are **no** `phase-<n>.mdx` files — the narrative lives in `phases.ts`. (The planned GSAP `workflow-scrolly.tsx` was never built; `workflow.tsx` orchestrates with `motion` + a sticky layout.)
 
 ### Add a workflow artifact
 
-1. Create `content/workflow/artifacts/<slug>.mdx`.
-2. Link from a phase MDX via standard markdown link to `/workflow/artifacts/<slug>`.
-3. Register the slug in `content/workflow/phases.ts` if the artifact should appear in the chapter-2 "desk" stack.
+1. Artifacts are per-product, per-type: `content/workflow/artifacts/<product>/<type>.mdx` where product ∈ {brief, forge, memo} and type ∈ {claude-md, prd, spec, prompt-library}.
+2. Register the loader in `content/workflow/artifacts/index.ts`; the route `/workflow/artifacts/[product]/[type]` SSGs from there, and per-type SEO metadata lives in the same file.
 
 ### Add / edit a manifesto principle
 
@@ -240,7 +237,7 @@ Edit the `@theme` block at the top of `app/globals.css`. Tailwind v4 picks up th
 
 - **File naming**: `kebab-case.tsx` (e.g., `project-card-android.tsx`). Export the component as `PascalCase` (`ProjectCardAndroid`). One component per file unless a tiny sibling component is exclusively used by it.
 - **Default to RSC**. Add `"use client"` only when the component uses hooks, browser APIs, event handlers, or motion libraries. Keep client islands small — pass server-rendered children down rather than promoting whole subtrees.
-- **R3F + GSAP components are always client + dynamic-imported**: `const R3FHero = dynamic(() => import('./r3f-hero'), { ssr: false })`.
+- **R3F components are always client + dynamic-imported**: `const R3FHero = dynamic(() => import('./r3f-hero'), { ssr: false })`.
 - **Props**: prefer named props over positional. Use `Readonly<{}>` for component props. No default-export for utility components; reserve default-exports for Next route files (`page.tsx`, `layout.tsx`).
 - **Composition over conditional bloat**: e.g., `ProjectCard` dispatches to `ProjectCardAndroid` / `ProjectCardOss` / `ProjectCardWeb` via a small switch; do NOT add a giant `if/else` inside one card component.
 - **`cn()` utility**: import from `lib/utils.ts`. Always use it when conditionally composing classNames. Never string-concatenate Tailwind classes by hand.
@@ -348,10 +345,9 @@ interface Project {
 
 - **Reduced-motion source-of-truth**: `useReducedMotion()` from `hooks/use-reduced-motion.ts`. The `ReducedMotionProvider` toggles `data-motion="reduce"` on `<html>` so CSS-only fallbacks work via `[data-motion="reduce"] *`.
 - **R3F components**: always client + `next/dynamic({ ssr: false })`. Wrap in a `<Suspense>` with a fast SVG/CSS-gradient placeholder so LCP is text-driven, not canvas-driven. Hydrate after `requestIdleCallback` for the hero; via `IntersectionObserver` for the workflow scene (only when chapter 4 is approaching the viewport).
-- **GSAP plugin registration**: once, at module scope inside a client provider. Never inside a component body (causes duplicate registrations on hot-reload).
-- **ScrollTrigger + Lenis**: register Lenis once in `LenisProvider`; in the workflow page mount, call `lenis.on('scroll', ScrollTrigger.update)` and `gsap.ticker.add((time) => lenis.raf(time * 1000))`. Always clean up in `useEffect` return.
-- **`motion` library**: use `whileInView` with `viewport={{ once: true, amount: 0.35 }}` for entrance animations so they don't re-fire on scroll-back. Use shared `layoutId` sparingly — they're powerful but easy to mis-pair.
-- **Three.js asset budget**: chapter 4 build-visualization total triangles ≤ 5k. No expensive postprocessing chains; bloom only.
+- **Lenis**: register once in `LenisProvider` (gated to `/` + `/workflow`); it integrates with `motion`'s scroll utilities. No GSAP/ScrollTrigger in the codebase. Always clean up listeners in the `useEffect` return.
+- **`motion` library**: use `whileInView` with `viewport={{ once: true, amount: 0.35 }}` for entrance animations so they don't re-fire on scroll-back. Use shared `layoutId` sparingly — they're powerful but easy to mis-pair. The workflow scenes are `motion`-driven with a sticky layout (no scrub timelines).
+- **Three.js asset budget**: the chapter-4 `build-tunnel` total triangles ≤ 5k. No postprocessing dependency (bloom was dropped); keep scenes cheap.
 - **Confetti**: `canvas-confetti` one-shot only, on the chapter-5 ship beat. Guard with `useReducedMotion()`.
 
 ---
@@ -373,21 +369,21 @@ interface Project {
 
 ## 10. Performance budget
 
-| Metric                          | Target                             |
-| ------------------------------- | ---------------------------------- |
-| Lighthouse Performance (mobile) | ≥ 90                               |
-| Lighthouse Accessibility        | ≥ 98                               |
-| Lighthouse Best Practices       | 100                                |
-| Lighthouse SEO                  | 100                                |
-| LCP                             | < 2.5s                             |
-| CLS                             | < 0.05                             |
-| INP                             | < 200ms                            |
-| Bundle ceiling (route `/`)      | ≤ 200KB gz (incl. R3F lazy)        |
-| Bundle ceiling (`/apps`)        | ≤ 160KB gz                         |
-| Bundle ceiling (`/workflow`)    | ≤ 220KB gz (incl. R3F + lazy GSAP) |
-| Bundle ceiling (other routes)   | ≤ 140KB gz                         |
+| Metric                          | Target                      |
+| ------------------------------- | --------------------------- |
+| Lighthouse Performance (mobile) | ≥ 90                        |
+| Lighthouse Accessibility        | ≥ 98                        |
+| Lighthouse Best Practices       | 100                         |
+| Lighthouse SEO                  | 100                         |
+| LCP                             | < 2.5s                      |
+| CLS                             | < 0.05                      |
+| INP                             | < 200ms                     |
+| Bundle ceiling (route `/`)      | ≤ 200KB gz (incl. R3F lazy) |
+| Bundle ceiling (`/apps`)        | ≤ 160KB gz                  |
+| Bundle ceiling (`/workflow`)    | ≤ 220KB gz (incl. lazy R3F) |
+| Bundle ceiling (other routes)   | ≤ 140KB gz                  |
 
-The floor for any client-touched route is roughly 128 KB (React 19 + Next 15 framework chunks + shared `motion` library). The ceilings above are set ~10–15 KB above measured current numbers so reasonable additions don't regress past them. Verify with `pnpm analyze`. `three` and `gsap` MUST NOT appear in chunks for routes other than `/` and `/workflow`.
+The floor for any client-touched route is roughly 128 KB (React 19 + Next 15 framework chunks + shared `motion` library). The ceilings above are set ~10–15 KB above measured current numbers so reasonable additions don't regress past them. Verify with `pnpm analyze`. `three` (R3F) MUST NOT appear in chunks for routes other than `/` and `/workflow`.
 
 **Image rules**:
 
@@ -428,7 +424,7 @@ You MUST confirm with the user before:
 
 **Git workflow**:
 
-- Development branch is **`claude/revamp-blokz-landing-zkhIT`**. All commits land there.
+- Work on the **chunk branch named in the active task** (the harness assigns one per session, e.g. `claude/iter5-chunk-<letter>-<slug>`). Never push to `main` directly; open a PR. The legacy `claude/revamp-blokz-landing-zkhIT` branch is retired.
 - Commit messages: imperative mood, ≤ 72 char subject, optional body. Conventional Commit prefixes welcome but not required (`feat:`, `fix:`, `chore:`).
 - Group related changes in one commit; don't make 10 micro-commits for one feature.
 - Never `--no-verify` or `--no-gpg-sign` unless the user explicitly asks.
@@ -476,10 +472,9 @@ Triage `BACKLOG.md` at the end of every Phase and again before launch.
 
 ### Add a new workflow chapter
 
-1. Append to `content/workflow/phases.ts`.
-2. Create the MDX file under `content/workflow/`.
-3. If the chapter needs a bespoke visual, create a component under `components/workflow/`; otherwise the default `phase-chapter.tsx` is sufficient.
-4. Update the workflow page's reduced-motion fallback section (`workflow-scrolly.tsx` exposes a `<WorkflowStatic/>` companion — keep it in sync).
+1. Append a phase to each product array in `content/workflow/phases.ts` (keep `brief`/`forge`/`memo` parallel).
+2. If the chapter needs a bespoke visual, add `components/workflow/chapter-<id>.tsx` and wire it into `workflow.tsx`'s `renderScene()`; otherwise `phase-chapter.tsx` is sufficient.
+3. Every R3F/motion scene ships a reduced-motion fallback (e.g. `build-tunnel-fallback.tsx`) — keep it in sync.
 
 ### Change brand colors
 
@@ -504,7 +499,7 @@ Triage `BACKLOG.md` at the end of every Phase and again before launch.
 **Vocabulary**:
 
 - **Vibecoding** — agentic engineering: conceptualizing, prompting, and shipping software end-to-end with an AI agent as primary author and human as architect/reviewer.
-- **Blokz Receipt** — fictional sample product narrated across the workflow page artifacts. Not a real product; the name is reserved as a placeholder.
+- **Sample products** — the three fictional products narrated across `/workflow` and its artifacts: **Blokz Brief** (arxiv → paper digest), **Eval Forge** (spec → eval suite), **Edge Memo** (on-device meeting capture). Not real products — illustrative of the workflow only. (The earlier single "Blokz Receipt" placeholder was retired.)
 - **Bento masonry** — the apps grid layout: CSS Grid + manual `span` annotations on `featured` entries; not a JS masonry lib.
 - **Glass card** — the standard surface treatment (recipe in §7).
 - **Chain mark** — small monogram badge for a blockchain (BTC, ETH, BSC, TRON, MULTI).
@@ -553,8 +548,8 @@ A change is "done" only when ALL of these hold:
 
 ## Quick references
 
-- Plan: `/root/.claude/plans/this-repo-is-my-jazzy-spark.md`
-- Branch: `claude/revamp-blokz-landing-zkhIT`
+- Plan of record: `Roadmap.md` (iterations + chunks) · deferred items: `BACKLOG.md`
+- Branch: the per-task chunk branch (e.g. `claude/iter5-chunk-<letter>-<slug>`); PR into `main`
 - Contact destination: `team@blokz.dev`
 - Production domain (TBD cutover): `blokz.dev`
 - Play Store dev: `https://play.google.com/store/apps/dev?id=8878695474933625157`

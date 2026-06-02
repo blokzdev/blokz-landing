@@ -1,10 +1,8 @@
 # PRD — Edge Memo
 
-> **Concept artifact.** Edge Memo is the third product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-3.
-
 ## 1. Problem
 
-Cloud meeting-capture is a privacy trade most people would prefer not to make. Sending raw audio to a vendor — even one they nominally trust — leaks conversations that didn't belong in the cloud in the first place: client calls, legal posture, half-baked product strategy. The status-quo cost of avoiding that leak is "take better notes yourself," which most people don't.
+Cloud meeting-capture is a privacy trade most people would prefer not to make. Sending raw audio to a vendor — even one they nominally trust — leaks conversations that didn't belong in the cloud in the first place: client calls, legal posture, half-baked product strategy. The status-quo cost of avoiding that leak is "take better notes yourself," which most people don't, so the meeting evaporates the moment it ends.
 
 The on-device capture should already exist.
 
@@ -19,13 +17,13 @@ JTBD: _"When I'm in a meeting that should not leave my device, I want a recorder
 
 > If we hand a user an on-device capture flow whose transcript and summary land within 5 seconds of meeting end, they will capture 3+ meetings per week within 30 days.
 
-**Success metric**: meetings captured per active user per week ≥ 3 within 30 days of installation.
+**Success metric**: meetings captured per active user per week ≥ 3 within 30 days of installation. (Baseline: privacy-conscious users capture ~0 because no tool clears their bar.)
 
 ## 4. MVP scope
 
 **In**:
 
-- iOS-native first. Foreground service, background audio entitlement.
+- iOS-native first. Foreground service, background-audio entitlement.
 - 3-model on-device pipeline: transcribe → summary → action items.
 - WER ≤ 0.12 on the goldset for 10–30 min clips.
 - Optional self-hosted sync via the user's own server (Tailscale-friendly).
@@ -35,18 +33,46 @@ JTBD: _"When I'm in a meeting that should not leave my device, I want a recorder
 
 - Multi-speaker diarization (initially, all speech treated as one stream).
 - Live in-meeting display (initially, post-meeting only).
-- Vendor-hosted sync (we don't plan to offer it).
+- Vendor-hosted sync (we don't plan to offer it — ever).
+- Real-time translation.
 
-## 5. Distribution
+## 5. User flows
 
-iOS-native via TestFlight then App Store; Android via Play Console; Tauri shell on Windows/macOS for laptop capture. No vendor-hosted sync — ever.
+1. Open the app → tap **Record** → a foreground capture session starts, transcript builds in 30s chunks.
+2. Tap **Stop** → summary and action items compute on-device, ready in ≤ 5s for a 30-min meeting.
+3. Review the note; edit any action item; everything stays local.
+4. Optional: enable **Sync** once, supply a relay URL → notes replicate end-to-end encrypted to the user's own server.
 
-## 6. Risks
+## 6. Constraints
 
-- **Battery / heat on long meetings** → mitigate with chunked inference + warn the user if a meeting exceeds the warm-budget.
-- **Transcription WER on accented speech** → goldset must include accent-diverse recordings; tune model selection accordingly.
-- **App-Store policy on background audio** → entitlement is well-trodden but requires careful review-notes.
+- **Perf**: transcript keeps pace with capture; full pipeline ≤ 5s after stop on an iPhone 14 Pro.
+- **Battery**: a 60-min capture stays inside the warm budget; the app warns before it would overheat.
+- **A11y**: VoiceOver on every control, Dynamic Type, reduced-motion safe.
+- **Privacy**: zero network access on capture/pipeline paths, enforced at build time.
+- **Fidelity**: WER ≤ 0.12 and action-item recall ≥ 0.8 on the goldset before a model swap ships.
+
+## 7. Distribution per platform
+
+| Platform | Channel                                               | Beta cohort        |
+| -------- | ----------------------------------------------------- | ------------------ |
+| iOS      | TestFlight cohort → App Store Connect                 | 50 testers         |
+| Android  | Compose port, Play Console internal → closed beta     | 50 testers         |
+| Windows  | Tauri shell, MSIX on GitHub Releases (laptop capture) | LinkedIn followers |
+| Web      | transformers.js / WebGPU reader for laptops           | invite link        |
+
+## 8. Risks
+
+- **Battery / heat on long meetings** → mitigate with chunked inference + warn the user if a meeting exceeds the warm budget.
+- **Transcription WER on accented speech** → the goldset must include accent-diverse recordings; tune model selection accordingly.
+- **App-Store policy on background audio** → the entitlement is well-trodden but needs careful review-notes and a clear user benefit.
+- **On-device model size vs. older hardware** → ship a smaller fallback model and gate device support by an on-launch capability check.
+
+## 9. Open questions
+
+- Ship diarization at MVP or defer? Lean: defer — single-stream transcript is useful enough and far cheaper on-device.
+- Bundle models in the binary or download on first launch? Lean: download on first launch to keep the App Store size sane.
+- Surface a live transcript during the meeting? Lean: post-meeting only at MVP; live view is a battery and UX rabbit hole.
 
 ---
 
-_Full PRD lands with Sub-plan B-3._
+_This artifact is a representative example. Real PRDs live next to the products they describe._

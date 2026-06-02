@@ -1,51 +1,97 @@
 # CLAUDE.md — Edge Memo
 
-> **Concept artifact.** Edge Memo is the third product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-3.
+This file is the contract between the agent and the Edge Memo codebase. Read end-to-end before touching anything non-trivial. The product is an iOS-native-first meeting-capture app where three small models cooperate locally — one transcribes, one summarises, one extracts action items. Nothing leaves the device by default; sync is opt-in and self-hosted.
 
 ## 1. Overview
 
-Edge Memo is an iOS-native first meeting-capture app where three small models cooperate locally: one transcribes, one summarises, one extracts action items. Nothing leaves the device by default. Optional self-hosted sync.
+Hit record, run the meeting, hit stop. Within seconds you have a transcript, a three-paragraph summary, and an action-item list — all computed on-device. The defining constraint is the privacy guarantee: the capture and inference paths never touch the network.
 
 Brand line: _Capture on-device. Trust by default._
 
 ## 2. Tech stack
 
-| Layer      | Choice                                      | Why                                |
-| ---------- | ------------------------------------------- | ---------------------------------- |
-| Platform   | iOS-native first (SwiftUI, Core ML)         | Background audio, on-device infra  |
-| Transcribe | Whisper variant (Core ML quantized)         | Strong WER for short-form speech   |
-| Summarise  | Small instruction-tuned model on-CoreML     | Local-only, sub-2s for 10-min clip |
-| Extract    | Same model with action-item prompt          | One artifact, two prompts          |
-| Sync       | Optional, self-hosted, end-to-end encrypted | Privacy by default                 |
+| Layer      | Choice                                      | Why                                  | Version |
+| ---------- | ------------------------------------------- | ------------------------------------ | ------- |
+| Platform   | iOS-native first (SwiftUI, Core ML)         | Background audio, on-device infra    | iOS 17+ |
+| Transcribe | Whisper variant (Core ML, quantized)        | Strong WER for short-form speech     | latest  |
+| Summarise  | Small instruction model on Core ML          | Local-only, sub-2s for a 10-min clip | latest  |
+| Extract    | Same model, action-item prompt              | One artifact, two prompts            | latest  |
+| Store      | SQLite + sqlite-vec (encrypted at rest)     | On-device notes + vector search      | latest  |
+| Sync       | Optional, self-hosted, end-to-end encrypted | Privacy by default                   | n/a     |
 
-## 3. Folder map (sketch)
+## 3. Commands
+
+```bash
+xcodegen generate          # regenerate the Xcode project from project.yml
+xcodebuild test            # unit + UI tests on the iOS simulator
+fastlane test              # CI test lane
+fastlane beta              # build + upload to TestFlight
+swiftlint                  # lint
+./scripts/score-goldset.sh # WER + action-item recall over the recording goldset
+```
+
+## 4. Folder map
 
 ```
 ios/                          # SwiftUI app
   Memo/
-    Capture/                  # AVAudioEngine + foreground service
+    Capture/                  # AVAudioEngine + background-audio entitlement
     Pipeline/                 # 3-model harness (transcribe → summary → actions)
+      Prompts/                # Summary.swift, Actions.swift — versioned prompts
     Sync/                     # Optional E2EE sync client
+    Store/                    # SQLite + sqlite-vec note store
     Resources/                # Vendored Core ML model bundles
-android/                      # Compose port, llama.cpp bindings
+android/                      # Compose port, llama.cpp/GGUF bindings
 sync-server/                  # Optional self-hosted relay (Rust)
 goldset/                      # Recordings + ground-truth transcripts/summaries
 ```
 
-## 4. Agent guardrails
+## 5. Conventions
+
+- **File names** PascalCase for Swift types; kebab-case for scripts and configs.
+- **SwiftUI views stay thin** — all pipeline work lives in `Pipeline/`, never in a `View` body.
+- **Prompts live in `Pipeline/Prompts/`** as versioned constants; any change ships paired with a goldset delta.
+- **The capture path is offline by construction** — no networking imports are allowed under `Capture/` or `Pipeline/`.
+- **One note format** — the on-disk schema is shared across iOS and Android; migrations are explicit.
+
+## 6. Agent guardrails
 
 ✅ Free to touch: SwiftUI components, capture flows, sync UX, content.
 
 🛑 Confirm before touching:
 
-- **Anything that touches the network on the capture path** — the default is offline.
+- **Anything that touches the network on the capture or pipeline path** — the default is offline, enforced by a build-time entitlement check.
 - Model selection or quantization scheme (affects WER, latency, battery).
-- Schema of the on-disk note format (existing notes have to migrate cleanly).
+- Schema of the on-disk note format (existing notes must migrate cleanly).
+- Signing, entitlements, `Info.plist` background modes, secrets, CI lanes.
+- Destructive git operations.
 
-## 5. Definition of done
+## 7. Definition of done
 
-Mirrors the Blokz Brief contract — lint clean, types clean, build clean, plus a WER + action-item-recall delta that holds within budget on the recording goldset.
+- `swiftlint` clean; `xcodebuild test` green on the simulator.
+- `./scripts/score-goldset.sh` shows no regression in WER or action-item recall versus the prior tag.
+- Manual a11y pass: VoiceOver labels on capture controls, Dynamic Type respected, reduced-motion safe.
+- Battery/heat sanity check on a 30-min capture on a real device.
+- PR description includes a screen recording and the goldset delta table.
+
+## 8. Domain glossary
+
+- **Pipeline** — the three-model chain: transcribe → summarise → extract, run end-to-end on-device.
+- **Goldset** — recordings with hand-graded transcripts, summaries, and action items used to score the pipeline.
+- **WER** — word error rate; the transcription accuracy metric, target ≤ 0.12.
+- **Sync** — the opt-in, end-to-end-encrypted relay to a user-supplied server; off by default.
+
+## 9. Environment & secrets
+
+There are no product API keys — the pipeline is fully local. CI-only secrets live in the runner:
+
+```
+MATCH_PASSWORD=          # fastlane match (signing)
+APP_STORE_CONNECT_KEY=   # TestFlight / App Store upload
+```
+
+Never log secret values. Never check secrets in. The app ships zero analytics SDKs; if you find one in a diff, remove it.
 
 ---
 
-_Full contract lands with Sub-plan B-3. Until then, treat this file as the shape, not the source of truth._
+_This artifact is a representative example. Real Blokz CLAUDE.md files for shipped projects live in their repos, not this site._
