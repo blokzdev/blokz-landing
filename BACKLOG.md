@@ -62,8 +62,7 @@ Anything in this section is explicitly safe to defer to after v2 goes live.
 - [ ] **[polish]** Residual bundle gap after the chunk-2 trim sprint. `/apps` 146 KB, `/apps/[slug]` 134 KB, `/workflow/artifacts/[slug]` 134 KB, `/_not-found` 118 KB. The remaining mass is React 19 + Next 15 runtime + motion library — roughly the modern-Next floor. Further wins would require lazy-loading `motion/react` per feature (large refactor). CLAUDE.md §10 ceilings already updated to reflect realistic targets.
 - [ ] **[polish]** Swap the in-memory IP rate limiter (`lib/rate-limit.ts`) for `@upstash/ratelimit` once we want hardened protection against sustained abuse. Today it resets on cold start and doesn't share state across regions — fine for expected volume.
 - [ ] **[polish]** Full PWA installability — add a service worker if mobile install rate becomes a stated goal. `app/manifest.ts` already advertises the icons.
-- [ ] **[polish]** Lighthouse-CI GitHub Action on every PR with score thresholds.
-- [ ] **[polish]** Playwright smoke suite for the hero, workflow scrolly, apps filter, contact form happy path.
+- [ ] **[polish]** Playwright smoke suite for the hero, apps directory filter, workflow, and contact-form happy path. The CI workflow (`.github/workflows/ci.yml`) is ready to host a `test` job once the suite + `@playwright/test` land.
 
 ### Tooling
 
@@ -80,6 +79,11 @@ Anything in this section is explicitly safe to defer to after v2 goes live.
 ---
 
 ## Resolved (rolling archive)
+
+CI — continuous integration gate
+
+- [x] Core CI workflow `.github/workflows/ci.yml` — on every PR + push to `main`: `pnpm install --frozen-lockfile` → `lint` → `typecheck` → `build` (Node from `.nvmrc`, pnpm from `packageManager`, store cached). Gives the "CI green" gate the merge workflow depends on.
+- [x] **[polish]** Lighthouse-CI job in the same workflow (`lighthouserc.json`) — audits `/`, `/about`, `/workflow`, `/contact`, and a sample `/apps/<slug>` against the production build. Hard gates: accessibility ≥ 0.98, best-practices = 1.0, SEO = 1.0; performance is a warning (CI runners are too noisy to block on). Reports upload to temporary public storage.
 
 Sub-plan B-2 / B-3 — Workflow artifact fill-in
 
