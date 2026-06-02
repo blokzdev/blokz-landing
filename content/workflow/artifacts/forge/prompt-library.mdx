@@ -1,8 +1,22 @@
 # Prompt library — Eval Forge
 
-> **Concept artifact.** Eval Forge is the second product threaded through the Blokz workflow. This file outlines the prompt shape; the full draft lands with Sub-plan B-2.
+Reusable prompts threaded through the Eval Forge workflow. Copy, adapt, ratify. Each prompt assumes you've already read `CLAUDE.md` for the project at hand. Because Forge's job is to grade other features, its own prompts are versioned in `prompts/` and gated by the meta-eval scorer.
 
-## 01 — Generate eval cases from a spec section
+## 01 — Plan a generator improvement
+
+Use at the start of every change to the generation pipeline. The agent outputs a numbered task list; you edit before any code is touched.
+
+> Read `CLAUDE.md` and the relevant section of `tech-spec.mdx`. Then, for change `<NAME>`, draft a numbered task list with concrete file paths.
+>
+> Each task must be:
+>
+> - ≤ 1 hour of agent work,
+> - independent enough to land as its own commit,
+> - written as an imperative ("Add X", "Refactor Y").
+>
+> End with a verification step listing the commands (including `pnpm test:meta`) and manual checks that prove the change is done.
+
+## 02 — Generate eval cases from a spec section
 
 The core prompt. Versioned in `prompts/generate-cases.ts`; every change ships paired with a meta-eval-score delta.
 
@@ -18,7 +32,7 @@ The core prompt. Versioned in `prompts/generate-cases.ts`; every change ships pa
 >
 > Distribution: 5 happy paths, 3 boundary cases, 2 hostile inputs. No emoji. No marketing prose.
 
-## 02 — Rubric design for a fuzzy output
+## 03 — Rubric design for a fuzzy output
 
 Use when the feature's output isn't deterministic and rubric-score is the right kind.
 
@@ -30,7 +44,7 @@ Use when the feature's output isn't deterministic and rubric-score is the right 
 >
 > Output as a TypeScript const matching the `Rubric` type in `packages/harness/rubric.ts`.
 
-## 03 — Audit a generated suite
+## 04 — Audit a generated suite
 
 Use after a generator run, before committing the output.
 
@@ -42,6 +56,29 @@ Use after a generator run, before committing the output.
 >
 > Suggest fixes; do not apply them.
 
+## 05 — Write release notes from a meta-eval delta
+
+Use after merging a prompt change to main, before promoting the generator to production.
+
+> Given this prompt diff plus the meta-eval score table (before vs. after across the reference pairs), draft user-facing release notes:
+>
+> - One sentence summary at the top.
+> - Two sections: **Improved** (axes where the generator got sharper), **Watch** (anything that regressed even slightly).
+> - Each entry is a single line, user-facing language, no jargon.
+> - Skip anything purely internal to the harness.
+
+## 06 — Refactor on the third repetition
+
+Use when you spot the same shape three times.
+
+> Three places in this codebase do `<DESCRIBE THE SHAPE>`:
+>
+> - `<file:line>`
+> - `<file:line>`
+> - `<file:line>`
+>
+> Propose a single shared abstraction. Show the proposed signature and call sites. Do not apply the change — I want to see the shape first.
+
 ---
 
-_Full prompt library lands with Sub-plan B-2._
+_Prompts evolve with the product. Edit freely; commit improvements back._

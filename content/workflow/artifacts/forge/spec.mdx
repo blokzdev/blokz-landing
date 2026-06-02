@@ -1,26 +1,26 @@
 # Tech spec — Eval Forge
 
-> **Concept artifact.** Eval Forge is the second product threaded through the Blokz workflow. This file outlines the shape; the full draft lands with Sub-plan B-2.
-
 ## 1. Architecture
 
 ```txt
 Spec section (markdown)
  ↓
-forge-cli OR forge.blokz.dev dashboard
+forge-cli  OR  forge.blokz.dev dashboard
  ↓
-Generator: Claude prompt over the spec
- ↓
+Generator: Claude prompt over the spec (Anthropic SDK)
+ ↓ streamed via SSE
 Emits:
-  ├── eval.test.ts        (Vitest harness)
-  ├── goldset.json        (10–30 hand-shaped cases)
-  ├── rubric.ts           (scoring axes)
+  ├── eval.test.ts          (Vitest harness)
+  ├── goldset.json          (10 hand-shapeable cases)
+  ├── rubric.ts             (scoring axes)
   └── .github/workflows/forge.yml
  ↓
 git commit + push → GitHub Action runs the gate
+ ↓
+PR check: pass / fail + per-axis scores
 ```
 
-## 2. Data shapes (sketch)
+## 2. Data shapes
 
 ```ts
 type EvalKind = "exact-match" | "rubric-score" | "human-review";
@@ -28,9 +28,11 @@ type EvalKind = "exact-match" | "rubric-score" | "human-review";
 interface GoldCase {
   id: string;
   input: unknown;
-  expected: unknown;
+  /** Present for exact-match; omitted when a rubric decides the score. */
+  expected?: unknown;
   kind: EvalKind;
   rubric?: { axis: string; weight: number }[];
+  notes: string;
 }
 
 interface RunResult {
@@ -39,19 +41,87 @@ interface RunResult {
   pass: number;
   fail: number;
   scoreByAxis?: Record<string, number>;
+  /** Judge reasoning, surfaced in the PR check for rubric-score cases. */
+  rationale?: Record<string, string>;
+  promptVersion: string;
 }
 ```
 
-## 3. API surface (sketch)
+## 3. API surface
 
-- `forge generate <spec.md>` — CLI; emits files to `./forge-output/`.
-- `POST /api/generate` (dashboard) — streams the same output as a zip.
-- `forge run` — CLI wrapper around `vitest run` with forge-aware reporters.
+### `forge generate <spec.md> --feature <name>`
 
-## 4. Test strategy
+CLI; emits the four files to `./forge-output/`. `--ci` also writes `forge.yml`.
 
-Meta-evals: a curated reference set of 20 (spec, expected-suite) pairs. Every prompt change re-runs the meta-eval scorer; regressions block merge.
+### `POST /api/generate`
+
+Edge runtime, streams Server-Sent Events; the dashboard mirror of the CLI.
+
+**Request**:
+
+```json
+{
+  "spec": "## Feature: bio-rewrite ...",
+  "feature": "user-bio-rewrite",
+  "kinds": ["exact-match", "rubric-score"]
+}
+```
+
+**Response** (text/event-stream): `event: case` per generated `GoldCase`, then `event: done` with the bundled zip URL.
+
+### `forge run`
+
+CLI wrapper around `vitest run` with a Forge-aware reporter that prints `RunResult` per feature.
+
+## 4. State management
+
+- **Server**: generation runs in the Edge route; nothing about the user's spec is persisted.
+- **Client**: the spec textarea and selected eval kinds — `useState`, sent in the request body.
+- **Repo**: the generated files _are_ the state. Re-running overwrites `./forge-output/`, never the committed suite.
+
+## 5. Error states
+
+| Case                             | UX                                                          |
+| -------------------------------- | ----------------------------------------------------------- |
+| Spec under length/structure bar  | Refuse with a link to the spec template; no API call        |
+| Generator returns malformed JSON | Retry once with a stricter prompt, then surface raw + error |
+| API timeout (20s)                | Stream what arrived, mark the run partial, offer re-run     |
+| Upstream LLM rate-limited        | Queue + "Try again in 60s" message                          |
+| Meta-eval score < 0.7            | Block the prompt change from shipping (CI gate, not UI)     |
+| GitHub token missing on `--ci`   | Emit suite + goldset, skip `forge.yml`, warn inline         |
+
+## 6. Security & privacy
+
+- **No persistent storage** of submitted specs. They live only for the duration of the Edge request.
+- **Rate limit** `/api/generate`: 10 req/min/IP (Upstash on Edge).
+- **Secrets**: the emitted Action reads `ANTHROPIC_API_KEY` from the target repo's own secret store; Forge never proxies it.
+- **CSP**: `default-src 'self'`; no third-party analytics on spec content.
+
+## 7. Test strategy
+
+- **Vitest unit**: spec parser, prompt builders, output-schema validators.
+- **Meta-eval scorer**: 20 curated `(spec, expected-suite)` reference pairs; every prompt change must hold ≥ 0.85.
+- **CLI integration**: `cargo test` covering flag combinations and the `--ci` branch.
+- **Playwright e2e**: paste → stream → download flow on Chrome, Firefox, mobile Safari.
+- **Snapshot**: the emitted file layout is golden-tested so the harness contract can't drift silently.
+
+## 8. Rollout
+
+| Stage         | Audience        | Gate                               |
+| ------------- | --------------- | ---------------------------------- |
+| Internal beta | 20 engineers    | Manual QA + meta-eval score ≥ 0.85 |
+| 5% canary     | Random sampling | 1 week clean Sentry + flat budget  |
+| 100%          | All             | Kill-switch flag on new eval kinds |
+
+## 9. Telemetry events
+
+Minimal, all anonymous:
+
+- `suite_generated` — case count, eval kinds, latency bucket
+- `suite_downloaded` — surface (CLI / dashboard)
+- `generate_error` — error code, spec-size bucket
+- `meta_eval_score` — emitted per release, ops dashboard tracks generator drift
 
 ---
 
-_Full spec lands with Sub-plan B-2._
+_This artifact is a representative example. Real specs evolve alongside their implementations._
