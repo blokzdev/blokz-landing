@@ -30,7 +30,7 @@ export function FeaturedCarousel({ apps }: Readonly<Props>) {
           behave the same way per CSS spec, so the lifted card would otherwise
           hit the top edge. */}
       <ul
-        className="-mx-6 -my-3 flex snap-x snap-mandatory [scrollbar-width:none] gap-5 overflow-x-auto px-6 py-3 [&::-webkit-scrollbar]:hidden"
+        className="no-scrollbar -mx-6 -my-3 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 py-3"
         role="list"
       >
         {featured.map((app) => (

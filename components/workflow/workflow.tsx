@@ -29,12 +29,12 @@ export function Workflow() {
       {/* Sticky product + platform bar under the global nav. Mobile collapses
           the labels to keep the bar slim; desktop keeps the label/control pair. */}
       <div className="sticky top-[64px] z-30 -mx-6 border-y border-white/[0.06] bg-[var(--color-canvas)]/85 px-6 py-2 backdrop-blur-xl sm:py-3">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:gap-3">
+        <div className="container-site flex flex-col gap-2 sm:gap-3">
           <div className="flex items-center gap-3 sm:justify-between">
             <p className="hidden font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase sm:block">
               Sample product
             </p>
-            <div className="-mx-2 flex min-w-0 flex-1 [scrollbar-width:none] overflow-x-auto px-2 sm:flex-initial [&::-webkit-scrollbar]:hidden">
+            <div className="no-scrollbar -mx-2 flex min-w-0 flex-1 overflow-x-auto px-2 sm:flex-initial">
               <ProductTabs product={product} onChange={setProduct} />
             </div>
           </div>
@@ -42,7 +42,7 @@ export function Workflow() {
             <p className="hidden font-mono text-[10px] tracking-[0.16em] text-[var(--color-ink-dim)] uppercase sm:block">
               Building for
             </p>
-            <div className="-mx-2 flex min-w-0 flex-1 [scrollbar-width:none] overflow-x-auto px-2 sm:flex-initial [&::-webkit-scrollbar]:hidden">
+            <div className="no-scrollbar -mx-2 flex min-w-0 flex-1 overflow-x-auto px-2 sm:flex-initial">
               <PlatformTabs platform={platform} onChange={setPlatform} />
             </div>
           </div>

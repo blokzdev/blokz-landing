@@ -25,7 +25,7 @@ export function PhaseChapter({ phase, platform, index, scene }: Readonly<Props>)
       aria-labelledby={`phase-${phase.id}-title`}
       className="relative border-t border-white/[0.06] px-6 py-20 sm:py-32 md:py-40"
     >
-      <div className="mx-auto grid max-w-7xl gap-10 sm:gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
+      <div className="container-site grid gap-10 sm:gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
         <motion.header
           className={cn(
             "relative flex flex-col lg:sticky lg:top-32 lg:self-start",

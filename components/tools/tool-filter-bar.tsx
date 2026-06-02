@@ -133,7 +133,7 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
 
   return (
     <div className="sticky top-16 z-30 -mx-6 mb-10 border-y border-white/[0.06] bg-[var(--color-canvas)]/85 px-6 py-4 backdrop-blur-xl sm:top-20">
-      <div className="mx-auto flex max-w-7xl flex-col gap-3">
+      <div className="container-site flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <div className="relative flex-1">
             <Search
@@ -184,7 +184,7 @@ export function ToolFilterBar({ total, filtered }: Readonly<Props>) {
           </p>
         </div>
 
-        <div className="-mx-2 flex [scrollbar-width:none] flex-col gap-3 overflow-x-auto px-2 [&::-webkit-scrollbar]:hidden">
+        <div className="no-scrollbar -mx-2 flex flex-col gap-3 overflow-x-auto px-2">
           <FilterRow label="Category">
             <Chip
               active={filter.category.length === 0}

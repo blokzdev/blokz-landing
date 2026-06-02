@@ -7,7 +7,7 @@ export function AppsPreview() {
 
   return (
     <section id="portfolio" className="relative px-6 py-32 sm:py-40">
-      <div className="mx-auto max-w-7xl">
+      <div className="container-site">
         <header className="mb-12 max-w-xl">
           <p className="text-eyebrow text-[var(--color-accent)]">{"// In production"}</p>
           <h2 className="mt-4 text-4xl sm:text-5xl md:text-6xl">

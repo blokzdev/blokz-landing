@@ -29,7 +29,7 @@ export default function HomePage() {
         opacity={0.07}
       />
 
-      <div className="relative mx-auto max-w-7xl">
+      <div className="container-site relative">
         <header className="mb-8 max-w-3xl">
           <p className="text-eyebrow text-[var(--color-accent)]">AI Apps Directory</p>
           <h1 className="mt-4 text-5xl sm:text-6xl md:text-7xl">

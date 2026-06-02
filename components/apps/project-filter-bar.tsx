@@ -36,7 +36,7 @@ export function ProjectFilterBar({ total, filtered }: Readonly<Props>) {
 
   return (
     <div className="sticky top-20 z-30 -mx-6 mb-12 border-y border-white/[0.06] bg-[var(--color-canvas)]/85 px-6 py-4 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="container-site flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <FilterRow label="Platform">
             <Chip active={filter.platform === null} onClick={() => setPlatform(null)}>

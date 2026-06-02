@@ -20,6 +20,25 @@
   --radius-lg: 1rem;
   --radius-xl: 1.25rem;
   --radius-2xl: 1.5rem;
+
+  /* z-index scale → z-nav, z-sticky, z-overlay, z-toast, z-skip.
+     Names map to the values currently hardcoded across the app. */
+  --z-index-sticky: 30; /* filter bars */
+  --z-index-nav: 40; /* site-nav header */
+  --z-index-overlay: 50; /* sheet / dialog overlay + content */
+  --z-index-toast: 60; /* toasts, above overlays */
+  --z-index-skip: 999; /* skip-to-content link */
+
+  /* duration scale → duration-fast / duration-base / duration-slow.
+     Namespace must be --transition-duration-* for v4 to mint utilities. */
+  --transition-duration-fast: 150ms;
+  --transition-duration-base: 300ms; /* the de-facto default in nav/sheet */
+  --transition-duration-slow: 500ms;
+
+  /* glow shadows → shadow-glow-accent / shadow-glow-hot.
+     The --shadow-* namespace mints shadow-* utilities. */
+  --shadow-glow-accent: 0 0 12px var(--color-accent); /* nav/footer accent dot */
+  --shadow-glow-hot: 0 0 24px var(--color-accent-hot);
 }
 
 @theme inline {
@@ -89,5 +108,72 @@
 
   .ease-out-expo {
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Centered content column. Intentionally padding-free: most shells supply
+     their own horizontal padding (often on a parent for full-bleed sticky bars),
+     so callers add `px-6` / `.safe-px` themselves where needed. */
+  .container-site {
+    margin-inline: auto;
+    max-width: 80rem; /* === max-w-7xl */
+  }
+
+  /* Standard vertical section rhythm. Callers may add `sm:`/`lg:` overrides. */
+  .section-y {
+    padding-block: 8rem;
+  }
+
+  /* Horizontal padding that respects the device safe-area insets (notches). */
+  .safe-px {
+    padding-left: max(1.5rem, env(safe-area-inset-left));
+    padding-right: max(1.5rem, env(safe-area-inset-right));
+  }
+
+  /* Hide the scrollbar while keeping the element scrollable. Consolidates the
+     repeated [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pattern. */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Edge-fade mask for horizontal scrollers — fades the leading/trailing 1.5rem. */
+  .scroll-fade-x {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 1.5rem,
+      #000 calc(100% - 1.5rem),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 1.5rem,
+      #000 calc(100% - 1.5rem),
+      transparent
+    );
+  }
+
+  /* Opt-in thin, accent-tinted scrollbar. Deliberately NOT a global element
+     selector — bespoke scrollers (e.g. chapter-environment) keep their own. */
+  .scrollbar-styled {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.12) transparent;
+  }
+  .scrollbar-styled::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scrollbar-styled::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-styled::-webkit-scrollbar-thumb {
+    background-color: rgb(255 255 255 / 0.12);
+    border-radius: 9999px;
+  }
+  .scrollbar-styled::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(255 255 255 / 0.2);
   }
 }

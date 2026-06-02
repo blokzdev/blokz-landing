@@ -13,7 +13,7 @@ const socials: ReadonlyArray<{ href: string; label: string }> = [
 export function SiteFooter() {
   return (
     <footer className="relative border-t border-white/[0.06] bg-[var(--color-canvas)]">
-      <div className="mx-auto max-w-7xl px-6 py-16">
+      <div className="container-site px-6 py-16">
         <div className="grid gap-12 md:grid-cols-3">
           <div>
             <Link
