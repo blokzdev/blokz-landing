@@ -1,8 +1,8 @@
 // TODO(user): refine narrative copy to your voice before launch. Tracked in
 // BACKLOG.md. Three sample products are threaded through the workflow — Blokz
-// Brief, Eval Forge, and Edge Memo — each explored across the same five
-// phases. Blokz Brief is fully fleshed out; Forge and Memo carry concept-level
-// beats today and will be filled in across Sub-plans B-2 and B-3.
+// Brief, Eval Forge, and Edge Memo — each explored across the same five phases.
+// All three now carry full beats, platform notes, and fleshed-out artifacts
+// (Sub-plans B-2 and B-3 shipped); what remains is voice/tone polish only.
 
 import type { Phase, WorkflowProduct } from "@/types/workflow";
 

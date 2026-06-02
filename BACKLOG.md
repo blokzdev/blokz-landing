@@ -32,7 +32,7 @@ Things that would make the site feel more "us" before the world sees it.
 - [ ] **[user]** Provide a vector SVG Blokz logo (wordmark + monogram). Replace the legacy `cdn.glitch.global` PNG referenced in `data/brand.ts` with `/public/brand/logo.svg`. Affects nav, footer, manifest icon, OG.
 - [ ] **[user]** Rewrite manifesto principles in `content/manifesto/principles.ts` to your voice. Five-card grid; ≤ 2 short sentences per principle.
 - [ ] **[user]** Rewrite the hero headline block in `data/brand.ts` (`brand.headline.eyebrow / title / titleAccent / sub`) if the current copy doesn't ring true.
-- [ ] **[user]** Workflow narrative migration — Sub-plan B of the AI-frontier pivot. **B-1 shipped**: three-product showcase (Blokz Brief, Eval Forge, Edge Memo) threaded through the workflow with a product picker above the platform tabs, 12 SSG'd MDX artifacts at `/workflow/artifacts/[product]/[type]`. Blokz Brief fully fleshed out; Forge and Memo carry concept-level beats and stub MDX. **B-2** (Forge content fill-in) and **B-3** (Memo content fill-in) remain — each is a content-only PR.
+- [ ] **[user]** Workflow narrative — voice/tone polish. Sub-plan B of the AI-frontier pivot is structurally complete: **B-1** shipped the three-product showcase (Blokz Brief, Eval Forge, Edge Memo) with a product picker, platform tabs, and 12 SSG'd MDX artifacts at `/workflow/artifacts/[product]/[type]`; **B-2** (Eval Forge) and **B-3** (Edge Memo) filled the artifacts out to Blokz Brief depth (see Resolved). All that remains is rewriting the narrative beats in `content/workflow/phases.ts` and the artifact copy to your personal voice before launch.
 - [ ] **[user]** Decide on a real Cal.com (or alternative) scheduling URL and set the `SCHEDULE_URL` constant in `components/contact/contact-success.tsx` to render the "Book a call" button on form-success.
 - [ ] **[user]** Replace the blanket Play-Store developer-page URL in `data/projects.ts` with per-app deep links (`details?id=<packageId>`). Only `blockscan` carries a verified package id (`com.bdc.blockscan.app`); the other eight rows link to the dev page today.
 - [ ] **[user]** Provide per-app download / review counts beyond Blockchair's confirmed 10K+ (currently only rating is shown on the other eight cards).
@@ -80,6 +80,12 @@ Anything in this section is explicitly safe to defer to after v2 goes live.
 ---
 
 ## Resolved (rolling archive)
+
+Sub-plan B-2 / B-3 — Workflow artifact fill-in
+
+- [x] **B-2** Eval Forge artifacts fleshed out to Blokz Brief depth — `content/workflow/artifacts/forge/{claude-md,prd,spec,prompt-library}.mdx`. Concept banners, `(sketch)` labels, and "lands with Sub-plan" footers removed; full section sets, tables, and code blocks added (web dashboard + Rust `clap` CLI + emitted Vitest harness + GitHub Action gate; `EvalKind` / `GoldCase` / `RunResult` shapes; meta-eval scorer).
+- [x] **B-3** Edge Memo artifacts fleshed out to Blokz Brief depth — `content/workflow/artifacts/memo/{claude-md,prd,spec,prompt-library}.mdx`. Same scaffolding removed; on-device iOS-first pipeline (three quantized Core ML models — transcribe / summarise / extract), privacy-first guardrails (offline by construction, opt-in self-hosted E2EE sync), goldset scored on WER + action-item recall.
+- [x] `content/workflow/phases.ts` header comment updated — all three products now carry full beats + artifacts; only voice/tone polish remains (now an active **Pre-launch polish** item).
 
 Iteration 2 — Home page refinement + apps lifecycle (this branch)
 

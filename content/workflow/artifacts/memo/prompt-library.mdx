@@ -1,10 +1,22 @@
 # Prompt library — Edge Memo
 
-> **Concept artifact.** Edge Memo is the third product threaded through the Blokz workflow. This file outlines the prompt shape; the full draft lands with Sub-plan B-3.
+Reusable prompts threaded through the Edge Memo workflow. Copy, adapt, ratify. Each prompt assumes you've already read `CLAUDE.md` for the project at hand. Because Edge Memo runs on-device with quantized small models, every prompt is short, structured, and tuned against the recording goldset — terseness is a hard constraint, not a style choice.
 
-Because Edge Memo runs on-device with quantized small models, every prompt is short, structured, and tuned against the recording goldset. The full prompt library will reflect that constraint — these placeholder entries describe the shape, not the final wording.
+## 01 — Plan a pipeline change
 
-## 01 — Summarise a meeting transcript
+Use at the start of every change to the capture or inference pipeline. The agent outputs a numbered task list; you edit before any code is touched.
+
+> Read `CLAUDE.md` and the relevant section of `tech-spec.mdx`. Then, for change `<NAME>`, draft a numbered task list with concrete file paths.
+>
+> Each task must be:
+>
+> - ≤ 1 hour of agent work,
+> - independent enough to land as its own commit,
+> - written as an imperative ("Add X", "Refactor Y").
+>
+> End with a verification step listing the commands (including `./scripts/score-goldset.sh`) and the device check that proves the change is done.
+
+## 02 — Summarise a meeting transcript
 
 The core summary prompt. Versioned in `ios/Memo/Pipeline/Prompts/Summary.swift`; every change ships paired with a faithfulness-score delta.
 
@@ -16,7 +28,7 @@ The core summary prompt. Versioned in `ios/Memo/Pipeline/Prompts/Summary.swift`;
 >
 > Each paragraph ≤ 60 words. No emoji. No marketing prose. If a paragraph is unsupported, write "Not covered."
 
-## 02 — Extract action items
+## 03 — Extract action items
 
 Runs immediately after the summary, on the same model.
 
@@ -28,7 +40,7 @@ Runs immediately after the summary, on the same model.
 >
 > Skip any action that is purely speculative or hypothetical. Output as a JSON array.
 
-## 03 — Audit a goldset regression
+## 04 — Audit a goldset regression
 
 Use when the WER or summary-faithfulness score drops between releases.
 
@@ -38,6 +50,29 @@ Use when the WER or summary-faithfulness score drops between releases.
 > 2. What kind of audio is involved (length, accent, content)?
 > 3. What single change to the pipeline would most likely undo the regression without harming the rest of the set?
 
+## 05 — Write release notes from a goldset delta
+
+Use after merging a model or prompt change to main, before promoting to TestFlight.
+
+> Given this change plus the goldset score table (before vs. after: WER, summary-faithfulness, action-item recall), draft user-facing release notes:
+>
+> - One sentence summary at the top.
+> - Two sections: **Improved** (metrics that got better), **Watch** (anything that regressed even slightly).
+> - Each entry is a single line, user-facing language, no jargon.
+> - Never mention a metric name to the user — translate it ("transcripts are more accurate on accented speech").
+
+## 06 — Refactor on the third repetition
+
+Use when you spot the same shape three times.
+
+> Three places in this codebase do `<DESCRIBE THE SHAPE>`:
+>
+> - `<file:line>`
+> - `<file:line>`
+> - `<file:line>`
+>
+> Propose a single shared abstraction. Show the proposed signature and call sites. Do not apply the change — I want to see the shape first.
+
 ---
 
-_Full prompt library lands with Sub-plan B-3._
+_Prompts evolve with the product. Edit freely; commit improvements back._
