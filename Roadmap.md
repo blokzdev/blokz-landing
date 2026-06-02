@@ -24,6 +24,25 @@ Status legend: ⬜ planned · 🟦 in progress · ✅ shipped
 - **Workflow narrative migration** (Sub-plan B): B-1 showcase, B-2 Eval Forge artifacts, B-3
   Edge Memo artifacts — all three sample products fleshed to full depth. ✅
 
+### Chunk ledger (continuous letter sequence)
+
+Chunks use one global A→Z sequence across iterations. Iteration 4 ran A0–E; Iteration 5 picks
+up at **F**. (There was no roadmap file before this one — A0–E were tracked in commit messages
+and `BACKLOG.md`'s Resolved archive, which is why "chunk F" didn't appear to exist yet.)
+
+| Chunk | What                                                                          | PR        | Status |
+| ----- | ----------------------------------------------------------------------------- | --------- | ------ |
+| A0    | Schema sweep + migrate 16 entries to the `App` shape                          | #12       | ✅     |
+| A1–A2 | Directory data fill                                                           | #13, #14  | ✅     |
+| A3    | +18 entries (search / observability / fine-tuning / browser-ext / automation) | #15       | ✅     |
+| A4    | Freshness audit + status filter + platform contract                           | #16       | ✅     |
+| B     | Route restructure (`/tools`→`/`, home→`/about`, consolidate portfolio)        | #17       | ✅     |
+| C     | Per-app detail pages + SEO                                                    | #18       | ✅     |
+| D     | UX polish — featured carousel, multi-select, sort, infinite scroll            | #19       | ✅     |
+| E     | Sponsored slots scaffold + 1 self-promo                                       | #21       | ✅     |
+| —     | Featured-carousel polish · legacy `/apps` redirect hotfix                     | #22 · #20 | ✅     |
+| F–L   | **Iteration 5 — Directory-grade UI/UX** (below)                               | —         | ⬜     |
+
 ---
 
 ## Iteration 5 — Directory-grade UI/UX refinement (Chunks F → L)

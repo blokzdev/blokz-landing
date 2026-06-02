@@ -1,13 +1,13 @@
 # Blokz.dev
 
-Marketing site for **Blokz Development Co.** — a vibecoding studio shipping production web3 apps.
+Marketing site for **Blokz Development Co.** — a vibecoding studio building AI apps (with a heritage of shipped blockchain explorers).
 
 The site is itself a demonstration: it's built end-to-end with Claude Code, and the workflow it preaches is visualized on `/workflow`.
 
 🌐 **Live:** [blokz.dev](https://blokz.dev)
 📒 **Contract:** see [`CLAUDE.md`](./CLAUDE.md) for stack, conventions, and agent guardrails
 📋 **Open items:** see [`BACKLOG.md`](./BACKLOG.md) for tracked deferrals
-🗺️ **Plan of record:** `/root/.claude/plans/this-repo-is-my-jazzy-spark.md` (local to the dev environment)
+🗺️ **Plan of record:** see [`Roadmap.md`](./Roadmap.md) for iterations + chunks
 
 ---
 
@@ -28,7 +28,7 @@ pnpm dev                        # http://localhost:3000
 | Command          | What it does                                      |
 | ---------------- | ------------------------------------------------- |
 | `pnpm dev`       | Dev server (Turbopack, hot reload)                |
-| `pnpm build`     | Production build (SSG + Edge route compilation)   |
+| `pnpm build`     | Production build (SSG)                            |
 | `pnpm start`     | Serve the production build locally                |
 | `pnpm lint`      | ESLint                                            |
 | `pnpm lint:fix`  | ESLint with autofix                               |
@@ -41,22 +41,25 @@ Pre-push auto-runs `pnpm typecheck`.
 
 ## What's in the box
 
-- **`/`** — R3F hero (cursor-reactive flow-field shader) → manifesto → featured-apps preview
-- **`/apps`** — bento grid of every project with platform/chain filters (`nuqs` URL state)
-- **`/apps/[slug]`** — per-project detail with `SoftwareApplication` JSON-LD; 10 slugs SSG'd
-- **`/workflow`** — five scrolly chapters narrating Idea → Spec → Environment → Develop → Ship, threaded through a fictional sample product (Blokz Receipt). Each chapter has a bespoke scene; the develop chapter ships a wireframe R3F build-pipeline tunnel.
-- **`/workflow/artifacts/[slug]`** — 4 sample MDX artifacts (`CLAUDE.md`, PRD, tech spec, prompt library) rendered with Shiki-highlighted code blocks
-- **`/contact`** — Resend-powered form with IP rate-limiting and an honest "offline" fallback when `RESEND_API_KEY` is unset
+- **`/`** — the **AI-apps directory**: ~70 curated tools with category / pricing / Blokz-mark / status filters + search + sort (`nuqs` URL state), a featured carousel, infinite scroll, and light-touch sponsored slots
+- **`/apps/[slug]`** — per-app detail with `SoftwareApplication` JSON-LD (one SSG page per directory app)
+- **`/about`** — studio identity: R3F hero (cursor-reactive flow-field shader) → Now/Next band → manifesto → portfolio of Blokz's own shipped apps
+- **`/portfolio/[slug]`** — per-project detail for Blokz's shipped apps
+- **`/workflow`** — a five-phase build narrative (Conceptualize → Spec → Environment → Develop → Ship) threaded through three sample products (Blokz Brief, Eval Forge, Edge Memo). Each phase has a bespoke scene; the Develop phase ships a wireframe R3F build tunnel.
+- **`/workflow/artifacts/[product]/[type]`** — 12 MDX artifacts (`CLAUDE.md`, PRD, tech spec, prompt library × 3 products), Shiki-highlighted
+- **`/contact`** — a Resend-powered server action with IP rate-limiting and an honest "offline" fallback when `RESEND_API_KEY` is unset
 
-Single source of truth for the apps showcase: [`data/projects.ts`](./data/projects.ts) (schema in [`types/project.ts`](./types/project.ts)).
+**Two content tracks** (don't conflate them):
 
-## Adding a new project
+- **Directory** (the `/` homepage): [`data/apps.ts`](./data/apps.ts) · schema [`types/app.ts`](./types/app.ts) · UI `components/tools/*`
+- **Portfolio** (`/about` + `/portfolio`): [`data/projects.ts`](./data/projects.ts) · schema [`types/project.ts`](./types/project.ts) · UI `components/apps/*`
 
-1. Append a `Project` entry to `data/projects.ts` (required fields: `slug`, `name`, `tagline`, `description`, `type`, `status`, `platforms`, `chains`, `media.icon`, `stats`, `links` with at least one `primary: true`).
-2. Drop an icon at `public/projects/<slug>/icon.png` (512×512 source). Until then, cards render a generated 2-letter monogram tinted by chain accent.
-3. (Optional) Long-form page: create `content/projects/<slug>.mdx` and set `hasLongForm: true`.
+## Adding an entry
 
-Full recipes for new card types, new workflow phases, brand-color changes, etc. live in `CLAUDE.md` §12.
+- **Directory app** → append an `App` to `data/apps.ts` (`slug`, `name`, `tagline`, `description`, `category`, `pricing`, `platforms`, `links` with ≥1 `primary: true`).
+- **Portfolio project** → append a `Project` to `data/projects.ts`, and drop an icon at `public/projects/<slug>/icon.png` (512×512). Until then, cards render a generated 2-letter monogram.
+
+Full recipes (both tracks, new workflow phases, brand-color changes, etc.) live in `CLAUDE.md` §5 + §12.
 
 ## Deploy
 
