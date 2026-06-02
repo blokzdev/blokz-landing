@@ -41,7 +41,7 @@ export default function HomePage() {
           </p>
         </header>
 
-        <Suspense fallback={<ToolGrid apps={allApps} />}>
+        <Suspense fallback={<ToolGrid items={allApps} />}>
           <NuqsAdapter>
             <ToolsBrowser apps={allApps} />
           </NuqsAdapter>
