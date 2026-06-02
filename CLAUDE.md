@@ -49,16 +49,16 @@ Don't add a dependency without confirming with the user (see §11). Don't change
 
 ```bash
 pnpm install         # install deps (pnpm only — npm/yarn rejected by engine-strict)
-pnpm dev             # next dev (Turbopack)
-pnpm build           # next build (SSG + Edge route compilation)
+pnpm dev             # next dev --turbopack
+pnpm build           # next build --turbopack (SSG)
 pnpm start           # serve production build locally
 pnpm lint            # eslint
 pnpm lint:fix        # eslint --fix
 pnpm format          # prettier --write .
+pnpm format:check    # prettier --check .
 pnpm typecheck       # tsc --noEmit
-pnpm analyze         # ANALYZE=true pnpm build (next-bundle-analyzer)
-pnpm test            # playwright test (optional, present after Phase 6)
-pnpm test:smoke      # playwright test --grep @smoke
+pnpm analyze         # ANALYZE=true next build (bundle analyzer)
+# Note: no `pnpm test` yet — a Playwright smoke suite is a tracked BACKLOG item, not set up.
 ```
 
 Pre-commit (auto): `lint-staged` → eslint --fix + prettier --write on staged files.
