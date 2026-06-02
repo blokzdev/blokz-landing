@@ -33,8 +33,9 @@ and `BACKLOG.md`'s Resolved archive, which is why "chunk F" didn't appear to exi
 | Chunk | What                                                                          | PR        | Status |
 | ----- | ----------------------------------------------------------------------------- | --------- | ------ |
 | A0    | Schema sweep + migrate 16 entries to the `App` shape                          | #12       | ✅     |
-| A1–A2 | Directory data fill                                                           | #13, #14  | ✅     |
-| A3    | +18 entries (search / observability / fine-tuning / browser-ext / automation) | #15       | ✅     |
+| A1    | +18 entries — agent / orchestration / vector-db                               | #13       | ✅     |
+| A2    | +18 entries — voice / vision / image-gen / video / audio                      | #14       | ✅     |
+| A3    | +18 entries — search / observability / fine-tuning / browser-ext / automation | #15       | ✅     |
 | A4    | Freshness audit + status filter + platform contract                           | #16       | ✅     |
 | B     | Route restructure (`/tools`→`/`, home→`/about`, consolidate portfolio)        | #17       | ✅     |
 | C     | Per-app detail pages + SEO                                                    | #18       | ✅     |
