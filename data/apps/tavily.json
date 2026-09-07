@@ -55,5 +55,7 @@
       "id": "web-scraping",
       "level": "primary"
     }
-  ]
+  ],
+  "featured": true,
+  "featuredAt": "2026-09-07"
 }

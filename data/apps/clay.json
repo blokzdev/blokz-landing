@@ -68,7 +68,7 @@
       "level": "secondary"
     }
   ],
-  "featured": true,
+  "featured": false,
   "featuredAt": "2026-08-21",
   "accentColor": "#F59E0B"
 }
