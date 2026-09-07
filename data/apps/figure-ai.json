@@ -64,5 +64,8 @@
       "id": "bipedal-locomotion",
       "level": "secondary"
     }
-  ]
+  ],
+  "accentColor": "#38BDF8",
+  "featured": true,
+  "featuredAt": "2026-09-07"
 }

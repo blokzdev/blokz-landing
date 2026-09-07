@@ -76,5 +76,8 @@
       "id": "summarization",
       "level": "secondary"
     }
-  ]
+  ],
+  "accentColor": "#6366F1",
+  "featured": true,
+  "featuredAt": "2026-09-07"
 }

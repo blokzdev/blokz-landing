@@ -67,5 +67,8 @@
       "id": "long-form-writing",
       "level": "secondary"
     }
-  ]
+  ],
+  "accentColor": "#00C4CC",
+  "featured": true,
+  "featuredAt": "2026-09-07"
 }
